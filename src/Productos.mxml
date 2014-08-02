@@ -311,10 +311,12 @@
 				<s:Image includeIn="dashboard_productos,catalogo_productos" x="25" width="24" height="24"
 						 buttonMode="true" smooth="true" smoothingQuality="high"
 						 source="img/ModIco.png" verticalCenter="-1" click="onShowDefaultCalloutClick()" id="btnMenu"/>
-				<s:Button id="btnGuardar" includeIn="catalogo_productos" x="518" y="4"
+				<s:Button id="btnGuardar" includeIn="catalogo_productos" x="578" y="4"
 						  label="Guardar" click="btnGuardar_clickHandler()"/>
-				<s:Button id="btnEliminar" includeIn="catalogo_productos" x="609" y="4"
+				<s:Button id="btnEliminar" includeIn="catalogo_productos" x="669" y="4"
 						  label="Eliminar"/>
+				<s:Button id="btnNuevo" includeIn="catalogo_productos" x="500" y="5" label="Nuevo"/>
+				<s:Button id="btnAyuda" includeIn="catalogo_productos" x="759" y="4" label="Ayuda"/>
 				
 			</s:BorderContainer>
 			
