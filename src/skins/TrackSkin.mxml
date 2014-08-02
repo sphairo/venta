@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GraphicBorderSkin xmlns:mx="http://www.adobe.com/2006/mxml"
+				   xmlns="http://www.degrafa.com/2007"
+				   xmlns:s="library://ns.adobe.com/flex/spark">
+	
+	<mx:Script>
+		<![CDATA[
+			
+			// required to initialize width skin measurement
+			override public function get measuredWidth():Number
+			{
+				
+				return 8;
+			}
+			
+			// required to initialize height skin measurement
+			override public function get measuredHeight():Number
+			{
+				return 1;
+			}
+			
+		]]>
+	</mx:Script>
+	
+	<fills>
+		<SolidFill id="mainFill" alpha="0.5" color="#0x444444"/>
+	</fills>
+	
+	<strokes>
+		<SolidStroke id="mainStroke" alpha="0" color="#0x1A1A1A" weight="1"/>
+	</strokes>
+	
+	<geometry>
+		<RoundedRectangle id="track" width="{this.skinWidth}" height="{this.skinHeight}"
+						  cornerRadius="0" fill="{this.mainFill}" stroke="{this.mainStroke}"/>
+	</geometry>
+</GraphicBorderSkin>

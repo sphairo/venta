@@ -1,0 +1,192 @@
+/* CSS file Autor Ing. Jesus Antonio Ramos Martinez  */
+@namespace s "library://ns.adobe.com/flex/spark";
+@namespace mx "library://ns.adobe.com/flex/mx";
+@namespace mx "library://ns.adobe.com/flex/halo";
+@namespace "library://ns.adobe.com/flex/spark";
+@namespace mx1 "library://ns.adobe.com/flex/mx";
+@namespace ah "com.hulstkamp.flex.spark.components.*";
+@namespace spark "spark.skins.spark.*";
+@namespace spark1 "mx.skins.spark.*";
+
+TextInput{
+	skinClass:ClassReference("spark.skins.spark.TextInputSkin");
+}
+
+s|Button
+{
+	cornerRadius:10;
+	height: 22;
+}
+
+/*.toggleSwitch
+{
+	skinClass:ClassReference("com.renders.ToggleSwitchSkin");
+}*/
+
+global
+{
+	content-background-alpha: 1.0;	
+	openDuration: 300;
+	openEasingFunction: "mx.effects.easing.Bounce.easeOut";
+	closeDuration: 300;
+	closeEasingFunction: "mx.effects.easing.Bounce.easeIn";
+	focusEnabled: false;
+	focusColor: #838C80;
+}
+
+s|DataGrid
+{
+	color: #444444; 
+	rollOverColor: #D6D6D6;
+	selectionColor: #A09D9D;
+	focusEnabled: false;
+	caretColor: #A09D9D;
+	skinClass: ClassReference("skins.DataGridSkin");
+}
+
+s|TitleWindow
+{
+	cornerRadius: 10;
+	borderColor:#858585;
+	skinClass: ClassReference("skins.SkinTitleWindow");
+/*	skinClass: ClassReference("skins.TitleWindowSkin");*/
+} 
+
+s|VScrollBar
+{
+	skinClass: ClassReference("skins.VScrollBarSkin");
+}
+
+s|HScrollBar
+{
+	skinClass: ClassReference("skins.HScrollBarSkin");
+}
+
+mx1|VScrollBar
+{
+	upArrowSkin:    ClassReference(null);
+	downArrowSkin:  ClassReference(null);
+	trackSkin:      ClassReference("skins.TrackSkin");
+	thumbSkin:      ClassReference("skins.ThumbSkin");
+}
+
+mx1|HScrollBar
+{
+	upArrowSkin:    ClassReference(null);
+	downArrowSkin:  ClassReference(null);
+	trackSkin:      ClassReference("skins.TrackSkin");
+	thumbSkin:      ClassReference("skins.ThumbSkin");
+}
+
+mx1|Alert
+{
+	creationCompleteEffect: efectoAlert;
+}
+
+.comboboxNotSelected
+{
+	chromeColor:#FF0000;
+}
+
+.comboboxSelected
+{
+	chromeColor:#cccccc;
+}
+
+.dataNull
+{
+	contentBackgroundColor:#ff0000;
+}
+
+.defaultStyle
+{
+	contentBackgroundColor:#ffffff;
+}
+
+.BalloonCanvas 
+{
+	borderSkin : ClassReference("com.anotherflexdev.ui.skins.BalloonBorder");
+	legPoint: L20, L-10;
+	roundHeight: 15;
+	legSize: 7;
+	backgroundColor: #FFFFFF;
+	
+}
+
+.PetAlert 
+{
+	borderSkin: ClassReference("com.anotherflexdev.ui.skins.BalloonBorder");
+	background-color: #FFFFFF;
+	title-style-name: petAlertTitle;
+	color: #000000;
+}
+
+.comboEditorError
+{
+	cornerRadius: 0;
+	left: 5; 
+	right: 5;
+	top: 3;
+	bottom:3;
+	fontSize: 10;
+	chromeColor:#FF0000;
+}
+
+.comboEditorDefault
+{
+	cornerRadius: 0;
+	left: 5; 
+	right: 5;
+	top: 3;
+	bottom:3;
+	fontSize: 10;
+	chromeColor:#cccccc;
+}
+
+.txtEmpty
+{
+	contentBackgroundColor:#fdf520; 
+}
+
+.txtFill
+{
+	contentBackgroundColor:#FFFFFF; 
+}
+
+.fontLabel
+{
+	text-transform: uppercase;
+	fontSize: 14;
+}
+
+.myHeaderStyle
+{
+	fontWeight:normal;
+	fontSize:12;
+	color:#FFFFFF;
+}
+
+.advancedDataGrid
+{
+	fontFamily: Arial;
+	fontSize: 12;
+	headerBackgroundSkin: ClassReference("skins.SkinHeaderAdvancedDataGrid");
+	headerStyleName: myHeaderStyle;
+	rollOverColor: #D6D6D6;
+	selectionColor: #A09D9D;
+}
+
+/*Application
+{
+	skinClass:ClassReference("clases.BackgroundApplication");	
+}*/
+
+.txtError
+{
+	color:#ff0000;	
+}
+
+.txtDefaultColor
+{
+	color:#000000;
+}

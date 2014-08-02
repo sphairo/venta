@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 width="100%" height="80" focusColor="#737373" rollOver="rollOverHandler(event)" buttonMode="true" rollOut="rollOutHandler(event)">
+	<fx:Script>
+		<![CDATA[
+			protected function rollOverHandler(event:MouseEvent):void
+			{
+				container.visible = true;
+				lblAdministrarProductos.setStyle("color", "#ffffff");
+			}
+			
+			protected function rollOutHandler(event:MouseEvent):void
+			{
+				container.visible = false;
+				lblAdministrarProductos.setStyle("color", "#575757");
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<s:BorderContainer width="100%" height="100%" id="container" visible="false" borderVisible="false">
+		<s:backgroundFill>
+			<s:LinearGradient rotation="90">
+				<s:GradientEntry color="#9b9b9b"/>
+				<s:GradientEntry color="#b1b1b1"/>
+			</s:LinearGradient>
+		</s:backgroundFill> 
+	</s:BorderContainer>
+	<s:Image id="imgAdministrarProductos" left="10" width="32" height="32"
+			 source="img/1394232268_JAVA.png" verticalCenter="0"/>
+	<s:Label id="lblAdministrarProductos" left="45" color="#575757" fontSize="16"
+			 text="Administrar productos" verticalCenter="0"/>
+</s:Group>

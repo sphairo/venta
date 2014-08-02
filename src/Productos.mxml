@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:WindowedApplication xmlns:fx="http://ns.adobe.com/mxml/2009"
+					   xmlns:s="library://ns.adobe.com/flex/spark"
+					   xmlns:mx="library://ns.adobe.com/flex/mx"
+					   xmlns:buttons="com.anotherflexdev.ui.buttons.*"
+					   width="100%" height="100%"
+					   currentState="dashboard_productos"
+					   preinitialize="preinitializeHandler(event)" skinClass="skins.skinProductos" xmlns:components="components.*" xmlns:renders="renders.*">
+	<s:states>
+		<s:State name="catalogo_productos"/>
+		<s:State name="dashboard_productos"/>
+	</s:states>
+	
+	<fx:Style source="Styles/Main.css"/>
+	
+	<fx:Style>
+		@namespace s "library://ns.adobe.com/flex/spark";
+		@namespace mx "library://ns.adobe.com/flex/mx";
+		@namespace buttons "com.anotherflexdev.ui.buttons.*";
+		@namespace components "components.*";
+		
+		/*Setup callout styles*/
+		components|SparkCallout {
+			backgroundColor:		#FFFFFF;
+			borderColor:			#f29c2e;
+			borderThickness:		3;
+		}
+	</fx:Style>
+	<fx:Declarations>
+		<mx:HTTPService id="service" result="onJSONLoad(event)" resultFormat="text"
+						url="http://localhost/Ventas/amfphp/services/getAllProducts.php" useProxy="false" fault="service_faultHandler(event)"/>
+		
+		
+		<mx:RemoteObject id="MiObjetoRemotoProducto" destination="amfphp" source="producto" showBusyCursor="true"> 
+			<s:method name="IniciarBusquedaProducto" result="IniciarBusquedaProductoExito(event)" fault="service_faultHandler(event)"/>
+			<s:method name="Listar" result="getAllProducts(event)" fault="service_faultHandler(event)"/>
+			<s:method name="callStoreProcedure" result="resultCallStoreProcedure(event)" fault="service_faultHandler(event)"/>
+		</mx:RemoteObject>
+		
+		<s:Callout id="defaultCallout"
+				   mouseDownOutside="onMouseDownOutside(event)"
+				   mouseDown="defaultCallout_mouseDownHandler(event)"
+				   verticalPosition="after"
+				   width="230"
+				   height="380">
+			<s:layout>
+				<s:VerticalLayout/>
+			</s:layout>
+			<renders:renderCatalogoProductos includeIn="catalogo_productos" click="currentState='dashboard_productos'"/>
+			<renders:renderAdministrarProductos includeIn="dashboard_productos" click="currentState='catalogo_productos'"/>
+			<renders:renderSoporte/>
+			<renders:renderConfiguracion/>
+			<renders:renderCerrarSession/>
+		</s:Callout>
+			
+		<components:SparkCallout/>
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[		
+			import clases.GlobalStatic;
+			import clases.Productos;
+			import clases.Utileria;
+			
+			import com.adobe.serialization.json.JSON;
+			import com.anotherflexdev.ui.AlertSTRM;
+			
+			import flash.utils.setTimeout;
+			
+			import mx.collections.ArrayCollection;
+			import mx.collections.IList;
+			import mx.collections.IViewCursor;
+			import mx.collections.Sort;
+			import mx.controls.Alert;
+			import mx.events.FlexEvent;
+			import mx.events.FlexMouseEvent;
+			import mx.managers.PopUpManager;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			
+			import skins.itemRenderProducto;
+			
+			import spark.collections.SortField;
+			
+			[Bindable] public var dp:ArrayCollection = new ArrayCollection();
+			[Bindable] public var dp2:ArrayCollection;
+			[Bindable] protected var producto:clases.Productos = new clases.Productos();
+			
+			private function IniciarBusquedaProductoExito(exito:ResultEvent):void
+			{
+				dp.removeAll();
+				dp = encapsulado(exito.result as ArrayCollection);
+				
+				list.dataProvider = dp;
+			}
+			
+			private function getAllProducts(exito:ResultEvent):void
+			{
+				dp.removeAll();
+				dp = encapsulado(exito.result as ArrayCollection);
+				list.dataProvider = dp;
+			}
+			
+			private function resultCallStoreProcedure(exito:ResultEvent):void
+			{
+				PopUpManager.removePopUp(GlobalStatic.utility.progress);
+				switch(exito.result.response)
+				{
+					case "0":
+						service.send();
+						//Alert.show("La información se ha guardo de forma exitosa", 'Atención');
+						AlertSTRM.show("La información se ha guardo de forma exitosa", 'Atención');
+						break;
+					case "1":
+					case "2":
+						Alert.show("Ocurrio un error al guardar la información.", "Error");
+						break;
+				}
+				
+			}
+			
+			private function onJSONLoad(event:ResultEvent):void
+			{
+				dp.removeAll();
+				dp = encapsulado((com.adobe.serialization.json.JSON.decode(String(event.result)) as Array));
+
+				list.dataProvider = dp;
+				
+				this.maximize();
+			}
+			
+			protected function init():void
+			{
+				
+			}
+			
+			protected function preinitializeHandler(event:FlexEvent):void
+			{
+				service.send();
+			}
+			
+			protected function service_faultHandler(error:FaultEvent):void
+			{
+				Alert.show(error.fault.faultString, "Ocurrio un error");
+			}
+			
+			private var arrayOriginal:ArrayCollection;
+			
+			private function encapsulado(collection:*):ArrayCollection{
+				
+				var array:ArrayCollection = new ArrayCollection();
+				
+				for each(var item:Object in collection)
+				{
+					producto = new clases.Productos();
+					producto.id_producto = item.id_producto;
+					producto.id_sucursal = item.id_sucursal;
+					producto.codigo_barra = item.codigo_barra;
+					producto.nom_producto = item.nom_producto;
+					producto.descripcion = item.descripcion;
+					producto.cantidad = item.cantidad;	
+					producto.precio = item.precio;
+					producto.precio_compra = Number(item.precio_compra);	
+					producto.marca = item.marca;	
+					producto.img = item.img;	
+					producto.link = item.link;
+					producto.path = item.path;
+					producto.binario = item.binario;
+					producto.fecha_entrada = format(item.fecha_entrada);
+					producto.tipoVenta = item.tipoVenta;	
+					producto.ofertas_Especiales =  item.ofertas_Especiales;	
+					producto.indice = item.indice;
+					
+					array.addItem(producto);
+				}
+				arrayOriginal = Utileria.clonar(array);
+				return array;
+			}
+			
+			private var lista:IList = new ArrayList();
+			private var queryString:String;
+			protected function btnGuardar_clickHandler():void
+			{
+				var foundObject:Array = new Array(), index:uint = 0;
+				GlobalStatic.utility.showLoading("Espere un momento mientras se guarda la información"); 
+				for each(var item:Object in datagrid_productos.dataProvider)
+				{
+					foundObject = GlobalStatic.utility.findMatchesByIDReturnArray(item.id_producto, arrayOriginal,"id_producto");
+					for each(var originalItem:Object in foundObject)
+					{	
+						/* $variable = “Este es un texto de \”prueba\” para escapar las comillas.”;
+						$variable = ‘Este es un texto de \’prueba\’ para escapar las comillas.’; */
+						
+						originalItem.nom_producto != item.nom_producto ? lista.addItem(" nom_producto = \'" + item.nom_producto + "\'") : "";
+						
+						if(lista.length > 0)
+						{
+							queryString = "UPDATE " + GlobalStatic.DataBaseName + ".producto SET";
+							index = lista.length - 1;
+							for each(var obj:Object in lista.toArray())
+							index-- == 0 ? queryString += obj : queryString += obj + " ,";
+							
+							queryString += " WHERE id_producto = " + item.id_producto;
+							GlobalStatic.utility.queryMasivo(queryString);
+							lista.removeAll();
+						}
+						break;	
+					}
+				}
+				if(GlobalStatic.utility.listaQuerys.length > 0)
+					contruirQuery();
+				else
+					trace("error");
+					
+			}
+			
+			private function contruirQuery():void
+			{
+				var superQuery:String = "";
+				var index:uint = GlobalStatic.utility.listaQuerys.length - 1;
+				for each(var query:Object in GlobalStatic.utility.listaQuerys.toArray())
+				index-- == 0 ? superQuery += query : superQuery += query + "|()|";
+				GlobalStatic.utility.listaQuerys.removeAll();//AHORA REMOVEMOS TODO LO QUE HAY EN LA LISTA PARA OCUPARLA LA PROXIMA VEZ.
+				trace(superQuery);
+				trace("call " + GlobalStatic.DataBaseName + ".Procedure_SqlTable(\"" + superQuery +"\")");
+				MiObjetoRemotoProducto.callStoreProcedure.send(superQuery);
+			}
+			
+			private function format(dateString:String):Date {
+				if ( dateString == null ) {
+					return null;
+				}
+				
+				if ( dateString.indexOf("0000-00-00") != -1 ) {
+					return null;
+				}
+				
+				dateString = dateString.split("-").join("/");
+				
+				return new Date(Date.parse( dateString ));
+			}
+			
+			private var palabra:String;
+			
+			private function doSearch():void {
+				palabra = txtBuscar.text.toLowerCase();
+				dp.filterFunction = filterMyArrayCollection;
+				dp.refresh();
+			}
+			
+			private function filterMyArrayCollection(item:Object):Boolean 
+			{				
+				return ((item.nom_producto.toLowerCase().indexOf(palabra) != -1) || (item.marca.toLowerCase().indexOf(palabra) != -1) || (item.descripcion.toLowerCase().indexOf(palabra) != -1))//coincidencias;
+			}
+			
+			private function changeBusqueda():void{
+				if(txtBuscar.text.length == 0){
+					palabra = '';
+					dp.filterFunction = filterMyArrayCollection;
+					dp.refresh();
+				}
+			}
+			
+			private function onShowDefaultCalloutClick():void {
+				defaultCallout.open(btnMenu);
+			}
+			
+			private function onMouseDownOutside(event:FlexMouseEvent):void {
+				event.target.close();
+			}
+						
+			protected function defaultCallout_mouseDownHandler(event:MouseEvent):void
+			{
+				defaultCallout.close();
+			}
+			
+		]]>
+		
+	</fx:Script>
+	
+	<s:Scroller id="scroll" includeIn="catalogo_productos,dashboard_productos" width="100%"
+				height="100%">
+		<s:Group id="Contenedor" width="100%" height="100%">
+			<s:BorderContainer id="border_header" x="0" y="0" width="100%" height="50"
+							   borderVisible="false">
+				<s:backgroundFill>
+					<s:LinearGradient rotation="90">
+						
+						<s:GradientEntry color="#f29c2e"/>
+						<s:GradientEntry color="#f9a73c"/>
+						<!--
+						
+						<s:GradientEntry color="#f9a73c"/>
+						<s:GradientEntry color="#f29c2e"/>
+						<s:GradientEntry color="#f39821"/>
+						<s:GradientEntry color="#f39215"/>
+						<s:GradientEntry color="#f48d08"/>				
+						<s:GradientEntry color="#f46e08"/>
+						
+						-->
+					</s:LinearGradient>
+				</s:backgroundFill> 
+				<s:TextInput id="txtBuscar" includeIn="dashboard_productos,catalogo_productos" y="12" left="60"
+							 width="400" borderColor="#FFA800" borderVisible="true"
+							 change="changeBusqueda()" chromeColor="#FFA800" enter="doSearch();"
+							 focusColor="#FF8A00" fontSize="16" fontStyle="normal" maxChars="30"
+							 prompt="Buscar"/>
+				<s:Image id="btn_buscar" includeIn="dashboard_productos,catalogo_productos" x="440" width="50"
+						 height="50" buttonMode="true" scaleMode="letterbox" smooth="true"
+						 smoothingQuality="high" source="img/btnSearch.png" verticalCenter="-1" click="doSearch();"/>
+				<s:Image includeIn="dashboard_productos,catalogo_productos" x="25" width="24" height="24"
+						 buttonMode="true" smooth="true" smoothingQuality="high"
+						 source="img/ModIco.png" verticalCenter="-1" click="onShowDefaultCalloutClick()" id="btnMenu"/>
+				<s:Button id="btnGuardar" includeIn="catalogo_productos" x="518" y="4"
+						  label="Guardar" click="btnGuardar_clickHandler()"/>
+				<s:Button id="btnEliminar" includeIn="catalogo_productos" x="609" y="4"
+						  label="Eliminar"/>
+				
+			</s:BorderContainer>
+			
+			<s:List id="list" includeIn="dashboard_productos" left="20" right="0" top="50" bottom="0"
+					borderVisible="false" contentBackgroundAlpha="0.5" focusColor="#F48D08"
+					rollOverColor="#D1D1D1" itemRenderer="skins.itemRenderProducto"
+					selectionColor="#ADADAD">
+				<s:layout>
+					<s:TileLayout horizontalGap="10" verticalGap="10"/>
+				</s:layout>
+			</s:List>
+			<s:DataGrid id="datagrid_productos" includeIn="catalogo_productos" x="0" y="50"
+						width="100%" height="100%" dataProvider="{dp}" editable="true">
+				<s:columns>
+					<s:ArrayList>
+						<s:GridColumn dataField="nom_producto" headerText="Nombre"></s:GridColumn>
+						<s:GridColumn dataField="marca" headerText="Marca"></s:GridColumn>
+						<s:GridColumn dataField="descripcion" headerText="Descripción"></s:GridColumn>
+						
+						<s:GridColumn dataField="cantidad" headerText="Cantidad"></s:GridColumn>
+						<s:GridColumn dataField="precio" headerText="Precio"></s:GridColumn>
+						<s:GridColumn dataField="precio_compra" headerText="Precio compra"></s:GridColumn>
+						
+						<s:GridColumn dataField="img" headerText="Foto"></s:GridColumn>
+						
+						<s:GridColumn dataField="fecha_entrada" headerText="Fecha Entrada"></s:GridColumn>
+						<s:GridColumn dataField="tipoVenta" headerText="Tipo Venta"></s:GridColumn>
+						
+						<s:GridColumn dataField="ofertas_Especiales" headerText="Oferta"></s:GridColumn>
+						
+						
+					</s:ArrayList>
+				</s:columns>
+			</s:DataGrid>
+		</s:Group>
+	</s:Scroller>	
+</s:WindowedApplication>

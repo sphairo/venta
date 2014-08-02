@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GraphicBorderSkin  xmlns:mx="http://www.adobe.com/2006/mxml"
+					xmlns="http://www.degrafa.com/2007">
+	
+	<mx:Script>
+		<![CDATA[
+			
+			// required to initialize width skin measurement
+			override public function get measuredWidth():Number
+			{  
+				return 6;
+			}
+			
+			// required to initialize height skin measurement
+			override public function get measuredHeight():Number
+			{
+				return 1;
+			}
+		]]>
+	</mx:Script>    
+	
+	<fills>
+		<SolidFill id="mainFill" color="#0x1A1A1A" alpha="0.5"/>
+	</fills>
+	
+	<geometry>
+		<RoundedRectangle id="thumb" y="2"
+						  width="{this.skinWidth}" height="{this.skinHeight-4}"
+						  fill="{this.mainFill}"  cornerRadius="6" />
+	</geometry>
+	
+</GraphicBorderSkin>

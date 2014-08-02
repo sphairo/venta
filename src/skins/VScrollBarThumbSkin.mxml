@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:SparkSkin xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark"
+    xmlns:fb="http://ns.adobe.com/flashbuilder/2009">
+
+    <fx:Metadata>
+        [HostComponent("spark.components.Button")]
+    </fx:Metadata> 
+    
+	<fx:Declarations>
+		<s:SolidColor id="upFill" color="0x555555"/>
+		<s:SolidColor id="downFill" color="0x444444"/>
+		<s:SolidColor id="disabledFill" color="0x999999"/>
+		<s:LinearGradient id="overFill" rotation="90">
+			<s:GradientEntry color="0x444444" ratio="0"/>
+			<s:GradientEntry  color="0x666666" ratio=".5"/>
+		</s:LinearGradient>
+	</fx:Declarations>
+	
+    <s:states>
+        <s:State name="up" />
+        <s:State name="over" />
+        <s:State name="down" />
+        <s:State name="disabled" />
+    </s:states>
+
+    <!-- fill -->
+    <s:Rect left="0" top="0" right="0" bottom="0" minWidth="10" minHeight="10" radiusX="6" alpha="0.4"
+			fill="{upFill}" fill.down="{downFill}" fill.over="{overFill}" fill.disabled="{disabledFill}" >
+		<s:stroke>
+			<s:SolidColorStroke color="0x1A1A1A"/>
+		</s:stroke>
+    </s:Rect>
+    
+</s:SparkSkin>
