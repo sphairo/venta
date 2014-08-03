@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:GridItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" 
+					xmlns:s="library://ns.adobe.com/flex/spark" 
+					xmlns:mx="library://ns.adobe.com/flex/mx" clipAndEnableScrolling="true">
+	
+	<fx:Script>
+		<![CDATA[
+			import mx.events.CalendarLayoutChangeEvent;
+			import mx.formatters.DateFormatter;
+			
+			protected function convertFechaToDate(item:Object):String 
+			{ 
+				var formatear:DateFormatter = new DateFormatter();
+				formatear.formatString = "DD-MM-YYYY";
+				return formatear.format(item);
+			}
+			
+			protected function selectedDate(event:CalendarLayoutChangeEvent):void
+			{
+				data.fecha_entrada = event.newDate;
+			}
+			
+		]]>
+	</fx:Script>
+	<mx:DateField id="dateFieldFechaNacimiento" width="90%"
+				  change="selectedDate(event)" editable="false"
+				  formatString="DD-MM-YYYY" horizontalCenter="0"
+				  labelFunction="convertFechaToDate"
+				  selectedDate="@{data.fecha_entrada}"
+				  verticalCenter="0" yearNavigationEnabled="true" toolTip="Fecha: Dia-Mes-Año"/>
+	
+</s:GridItemRenderer>

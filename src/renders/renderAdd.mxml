@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" width="110" height="40" buttonMode="true" contentBackgroundAlpha="0.0">
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<s:Image left="10" width="32" height="32" scaleMode="letterbox" smooth="true"
+			 source="img/btn_zoom_more.png" verticalCenter="0"/>
+	<s:Label id="lblAgregar" left="45" color="#FFFFFF" fontStyle="italic" fontWeight="normal"
+			 text="Agregar" verticalCenter="0"/>
+</s:Group>

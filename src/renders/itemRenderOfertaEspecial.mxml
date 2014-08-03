@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:GridItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009"
+					xmlns:s="library://ns.adobe.com/flex/spark"
+					xmlns:mx="library://ns.adobe.com/flex/mx"
+					clipAndEnableScrolling="true">
+	<fx:Script>
+		<![CDATA[
+			import clases.GlobalStatic;
+			
+			import mx.collections.ArrayCollection;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			
+			import spark.events.IndexChangeEvent;
+			private var queryString:String;
+			protected var queryComboCargo:String = "";
+			
+			[Bindable] private var arrayGrupos:ArrayCollection;
+			
+			[Bindable]
+			public var array:ArrayCollection = new ArrayCollection(
+				[   
+					{value:"SI"},
+					{value:"NO"}	
+				]                
+			);
+			
+			protected function llenarComboCargo():void
+			{
+				queryComboCargo ="SELECT id_grupo AS data, CONCAT(id_grupo, ' - ' , nombre_grupo) AS label FROM " + GlobalStatic.DataBaseName + ".grupo;";
+				cursorManager.setBusyCursor();
+			}
+			
+			protected function exitoGetAllGrupos(event:ResultEvent):void
+			{
+				if(comboBox.dataProvider.length == 0)
+				{
+					if(arrayGrupos !== null)
+						arrayGrupos.removeAll();
+					
+					arrayGrupos = event.result.Tables.TablaTemp.Rows as ArrayCollection;
+					comboBox.selectedIndex = -1;
+					comboBox.dataProvider = arrayGrupos;
+				}
+				cursorManager.removeBusyCursor();
+			}
+			
+			override public function set data(value:Object):void
+			{
+				try
+				{
+					if(value == null) return;
+					super.data = value;
+					
+					comboBox.textInput.text = data.ofertas_Especiales;
+				}
+				catch(error:Error)
+				{
+					trace(error);
+				}   
+			}
+			
+			protected function errorGeneral(event:FaultEvent):void
+			{
+				cursorManager.removeBusyCursor();
+			}
+			
+			protected function cerrarComboBox():void
+			{
+				data.grupo.id_grupo = comboBox.selectedItem.data;//ASIGNAMOS VALORES A LAS PROPIEDADES DEL OBJETO QUE ESTAMOS EDITANDO
+				data.id_grupo = comboBox.selectedItem.data;
+				data.grupo.nombre_grupo = comboBox.selectedItem.label;
+			}
+			
+			protected function changeHandler(event:IndexChangeEvent):void
+			{
+				data.ofertas_Especiales = comboBox.selectedItem.value;
+			}
+			
+		]]>
+	</fx:Script>
+	<s:ComboBox id="comboBox" left="2" right="2" top="2" bottom="2" width="100%" height="100%"
+				selectedIndex="-1" skinClass="skinCombobox" labelField="value" change="changeHandler(event)" dataProvider="{array}"/>
+</s:GridItemRenderer>

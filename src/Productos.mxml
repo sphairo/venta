@@ -63,7 +63,8 @@
 			import clases.Utileria;
 			
 			import com.adobe.serialization.json.JSON;
-			import com.anotherflexdev.ui.AlertSTRM;
+			import com.anotherflexdev.ui.AlertError;
+			import com.anotherflexdev.ui.AlertInfo;
 			
 			import flash.utils.setTimeout;
 			
@@ -109,11 +110,11 @@
 					case "0":
 						service.send();
 						//Alert.show("La información se ha guardo de forma exitosa", 'Atención');
-						AlertSTRM.show("La información se ha guardo de forma exitosa", 'Atención');
+						AlertInfo.show("La información se ha guardo de forma exitosa", 'Atención');
 						break;
 					case "1":
 					case "2":
-						Alert.show("Ocurrio un error al guardar la información.", "Error");
+						AlertError.show("Ocurrio un error al guardar la información.", "Error");
 						break;
 				}
 				
@@ -161,7 +162,8 @@
 					producto.cantidad = item.cantidad;	
 					producto.precio = item.precio;
 					producto.precio_compra = Number(item.precio_compra);	
-					producto.marca = item.marca;	
+					producto.marca = item.marca;
+					producto.value = item.marca;
 					producto.img = item.img;	
 					producto.link = item.link;
 					producto.path = item.path;
@@ -288,16 +290,6 @@
 						
 						<s:GradientEntry color="#f29c2e"/>
 						<s:GradientEntry color="#f9a73c"/>
-						<!--
-						
-						<s:GradientEntry color="#f9a73c"/>
-						<s:GradientEntry color="#f29c2e"/>
-						<s:GradientEntry color="#f39821"/>
-						<s:GradientEntry color="#f39215"/>
-						<s:GradientEntry color="#f48d08"/>				
-						<s:GradientEntry color="#f46e08"/>
-						
-						-->
 					</s:LinearGradient>
 				</s:backgroundFill> 
 				<s:TextInput id="txtBuscar" includeIn="dashboard_productos,catalogo_productos" y="12" left="60"
@@ -311,13 +303,14 @@
 				<s:Image includeIn="dashboard_productos,catalogo_productos" x="25" width="24" height="24"
 						 buttonMode="true" smooth="true" smoothingQuality="high"
 						 source="img/ModIco.png" verticalCenter="-1" click="onShowDefaultCalloutClick()" id="btnMenu"/>
-				<s:Button id="btnGuardar" includeIn="catalogo_productos" x="578" y="4"
-						  label="Guardar" click="btnGuardar_clickHandler()"/>
-				<s:Button id="btnEliminar" includeIn="catalogo_productos" x="669" y="4"
-						  label="Eliminar"/>
-				<s:Button id="btnNuevo" includeIn="catalogo_productos" x="500" y="5" label="Nuevo"/>
-				<s:Button id="btnAyuda" includeIn="catalogo_productos" x="759" y="4" label="Ayuda"/>
-				
+				<s:HGroup x="550" y="5" height="40" width="440">
+					<renders:renderAdd id="btnNuevo" includeIn="catalogo_productos" click="AlertError.show('Ocurrio un error al guardar la información.')"/>
+					<renders:renderDelete id="btnEliminar" includeIn="catalogo_productos"/>
+					<renders:renderSave id="btnGuardar" includeIn="catalogo_productos"
+										click="btnGuardar_clickHandler()"/>
+					<renders:renderPrint id="btnImprimir" includeIn="catalogo_productos" click="AlertInfo.show('Ocurrio un error al guardar la información.')"/>
+					<renders:renderHelp id="btnAyuda" includeIn="catalogo_productos" click="AlertInfo.show('Ocurrio un error al guardar la información.')"/>
+				</s:HGroup>
 			</s:BorderContainer>
 			
 			<s:List id="list" includeIn="dashboard_productos" left="20" right="0" top="50" bottom="0"
@@ -333,19 +326,19 @@
 				<s:columns>
 					<s:ArrayList>
 						<s:GridColumn dataField="nom_producto" headerText="Nombre"></s:GridColumn>
-						<s:GridColumn dataField="marca" headerText="Marca"></s:GridColumn>
+						<s:GridColumn dataField="marca" headerText="Marca" itemRenderer="renders.itemRenderMarcas" editable="false"></s:GridColumn>
 						<s:GridColumn dataField="descripcion" headerText="Descripción"></s:GridColumn>
 						
 						<s:GridColumn dataField="cantidad" headerText="Cantidad"></s:GridColumn>
 						<s:GridColumn dataField="precio" headerText="Precio"></s:GridColumn>
 						<s:GridColumn dataField="precio_compra" headerText="Precio compra"></s:GridColumn>
 						
-						<s:GridColumn dataField="img" headerText="Foto"></s:GridColumn>
+						<s:GridColumn headerText="Foto" itemRenderer="itemRenderImg" editable="false"></s:GridColumn>
 						
-						<s:GridColumn dataField="fecha_entrada" headerText="Fecha Entrada"></s:GridColumn>
-						<s:GridColumn dataField="tipoVenta" headerText="Tipo Venta"></s:GridColumn>
+						<s:GridColumn headerText="Fecha Entrada" editable="false" dataField="fecha_entrada" itemRenderer="renderFechaEntrada"></s:GridColumn>
+						<s:GridColumn dataField="tipoVenta" headerText="Tipo Venta" itemRenderer="renders.itemRenderTipoVenta" editable="false"></s:GridColumn>
 						
-						<s:GridColumn dataField="ofertas_Especiales" headerText="Oferta"></s:GridColumn>
+						<s:GridColumn dataField="ofertas_Especiales" headerText="Oferta" editable="false" itemRenderer="renders.itemRenderOfertaEspecial"></s:GridColumn>
 						
 						
 					</s:ArrayList>

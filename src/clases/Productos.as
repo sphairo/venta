@@ -23,6 +23,7 @@ package clases
 		private var _tipoVenta:String;	
 		private var _ofertas_Especiales:String;	
 		private var _indice:int;	
+		private var _value:String;
 		
 		[Bindable(event="propertyChange")]
 		public function get id_producto():int
@@ -30,13 +31,23 @@ package clases
 			return _id_producto;
 		}
 		
-		public function set id_producto(value:int):void
+		public function set id_producto(newValue:int):void
 		{
+			if (newValue != id_producto)
+			{
+				_id_producto = newValue
+				
+				if (hasEventListener("valueChanged"))
+				{
+					dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
+				}
+			}
+			/*
 			var oldValue:int = _id_producto;
 			if (oldValue != value){
 				_id_producto = value;
 				dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
-			}
+			}*/
 		}
 		
 		[Bindable(event="propertyChange")]
@@ -45,11 +56,21 @@ package clases
 			return _id_sucursal;
 		}
 		
-		public function set id_sucursal(value:int):void
+		public function set id_sucursal(newValue:int):void
 		{
-			var oldValue:int = _id_sucursal;
+			if (newValue != id_sucursal)
+			{
+				_id_sucursal = newValue
+				
+				if (hasEventListener("valueChanged"))
+				{
+					dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
+				}
+			}
+			
+			/*var oldValue:int = _id_sucursal;
 			if (oldValue != value)
-				_id_sucursal = value;
+				_id_sucursal = value;*/
 		}
 		
 		
@@ -59,11 +80,21 @@ package clases
 			return _codigo_barra;
 		}
 		
-		public function set codigo_barra(value:String):void
+		public function set codigo_barra(newValue:String):void
 		{
-			var oldValue:String = _codigo_barra;
+			if (newValue != codigo_barra)
+			{
+				_codigo_barra = newValue
+				
+				if (hasEventListener("valueChanged"))
+				{
+					dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
+				}
+			}
+			
+			/*var oldValue:String = _codigo_barra;
 			if (oldValue != value)
-				_codigo_barra = value;
+				_codigo_barra = value;*/
 		}
 		
 		
@@ -73,11 +104,20 @@ package clases
 			return _descripcion;
 		}
 		
-		public function set descripcion(value:String):void
+		public function set descripcion(newValue:String):void
 		{
-			var oldValue:String = _descripcion;
+			if (newValue != descripcion)
+			{
+				_descripcion = newValue
+				
+				if (hasEventListener("valueChanged"))
+				{
+					dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
+				}
+			}
+			/*var oldValue:String = _descripcion;
 			if (oldValue != value)
-				_descripcion = value;
+				_descripcion = value;*/
 		}
 		
 		
@@ -87,11 +127,21 @@ package clases
 			return _cantidad;
 		}
 		
-		public function set cantidad(value:int):void
+		public function set cantidad(newValue:int):void
 		{
-			var oldValue:int = _cantidad;
+			if (newValue != cantidad)
+			{
+				_cantidad = newValue
+				
+				if (hasEventListener("valueChanged"))
+				{
+					dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
+				}
+			}
+			
+			/*var oldValue:int = _cantidad;
 			if (oldValue != value)
-				_cantidad = value;
+				_cantidad = value;*/
 		}
 		
 		
@@ -101,11 +151,21 @@ package clases
 			return _marca;
 		}
 		
-		public function set marca(value:String):void
+		public function set marca(newValue:String):void
 		{
-			var oldValue:String = _marca;
+			if (newValue != marca)
+			{
+				_marca = newValue
+				
+				if (hasEventListener("valueChanged"))
+				{
+					dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
+				}
+			}
+			
+			/*var oldValue:String = _marca;
 			if (oldValue != value)
-				_marca = value;
+				_marca = value;*/
 		}
 		
 		
@@ -115,11 +175,21 @@ package clases
 			return _link;
 		}
 		
-		public function set link(value:String):void
+		public function set link(newValue:String):void
 		{
-			var oldValue:String = _link;
+			if (newValue != link)
+			{
+				_link = newValue
+				
+				if (hasEventListener("valueChanged"))
+				{
+					dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
+				}
+			}
+			
+			/*var oldValue:String = _link;
 			if (oldValue != value)
-				_link = value;
+				_link = value;*/
 		}
 		
 		
@@ -129,11 +199,21 @@ package clases
 			return _binario;
 		}
 		
-		public function set binario(value:String):void
+		public function set binario(newValue:String):void
 		{
-			var oldValue:String = _binario;
+			if (newValue != binario)
+			{
+				_binario = newValue
+				
+				if (hasEventListener("valueChanged"))
+				{
+					dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
+				}
+			}
+			
+			/*var oldValue:String = _binario;
 			if (oldValue != value)
-				_binario = value;
+				_binario = value;*/
 		}
 		
 		
@@ -143,11 +223,21 @@ package clases
 			return _fecha_entrada;
 		}
 		
-		public function set fecha_entrada(value:Date):void
+		public function set fecha_entrada(newValue:Date):void
 		{
-			var oldValue:Date = _fecha_entrada;
+			if (newValue != fecha_entrada)
+			{
+				_fecha_entrada = newValue
+				
+				if (hasEventListener("valueChanged"))
+				{
+					dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
+				}
+			}
+			
+			/*var oldValue:Date = _fecha_entrada;
 			if (oldValue != value)
-				_fecha_entrada = value;
+				_fecha_entrada = value;*/
 		}
 		
 		[Bindable(event="propertyChange")]
@@ -156,11 +246,21 @@ package clases
 			return _tipoVenta;
 		}
 		
-		public function set tipoVenta(value:String):void
+		public function set tipoVenta(newValue:String):void
 		{
-			var oldValue:String = _tipoVenta;
+			if (newValue != tipoVenta)
+			{
+				_tipoVenta = newValue
+				
+				if (hasEventListener("valueChanged"))
+				{
+					dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
+				}
+			}
+			
+			/*var oldValue:String = _tipoVenta;
 			if (oldValue != value)
-				_tipoVenta = value;
+				_tipoVenta = value;*/
 		}
 		
 		[Bindable(event="propertyChange")]
@@ -169,11 +269,20 @@ package clases
 			return _ofertas_Especiales;
 		}
 		
-		public function set ofertas_Especiales(value:String):void
+		public function set ofertas_Especiales(newValue:String):void
 		{
-			var oldValue:String = _ofertas_Especiales;
+			if (newValue != ofertas_Especiales)
+			{
+				_ofertas_Especiales = newValue
+				
+				if (hasEventListener("valueChanged"))
+				{
+					dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
+				}
+			}
+			/*var oldValue:String = _ofertas_Especiales;
 			if (oldValue != value)
-				_ofertas_Especiales = value;
+				_ofertas_Especiales = value;*/
 		}
 		
 		[Bindable(event="propertyChange")]
@@ -182,11 +291,20 @@ package clases
 			return _indice;
 		}
 		
-		public function set indice(value:int):void
+		public function set indice(newValue:int):void
 		{
-			var oldValue:int = _indice;
+			if (newValue != indice)
+			{
+				_indice = newValue
+				
+				if (hasEventListener("valueChanged"))
+				{
+					dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
+				}
+			}
+			/*var oldValue:int = _indice;
 			if (oldValue != value)
-				_indice = value;
+				_indice = value;*/
 		}
 		
 		
@@ -196,11 +314,20 @@ package clases
 			return _path;
 		}
 		
-		public function set path(value:String):void
+		public function set path(newValue:String):void
 		{
-			var oldValue:String = _path;
+			if (newValue != path)
+			{
+				_path = newValue
+				
+				if (hasEventListener("valueChanged"))
+				{
+					dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
+				}
+			}
+			/*var oldValue:String = _path;
 			if (oldValue != value)
-				_path = value;
+				_path = value;*/
 		}
 		
 		
@@ -210,10 +337,14 @@ package clases
 		}
 		
 		public function set img(newValue:String):void {
-			var oldValue:String = img;
-			if (oldValue != newValue){
-				_img = newValue;
-				dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
+			if (newValue != img)
+			{
+				_img = newValue
+				
+				if (hasEventListener("valueChanged"))
+				{
+					dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
+				}
 			}
 		}
 				
@@ -223,9 +354,18 @@ package clases
 		}
 		
 		public function set nom_producto(newValue:String):void {
-			var oldValue:String = _nom_producto;
+			if (newValue != nom_producto)
+			{
+				_nom_producto = newValue
+				
+				if (hasEventListener("valueChanged"))
+				{
+					dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
+				}
+			}
+			/*var oldValue:String = _nom_producto;
 			if (oldValue != newValue)
-				_nom_producto = newValue;
+				_nom_producto = newValue;*/
 		}
 		
 		[Bindable]
@@ -234,9 +374,19 @@ package clases
 		}
 		
 		public function set precio(newValue:Number):void {
-			var oldValue:Number = _precio;
+			if (newValue != precio)
+			{
+				_precio = newValue
+				
+				if (hasEventListener("valueChanged"))
+				{
+					dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
+				}
+			}
+			
+			/*var oldValue:Number = _precio;
 			if (oldValue != newValue)
-				_precio = newValue;
+				_precio = newValue;*/
 		}
 		
 		[Bindable]
@@ -245,9 +395,36 @@ package clases
 		}
 		
 		public function set precio_compra(newValue:Number):void {
-			var oldValue:Number = _precio_compra;
+			if (newValue != precio_compra)
+			{
+				_precio_compra = newValue
+				
+				if (hasEventListener("valueChanged"))
+				{
+					dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
+				}
+			}
+			/*var oldValue:Number = _precio_compra;
 			if (oldValue != newValue)
-				_precio_compra = newValue;
+				_precio_compra = newValue;*/
 		}
+		
+		[Bindable]
+		public function get value():String {
+			return _value;
+		}
+		
+		public function set value(newValue:String):void {
+			if (newValue != value)
+			{
+				_value = newValue
+				
+				if (hasEventListener("valueChanged"))
+				{
+					dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
+				}
+			}
+		}
+		
 	}
 }
