@@ -25,6 +25,8 @@ package clases
 		private var _indice:int;	
 		private var _value:String;
 		
+		public function Productos(){}
+		
 		[Bindable(event="propertyChange")]
 		public function get id_producto():int
 		{
@@ -42,12 +44,6 @@ package clases
 					dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
 				}
 			}
-			/*
-			var oldValue:int = _id_producto;
-			if (oldValue != value){
-				_id_producto = value;
-				dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
-			}*/
 		}
 		
 		[Bindable(event="propertyChange")]
@@ -67,10 +63,6 @@ package clases
 					dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
 				}
 			}
-			
-			/*var oldValue:int = _id_sucursal;
-			if (oldValue != value)
-				_id_sucursal = value;*/
 		}
 		
 		
@@ -91,10 +83,6 @@ package clases
 					dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
 				}
 			}
-			
-			/*var oldValue:String = _codigo_barra;
-			if (oldValue != value)
-				_codigo_barra = value;*/
 		}
 		
 		
@@ -115,9 +103,6 @@ package clases
 					dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
 				}
 			}
-			/*var oldValue:String = _descripcion;
-			if (oldValue != value)
-				_descripcion = value;*/
 		}
 		
 		
@@ -138,10 +123,6 @@ package clases
 					dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
 				}
 			}
-			
-			/*var oldValue:int = _cantidad;
-			if (oldValue != value)
-				_cantidad = value;*/
 		}
 		
 		
@@ -162,10 +143,6 @@ package clases
 					dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
 				}
 			}
-			
-			/*var oldValue:String = _marca;
-			if (oldValue != value)
-				_marca = value;*/
 		}
 		
 		
@@ -186,10 +163,6 @@ package clases
 					dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
 				}
 			}
-			
-			/*var oldValue:String = _link;
-			if (oldValue != value)
-				_link = value;*/
 		}
 		
 		
@@ -210,10 +183,6 @@ package clases
 					dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
 				}
 			}
-			
-			/*var oldValue:String = _binario;
-			if (oldValue != value)
-				_binario = value;*/
 		}
 		
 		
@@ -234,10 +203,6 @@ package clases
 					dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
 				}
 			}
-			
-			/*var oldValue:Date = _fecha_entrada;
-			if (oldValue != value)
-				_fecha_entrada = value;*/
 		}
 		
 		[Bindable(event="propertyChange")]
@@ -257,10 +222,6 @@ package clases
 					dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
 				}
 			}
-			
-			/*var oldValue:String = _tipoVenta;
-			if (oldValue != value)
-				_tipoVenta = value;*/
 		}
 		
 		[Bindable(event="propertyChange")]
@@ -280,9 +241,6 @@ package clases
 					dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
 				}
 			}
-			/*var oldValue:String = _ofertas_Especiales;
-			if (oldValue != value)
-				_ofertas_Especiales = value;*/
 		}
 		
 		[Bindable(event="propertyChange")]
@@ -302,9 +260,6 @@ package clases
 					dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
 				}
 			}
-			/*var oldValue:int = _indice;
-			if (oldValue != value)
-				_indice = value;*/
 		}
 		
 		
@@ -325,9 +280,6 @@ package clases
 					dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
 				}
 			}
-			/*var oldValue:String = _path;
-			if (oldValue != value)
-				_path = value;*/
 		}
 		
 		
@@ -363,9 +315,6 @@ package clases
 					dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
 				}
 			}
-			/*var oldValue:String = _nom_producto;
-			if (oldValue != newValue)
-				_nom_producto = newValue;*/
 		}
 		
 		[Bindable]
@@ -383,10 +332,6 @@ package clases
 					dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
 				}
 			}
-			
-			/*var oldValue:Number = _precio;
-			if (oldValue != newValue)
-				_precio = newValue;*/
 		}
 		
 		[Bindable]
@@ -404,27 +349,6 @@ package clases
 					dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
 				}
 			}
-			/*var oldValue:Number = _precio_compra;
-			if (oldValue != newValue)
-				_precio_compra = newValue;*/
 		}
-		
-		[Bindable]
-		public function get value():String {
-			return _value;
-		}
-		
-		public function set value(newValue:String):void {
-			if (newValue != value)
-			{
-				_value = newValue
-				
-				if (hasEventListener("valueChanged"))
-				{
-					dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
-				}
-			}
-		}
-		
 	}
 }

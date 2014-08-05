@@ -6,26 +6,30 @@
 	<fx:Script>
 		<![CDATA[
 			import mx.events.FlexMouseEvent;
-			private function onMouseDownOutside(event:FlexMouseEvent):void {
+			internal function onMouseDownOutside(event:FlexMouseEvent):void {
 				event.target.close();
 			}
 			
-			protected function defaultCallout_mouseDownHandler(event:MouseEvent):void
+			internal function defaultCallout_mouseDownHandler(event:MouseEvent):void
 			{
 				defaultCallout.close();
 			}
 			
-			private function onShowDefaultCalloutClick():void {
+			internal function onShowDefaultCalloutClick():void {
 				defaultCallout.open(img);
 			}
 		]]>
 	</fx:Script>
 	<fx:Declarations>
-		<s:Callout id="defaultCallout" horizontalCenter="0" height="180"
+		<s:Callout id="defaultCallout" horizontalCenter="0" height="225"
 				   mouseDown="defaultCallout_mouseDownHandler(event)"
 				   mouseDownOutside="onMouseDownOutside(event)" verticalCenter="0">
-			<s:Image width="128" height="128" source="{data.img}" top="5"/>
-			<s:Button id="btnSeleccionar" label="Cambiar foto" bottom="5" left="10" right="10"/>
+			<s:layout>
+				<s:VerticalLayout>
+				</s:VerticalLayout>
+			</s:layout>
+			<s:Image width="152" height="152" source="{data.img}" top="5"/>
+			<renders:renderCambiarFoto/>
 		</s:Callout>
 		<components:SparkCallout/>
 	</fx:Declarations>

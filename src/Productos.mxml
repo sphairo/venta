@@ -3,9 +3,10 @@
 					   xmlns:s="library://ns.adobe.com/flex/spark"
 					   xmlns:mx="library://ns.adobe.com/flex/mx"
 					   xmlns:buttons="com.anotherflexdev.ui.buttons.*"
-					   width="100%" height="100%"
-					   currentState="dashboard_productos"
-					   preinitialize="preinitializeHandler(event)" skinClass="skins.skinProductos" xmlns:components="components.*" xmlns:renders="renders.*">
+					   xmlns:components="components.*"
+					   xmlns:renders="renders.*"
+					   width="100%" height="100%" currentState="dashboard_productos"
+					   preinitialize="preinitializeHandler(event)" skinClass="skins.skinProductos">
 	<s:states>
 		<s:State name="catalogo_productos"/>
 		<s:State name="dashboard_productos"/>
@@ -27,27 +28,28 @@
 		}
 	</fx:Style>
 	<fx:Declarations>
-		<mx:HTTPService id="service" result="onJSONLoad(event)" resultFormat="text"
-						url="http://localhost/Ventas/amfphp/services/getAllProducts.php" useProxy="false" fault="service_faultHandler(event)"/>
+		<mx:HTTPService id="service" fault="service_faultHandler(event)" result="onJSONLoad(event)"
+						resultFormat="text"
+						url="http://localhost/Ventas/amfphp/services/getAllProducts.php"
+						useProxy="false"/>
 		
 		
-		<mx:RemoteObject id="MiObjetoRemotoProducto" destination="amfphp" source="producto" showBusyCursor="true"> 
-			<s:method name="IniciarBusquedaProducto" result="IniciarBusquedaProductoExito(event)" fault="service_faultHandler(event)"/>
-			<s:method name="Listar" result="getAllProducts(event)" fault="service_faultHandler(event)"/>
-			<s:method name="callStoreProcedure" result="resultCallStoreProcedure(event)" fault="service_faultHandler(event)"/>
+		<mx:RemoteObject id="MiObjetoRemotoProducto" destination="amfphp" showBusyCursor="true"
+						 source="producto"> 
+			<s:method fault="service_faultHandler(event)" name="callStoreProcedure"
+					  result="resultCallStoreProcedure(event)"/>
 		</mx:RemoteObject>
 		
-		<s:Callout id="defaultCallout"
-				   mouseDownOutside="onMouseDownOutside(event)"
+		<s:Callout id="defaultCallout" width="230" height="380"
 				   mouseDown="defaultCallout_mouseDownHandler(event)"
-				   verticalPosition="after"
-				   width="230"
-				   height="380">
+				   mouseDownOutside="onMouseDownOutside(event)" verticalPosition="after">
 			<s:layout>
 				<s:VerticalLayout/>
-			</s:layout>
-			<renders:renderCatalogoProductos includeIn="catalogo_productos" click="currentState='dashboard_productos'"/>
-			<renders:renderAdministrarProductos includeIn="dashboard_productos" click="currentState='catalogo_productos'"/>
+			</s:layout> 
+			<renders:renderCatalogoProductos includeIn="catalogo_productos"
+											 click="currentState='dashboard_productos'"/>
+			<renders:renderAdministrarProductos includeIn="dashboard_productos"
+												click="currentState='catalogo_productos'"/>
 			<renders:renderSoporte/>
 			<renders:renderConfiguracion/>
 			<renders:renderCerrarSession/>
@@ -66,12 +68,8 @@
 			import com.anotherflexdev.ui.AlertError;
 			import com.anotherflexdev.ui.AlertInfo;
 			
-			import flash.utils.setTimeout;
-			
 			import mx.collections.ArrayCollection;
 			import mx.collections.IList;
-			import mx.collections.IViewCursor;
-			import mx.collections.Sort;
 			import mx.controls.Alert;
 			import mx.events.FlexEvent;
 			import mx.events.FlexMouseEvent;
@@ -81,28 +79,11 @@
 			
 			import skins.itemRenderProducto;
 			
-			import spark.collections.SortField;
-			
 			[Bindable] public var dp:ArrayCollection = new ArrayCollection();
-			[Bindable] public var dp2:ArrayCollection;
 			[Bindable] protected var producto:clases.Productos = new clases.Productos();
+			[Bindable] public var arrayMarcas:ArrayCollection;
 			
-			private function IniciarBusquedaProductoExito(exito:ResultEvent):void
-			{
-				dp.removeAll();
-				dp = encapsulado(exito.result as ArrayCollection);
-				
-				list.dataProvider = dp;
-			}
-			
-			private function getAllProducts(exito:ResultEvent):void
-			{
-				dp.removeAll();
-				dp = encapsulado(exito.result as ArrayCollection);
-				list.dataProvider = dp;
-			}
-			
-			private function resultCallStoreProcedure(exito:ResultEvent):void
+			internal function resultCallStoreProcedure(exito:ResultEvent):void
 			{
 				PopUpManager.removePopUp(GlobalStatic.utility.progress);
 				switch(exito.result.response)
@@ -120,34 +101,27 @@
 				
 			}
 			
-			private function onJSONLoad(event:ResultEvent):void
+			internal function onJSONLoad(event:ResultEvent):void
 			{
+				this.maximize();
 				dp.removeAll();
 				dp = encapsulado((com.adobe.serialization.json.JSON.decode(String(event.result)) as Array));
-
-				list.dataProvider = dp;
-				
-				this.maximize();
+				arrayMarcas = new ArrayCollection(Utileria.group(dp));
 			}
 			
-			protected function init():void
-			{
-				
-			}
-			
-			protected function preinitializeHandler(event:FlexEvent):void
+			internal function preinitializeHandler(event:FlexEvent):void
 			{
 				service.send();
 			}
 			
-			protected function service_faultHandler(error:FaultEvent):void
+			internal function service_faultHandler(error:FaultEvent):void
 			{
 				Alert.show(error.fault.faultString, "Ocurrio un error");
 			}
 			
 			private var arrayOriginal:ArrayCollection;
 			
-			private function encapsulado(collection:*):ArrayCollection{
+			internal function encapsulado(collection:*):ArrayCollection{
 				
 				var array:ArrayCollection = new ArrayCollection();
 				
@@ -163,7 +137,7 @@
 					producto.precio = item.precio;
 					producto.precio_compra = Number(item.precio_compra);	
 					producto.marca = item.marca;
-					producto.value = item.marca;
+					//producto.value = item.marca;
 					producto.img = item.img;	
 					producto.link = item.link;
 					producto.path = item.path;
@@ -181,7 +155,7 @@
 			
 			private var lista:IList = new ArrayList();
 			private var queryString:String;
-			protected function btnGuardar_clickHandler():void
+			internal function btnGuardar_clickHandler():void
 			{
 				var foundObject:Array = new Array(), index:uint = 0;
 				GlobalStatic.utility.showLoading("Espere un momento mientras se guarda la información"); 
@@ -216,7 +190,7 @@
 					
 			}
 			
-			private function contruirQuery():void
+			internal function contruirQuery():void
 			{
 				var superQuery:String = "";
 				var index:uint = GlobalStatic.utility.listaQuerys.length - 1;
@@ -228,7 +202,7 @@
 				MiObjetoRemotoProducto.callStoreProcedure.send(superQuery);
 			}
 			
-			private function format(dateString:String):Date {
+			internal function format(dateString:String):Date {
 				if ( dateString == null ) {
 					return null;
 				}
@@ -244,18 +218,18 @@
 			
 			private var palabra:String;
 			
-			private function doSearch():void {
+			internal function doSearch():void {
 				palabra = txtBuscar.text.toLowerCase();
 				dp.filterFunction = filterMyArrayCollection;
 				dp.refresh();
 			}
 			
-			private function filterMyArrayCollection(item:Object):Boolean 
+			internal function filterMyArrayCollection(item:Object):Boolean 
 			{				
 				return ((item.nom_producto.toLowerCase().indexOf(palabra) != -1) || (item.marca.toLowerCase().indexOf(palabra) != -1) || (item.descripcion.toLowerCase().indexOf(palabra) != -1))//coincidencias;
 			}
 			
-			private function changeBusqueda():void{
+			internal function changeBusqueda():void{
 				if(txtBuscar.text.length == 0){
 					palabra = '';
 					dp.filterFunction = filterMyArrayCollection;
@@ -263,19 +237,18 @@
 				}
 			}
 			
-			private function onShowDefaultCalloutClick():void {
+			internal function onShowDefaultCalloutClick():void {
 				defaultCallout.open(btnMenu);
 			}
 			
-			private function onMouseDownOutside(event:FlexMouseEvent):void {
+			internal function onMouseDownOutside(event:FlexMouseEvent):void {
 				event.target.close();
 			}
 						
-			protected function defaultCallout_mouseDownHandler(event:MouseEvent):void
+			internal function defaultCallout_mouseDownHandler(event:MouseEvent):void
 			{
 				defaultCallout.close();
 			}
-			
 		]]>
 		
 	</fx:Script>
@@ -292,31 +265,36 @@
 						<s:GradientEntry color="#f9a73c"/>
 					</s:LinearGradient>
 				</s:backgroundFill> 
-				<s:TextInput id="txtBuscar" includeIn="dashboard_productos,catalogo_productos" y="12" left="60"
-							 width="400" borderColor="#FFA800" borderVisible="true"
+				<s:TextInput id="txtBuscar" includeIn="dashboard_productos,catalogo_productos" y="12"
+							 left="60" width="400" borderColor="#FFA800" borderVisible="true"
 							 change="changeBusqueda()" chromeColor="#FFA800" enter="doSearch();"
 							 focusColor="#FF8A00" fontSize="16" fontStyle="normal" maxChars="30"
 							 prompt="Buscar"/>
-				<s:Image id="btn_buscar" includeIn="dashboard_productos,catalogo_productos" x="440" width="50"
-						 height="50" buttonMode="true" scaleMode="letterbox" smooth="true"
-						 smoothingQuality="high" source="img/btnSearch.png" verticalCenter="-1" click="doSearch();"/>
-				<s:Image includeIn="dashboard_productos,catalogo_productos" x="25" width="24" height="24"
-						 buttonMode="true" smooth="true" smoothingQuality="high"
-						 source="img/ModIco.png" verticalCenter="-1" click="onShowDefaultCalloutClick()" id="btnMenu"/>
-				<s:HGroup x="550" y="5" height="40" width="440">
-					<renders:renderAdd id="btnNuevo" includeIn="catalogo_productos" click="AlertError.show('Ocurrio un error al guardar la información.')"/>
+				<s:Image id="btn_buscar" includeIn="dashboard_productos,catalogo_productos" x="440"
+						 width="50" height="50" buttonMode="true" click="doSearch();"
+						 scaleMode="letterbox" smooth="true" smoothingQuality="high"
+						 source="img/btnSearch.png" verticalCenter="-1"/>
+				<s:Image id="btnMenu" includeIn="dashboard_productos,catalogo_productos" x="25"
+						 width="24" height="24" buttonMode="true"
+						 click="onShowDefaultCalloutClick()" smooth="true" smoothingQuality="high"
+						 source="img/ModIco.png" verticalCenter="-1"/>
+				<s:HGroup x="550" y="5" height="40">
+					<renders:renderAdd id="btnNuevo" includeIn="catalogo_productos"
+									   click="AlertError.show('Ocurrio un error al guardar la información.')"/>
 					<renders:renderDelete id="btnEliminar" includeIn="catalogo_productos"/>
 					<renders:renderSave id="btnGuardar" includeIn="catalogo_productos"
 										click="btnGuardar_clickHandler()"/>
-					<renders:renderPrint id="btnImprimir" includeIn="catalogo_productos" click="AlertInfo.show('Ocurrio un error al guardar la información.')"/>
-					<renders:renderHelp id="btnAyuda" includeIn="catalogo_productos" click="AlertInfo.show('Ocurrio un error al guardar la información.')"/>
+					<renders:renderPrint id="btnImprimir" includeIn="catalogo_productos"
+										 click="AlertInfo.show('Ocurrio un error al guardar la información.')"/>
+					<renders:renderHelp id="btnAyuda" includeIn="catalogo_productos"
+										click="AlertInfo.show('Ocurrio un error al guardar la información.')"/>
 				</s:HGroup>
 			</s:BorderContainer>
 			
 			<s:List id="list" includeIn="dashboard_productos" left="20" right="0" top="50" bottom="0"
-					borderVisible="false" contentBackgroundAlpha="0.5" focusColor="#F48D08"
-					rollOverColor="#D1D1D1" itemRenderer="skins.itemRenderProducto"
-					selectionColor="#ADADAD">
+					borderVisible="false" contentBackgroundAlpha="0.5" dataProvider="{dp}"
+					focusColor="#F48D08" itemRenderer="skins.itemRenderProducto"
+					rollOverColor="#D1D1D1" selectionColor="#ADADAD">
 				<s:layout>
 					<s:TileLayout horizontalGap="10" verticalGap="10"/>
 				</s:layout>
@@ -326,19 +304,24 @@
 				<s:columns>
 					<s:ArrayList>
 						<s:GridColumn dataField="nom_producto" headerText="Nombre"></s:GridColumn>
-						<s:GridColumn dataField="marca" headerText="Marca" itemRenderer="renders.itemRenderMarcas" editable="false"></s:GridColumn>
+						<s:GridColumn dataField="marca" editable="false" headerText="Marca"
+									  itemRenderer="renders.itemRenderMarcas"></s:GridColumn>
 						<s:GridColumn dataField="descripcion" headerText="Descripción"></s:GridColumn>
 						
 						<s:GridColumn dataField="cantidad" headerText="Cantidad"></s:GridColumn>
 						<s:GridColumn dataField="precio" headerText="Precio"></s:GridColumn>
 						<s:GridColumn dataField="precio_compra" headerText="Precio compra"></s:GridColumn>
 						
-						<s:GridColumn headerText="Foto" itemRenderer="itemRenderImg" editable="false"></s:GridColumn>
+						<s:GridColumn editable="false" headerText="Foto" itemRenderer="itemRenderImg"></s:GridColumn>
 						
-						<s:GridColumn headerText="Fecha Entrada" editable="false" dataField="fecha_entrada" itemRenderer="renderFechaEntrada"></s:GridColumn>
-						<s:GridColumn dataField="tipoVenta" headerText="Tipo Venta" itemRenderer="renders.itemRenderTipoVenta" editable="false"></s:GridColumn>
+						<s:GridColumn dataField="fecha_entrada" editable="false"
+									  headerText="Fecha Entrada" itemRenderer="renderFechaEntrada"></s:GridColumn>
+						<s:GridColumn dataField="tipoVenta" editable="false" headerText="Tipo Venta"
+									  itemRenderer="renders.itemRenderTipoVenta"></s:GridColumn>
 						
-						<s:GridColumn dataField="ofertas_Especiales" headerText="Oferta" editable="false" itemRenderer="renders.itemRenderOfertaEspecial"></s:GridColumn>
+						<s:GridColumn dataField="ofertas_Especiales" editable="false"
+									  headerText="Oferta"
+									  itemRenderer="renders.itemRenderOfertaEspecial"></s:GridColumn>
 						
 						
 					</s:ArrayList>

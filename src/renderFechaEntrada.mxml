@@ -27,6 +27,6 @@
 				  formatString="DD-MM-YYYY" horizontalCenter="0"
 				  labelFunction="convertFechaToDate"
 				  selectedDate="@{data.fecha_entrada}"
-				  verticalCenter="0" yearNavigationEnabled="true" toolTip="Fecha: Dia-Mes-Año"/>
+				  verticalCenter="0" yearNavigationEnabled="true" toolTip="Fecha: Dia-Mes-Año" buttonMode="true"/>
 	
 </s:GridItemRenderer>

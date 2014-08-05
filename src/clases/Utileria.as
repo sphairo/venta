@@ -32,6 +32,27 @@ package clases
 		
 		public function Utileria(){}
 		
+		public static function position(Arr:Array, Str:String):Number {
+			for (var i:int = 0; i < Arr.length; i++) {
+				if (Arr[i].value == Str) {
+					return i;
+				}
+			}
+			return -1;
+		}
+		
+		public static function group(Arr:ArrayCollection):Array{
+			var info:Array = new Array();
+			var memory:Array = new Array();
+			for (var i:int = 0; i < Arr.length; i++) {            
+				if (position(memory, Arr[i].marca) == -1) {
+					memory.push({value:Arr[i].marca});
+					info.push({value:Arr[i].marca});
+				}
+			}
+			return info;
+		}
+		
 		public static function newSibling(sourceObj:Object):* 
 		{
 			if(sourceObj) 
