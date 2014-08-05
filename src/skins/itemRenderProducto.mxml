@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<s:ItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" 
-				xmlns:s="library://ns.adobe.com/flex/spark" 
-				xmlns:mx="library://ns.adobe.com/flex/mx" 
-				autoDrawBackground="true" width="155" height="220" rollOver="over()" rollOut="out()" xmlns:components="components.*" xmlns:renders="renders.*">
+<s:ItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009"
+				xmlns:s="library://ns.adobe.com/flex/spark"
+				xmlns:mx="library://ns.adobe.com/flex/mx"
+				xmlns:components="components.*"
+				xmlns:renders="renders.*"
+				width="155" height="220" autoDrawBackground="true" rollOut="out()" rollOver="over()">
 	
 	<fx:Script>
 		<![CDATA[
 			import com.anotherflexdev.ui.AlertInfo;
-			
-			import mx.binding.utils.BindingUtils;
-			import mx.events.FlexEvent;
 			
 			internal function over():void
 			{
@@ -59,24 +58,27 @@
 	</fx:Script>
 
 	<fx:Declarations>
-		<s:Callout id="defaultCallout" horizontalCenter="0"
+		<s:Callout id="defaultCallout" width="190" height="66" horizontalCenter="0"
 				   mouseDown="defaultCallout_mouseDownHandler(event)"
-				   mouseDownOutside="onMouseDownOutside(event)" verticalCenter="0"
-				   rollOut="defaultCallout.close()" width="190" height="66">
+				   mouseDownOutside="onMouseDownOutside(event)" rollOut="defaultCallout.close()"
+				   verticalCenter="0">
 			<renders:renderCambiarFoto/>
 		</s:Callout>
 		<components:SparkCallout/>
 	</fx:Declarations>	
 	<s:Image id="img_background" width="100%" height="100%" scaleMode="stretch" smooth="true"
 			 source="@Embed('img/background_producto.png')"/>
-	<s:Image id="img" y="10" width="124" height="124" horizontalCenter="0"
-				   scaleMode="letterbox" smooth="true" smoothingQuality="high" source="{data.img}" complete="cargaCompleta()" rollOver="img_rollOverHandler(event)" rollOut="img_rollOutHandler(event)"/>
-	<s:BusyIndicator id="loader" width="64" height="64" horizontalCenter="0" verticalCenter="-40" />
+	<s:Image id="img" y="10" width="124" height="124" complete="cargaCompleta()" horizontalCenter="0"
+			 rollOut="img_rollOutHandler(event)" rollOver="img_rollOverHandler(event)"
+			 scaleMode="letterbox" smooth="true" smoothingQuality="high" source="{data.img}"/>
+	<s:BusyIndicator id="loader" width="64" height="64" horizontalCenter="0" verticalCenter="-40"/>
 	<s:Label x="15" y="172" width="130" color="#929292" fontSize="12" text="{data.nom_producto}"
 			 textAlign="left"/>
 	<s:Label x="15" y="159" color="#A4A4A4" fontSize="12" fontWeight="bold" text="${data.precio} MXN"/>
-	<s:Label text="{data.id_producto}" fontWeight="bold" fontSize="21" visible="false"/>
-	<s:Image x="15" y="136" smooth="true" source="img/rankingCeroStarss.png" id="ranking" buttonMode="true" click="ranking_clickHandler(event)"/>
-	<s:Image id="imgCamara" y="45" buttonMode="true" horizontalCenter="0" smooth="true"
-			 source="img/camara.png" visible="false" rollOver="img_rollOverHandler(event)" click="onShowDefaultCalloutClick()"/>
+	<s:Label visible="false" fontSize="21" fontWeight="bold" text="{data.id_producto}"/>
+	<s:Image id="ranking" x="15" y="136" buttonMode="true" click="ranking_clickHandler(event)"
+			 smooth="true" source="img/rankingCeroStarss.png"/>
+	<s:Image id="imgCamara" visible="false" y="45" buttonMode="true"
+			 click="onShowDefaultCalloutClick()" horizontalCenter="0"
+			 rollOver="img_rollOverHandler(event)" smooth="true" source="img/camara.png"/>
 </s:ItemRenderer>

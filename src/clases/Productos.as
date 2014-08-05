@@ -1,6 +1,7 @@
 package clases
 {
 	import flash.events.EventDispatcher;
+	import flash.system.System;
 	
 	import mx.events.PropertyChangeEvent;
 
@@ -25,7 +26,25 @@ package clases
 		private var _indice:int;	
 		private var _value:String;
 		
-		public function Productos(){}
+		public function Productos(producto:Object){
+			id_producto = producto.id_producto;
+			id_sucursal = producto.id_sucursal;
+			codigo_barra = producto.codigo_barra;
+			nom_producto = producto.nom_producto;
+			descripcion = producto.descripcion;
+			cantidad = producto.cantidad;	
+			precio = producto.precio;
+			precio_compra = Number(producto.precio_compra);	
+			marca = producto.marca;
+			img = producto.img;	
+			link = producto.link;
+			path = producto.path;
+			binario = producto.binario;
+			fecha_entrada = Utileria.format(producto.fecha_entrada);
+			tipoVenta = producto.tipoVenta;	
+			ofertas_Especiales =  producto.ofertas_Especiales;	
+			indice = producto.indice;
+		}
 		
 		[Bindable(event="propertyChange")]
 		public function get id_producto():int

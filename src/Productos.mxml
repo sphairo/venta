@@ -106,8 +106,10 @@
 			{
 				removeEventListener(ResultEvent.RESULT, onJSONLoad);
 				dp.removeAll();
-				dp = encapsulado((com.adobe.serialization.json.JSON.decode(String(event.result)) as Array));
+				dp = encapsulado((com.adobe.serialization.json.JSON.decode(String(event.result))));
 				arrayMarcas = new ArrayCollection(Utileria.group(dp));
+				arrayOriginal = Utileria.clonar(dp);
+				System.gc();
 			}
 			
 			internal function preinitializeHandler(event:FlexEvent):void
@@ -129,29 +131,9 @@
 				
 				for each(var item:Object in collection)
 				{
-					producto = new clases.Productos();
-					producto.id_producto = item.id_producto;
-					producto.id_sucursal = item.id_sucursal;
-					producto.codigo_barra = item.codigo_barra;
-					producto.nom_producto = item.nom_producto;
-					producto.descripcion = item.descripcion;
-					producto.cantidad = item.cantidad;	
-					producto.precio = item.precio;
-					producto.precio_compra = Number(item.precio_compra);	
-					producto.marca = item.marca;
-					producto.img = item.img;	
-					producto.link = item.link;
-					producto.path = item.path;
-					producto.binario = item.binario;
-					producto.fecha_entrada = format(item.fecha_entrada);
-					producto.tipoVenta = item.tipoVenta;	
-					producto.ofertas_Especiales =  item.ofertas_Especiales;	
-					producto.indice = item.indice;
-					
+					producto = new clases.Productos(item);
 					array.addItem(producto);
-					producto = null;
 				}
-				arrayOriginal = Utileria.clonar(array);
 				return array;
 			}
 			
@@ -199,20 +181,6 @@
 				GlobalStatic.utility.listaQuerys.removeAll();//AHORA REMOVEMOS TODO LO QUE HAY EN LA LISTA PARA OCUPARLA LA PROXIMA VEZ.
 				trace("call " + GlobalStatic.DataBaseName + ".Procedure_SqlTable(\"" + superQuery +"\")");
 				MiObjetoRemotoProducto.callStoreProcedure.send(superQuery);
-			}
-			
-			internal function format(dateString:String):Date {
-				if ( dateString == null ) {
-					return null;
-				}
-				
-				if ( dateString.indexOf("0000-00-00") != -1 ) {
-					return null;
-				}
-				
-				dateString = dateString.split("-").join("/");
-				
-				return new Date(Date.parse( dateString ));
 			}
 			
 			internal var palabra:String;

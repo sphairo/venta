@@ -32,6 +32,20 @@ package clases
 		
 		public function Utileria(){}
 		
+		internal static function format(dateString:String):Date {
+			if ( dateString == null ) {
+				return null;
+			}
+			
+			if ( dateString.indexOf("0000-00-00") != -1 ) {
+				return null;
+			}
+			
+			dateString = dateString.split("-").join("/");
+			
+			return new Date(Date.parse( dateString ));
+		}
+		
 		internal static function position(Arr:Array, Str:String):Number {
 			for (var i:int = 0; i < Arr.length; i++) {
 				if (Arr[i].value == Str) {
@@ -90,6 +104,7 @@ package clases
 			var myByteArray:ByteArray = new ByteArray();
 			myByteArray.writeObject(source);
 			myByteArray.position = 0;
+			source  = null;
 			return(myByteArray.readObject());
 		}
 		
