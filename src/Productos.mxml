@@ -4,8 +4,7 @@
 					   xmlns:mx="library://ns.adobe.com/flex/mx"
 					   xmlns:buttons="com.anotherflexdev.ui.buttons.*"
 					   xmlns:components="components.*"
-					   xmlns:renders="renders.*"
-					   width="100%" height="100%" currentState="dashboard_productos"
+					   xmlns:renders="renders.*" currentState="dashboard_productos"
 					   preinitialize="preinitializeHandler(event)" skinClass="skins.skinProductos">
 	<s:states>
 		<s:State name="catalogo_productos"/>
@@ -77,11 +76,25 @@
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
 			
-			import skins.itemRenderProducto;
-			
-			[Bindable] public var dp:ArrayCollection = new ArrayCollection();
-			[Bindable] protected var producto:clases.Productos = new clases.Productos();
+			[Bindable] internal var dp:ArrayCollection = new ArrayCollection();
+			[Bindable] internal var producto:clases.Productos = new clases.Productos();
 			[Bindable] public var arrayMarcas:ArrayCollection;
+			
+			[Bindable]
+			public var arrayOferta:ArrayCollection = new ArrayCollection(
+				[   
+					{value:"SI"},
+					{value:"NO"}	
+				]                
+			);
+			
+			[Bindable]
+			public var arrayTipoVenta:ArrayCollection = new ArrayCollection(
+				[   
+					{value:"Pieza(s)"},
+					{value:"A granel Kg/gr"}	
+				]                
+			);
 			
 			internal function resultCallStoreProcedure(exito:ResultEvent):void
 			{
@@ -103,7 +116,7 @@
 			
 			internal function onJSONLoad(event:ResultEvent):void
 			{
-				this.maximize();
+				maximize();
 				dp.removeAll();
 				dp = encapsulado((com.adobe.serialization.json.JSON.decode(String(event.result)) as Array));
 				arrayMarcas = new ArrayCollection(Utileria.group(dp));
@@ -119,7 +132,7 @@
 				Alert.show(error.fault.faultString, "Ocurrio un error");
 			}
 			
-			private var arrayOriginal:ArrayCollection;
+			internal var arrayOriginal:ArrayCollection;
 			
 			internal function encapsulado(collection:*):ArrayCollection{
 				
@@ -137,7 +150,6 @@
 					producto.precio = item.precio;
 					producto.precio_compra = Number(item.precio_compra);	
 					producto.marca = item.marca;
-					//producto.value = item.marca;
 					producto.img = item.img;	
 					producto.link = item.link;
 					producto.path = item.path;
@@ -153,8 +165,8 @@
 				return array;
 			}
 			
-			private var lista:IList = new ArrayList();
-			private var queryString:String;
+			internal var lista:IList = new ArrayList();
+			internal var queryString:String;
 			internal function btnGuardar_clickHandler():void
 			{
 				var foundObject:Array = new Array(), index:uint = 0;
@@ -163,10 +175,7 @@
 				{
 					foundObject = GlobalStatic.utility.findMatchesByIDReturnArray(item.id_producto, arrayOriginal,"id_producto");
 					for each(var originalItem:Object in foundObject)
-					{	
-						/* $variable = “Este es un texto de \”prueba\” para escapar las comillas.”;
-						$variable = ‘Este es un texto de \’prueba\’ para escapar las comillas.’; */
-						
+					{							
 						originalItem.nom_producto != item.nom_producto ? lista.addItem(" nom_producto = \'" + item.nom_producto + "\'") : "";
 						
 						if(lista.length > 0)
@@ -197,7 +206,6 @@
 				for each(var query:Object in GlobalStatic.utility.listaQuerys.toArray())
 				index-- == 0 ? superQuery += query : superQuery += query + "|()|";
 				GlobalStatic.utility.listaQuerys.removeAll();//AHORA REMOVEMOS TODO LO QUE HAY EN LA LISTA PARA OCUPARLA LA PROXIMA VEZ.
-				trace(superQuery);
 				trace("call " + GlobalStatic.DataBaseName + ".Procedure_SqlTable(\"" + superQuery +"\")");
 				MiObjetoRemotoProducto.callStoreProcedure.send(superQuery);
 			}
@@ -216,7 +224,7 @@
 				return new Date(Date.parse( dateString ));
 			}
 			
-			private var palabra:String;
+			internal var palabra:String;
 			
 			internal function doSearch():void {
 				palabra = txtBuscar.text.toLowerCase();

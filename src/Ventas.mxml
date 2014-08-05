@@ -3,13 +3,14 @@
 					   xmlns:s="library://ns.adobe.com/flex/spark"
 					   xmlns:mx="library://ns.adobe.com/flex/mx"
 					   xmlns:buttons="com.anotherflexdev.ui.buttons.*"
-					   creationComplete="maximize()" currentState="login" width="100%" height="100%" title="Marketplace">
+					   width="100%" height="100%" creationComplete="maximize()" currentState="login"
+					   title="Marketplace">
 	<fx:Style source="Styles/Main.css"/>
 	<fx:Style source="styles/Main.css"/>
 	
 	<fx:Script>
 		<![CDATA[
-			protected function returnHome():void
+			internal function returnHome():void
 			{
 				imgbackground_home.visible = true;
 				tabNavigatorSearch.selectedIndex = 0;
@@ -21,23 +22,19 @@
 		<mx:RemoteObject id="MiObjetoRemotoLogin" destination="amfphp" fault="errorGeneral(event)"
 						 showBusyCursor="true" source="usuarios">
 			<s:method fault="errorAlVerificar(event);" name="VerificarAcceso"
-					   result="VerificarUsuarioExito(event)"/>
+					  result="VerificarUsuarioExito(event)"/>
 		</mx:RemoteObject>
 	</fx:Declarations>
 	<fx:Declarations>
-		<mx:Move id="hideEffect" yTo="-5000" duration="800"/>
-		<mx:Move id="hideEffect2" xTo="-5000" duration="800"/>
-		<mx:Move id="showEffect" yFrom="500" duration="800"/>
-		<mx:Move id="showEffect2" xFrom="500" duration="800"/> 
+		<mx:Move id="hideEffect" duration="800" yTo="-5000"/>
+		<mx:Move id="hideEffect2" duration="800" xTo="-5000"/>
+		<mx:Move id="showEffect" duration="800" yFrom="500"/>
+		<mx:Move id="showEffect2" duration="800" xFrom="500"/> 
 	</fx:Declarations>
 	<fx:Script>
 		<![CDATA[
 			import mx.controls.Alert;
-			import mx.controls.Label;
 			import mx.controls.SWFLoader;
-			import mx.events.FlexEvent;
-			import mx.printing.FlexPrintJob;
-			import mx.printing.FlexPrintJobScaleType;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
 			
@@ -53,12 +50,12 @@
 			[Bindable][Embed(source="img/btnNaranja.png", mimeType="image/png")] public var btnNaranja:Class;
 			[Bindable][Embed(source="img/home.png", mimeType="image/png")] public var btnHomeDashboard:Class;
 						
-			private function errorGeneral(falla:FaultEvent):void 
+			internal function errorGeneral(falla:FaultEvent):void 
 			{	
 				Alert.show(falla.fault.faultString, "Error",0,null,null,icono_Error,0);
 			}
 			
-			protected function iniciarSession():void
+			internal function iniciarSession():void
 			{
 				if(txtUsuario.text != "" && txtContrasena.text != "")
 					MiObjetoRemotoLogin.VerificarAcceso.send(txtUsuario.text , txtContrasena.text);
@@ -66,7 +63,7 @@
 					Alert.show("Datos Incorrectos", "Atención",0,null,null,icono_Error,0);
 			}
 			
-			private function VerificarUsuarioExito(exito:ResultEvent):void 
+			internal function VerificarUsuarioExito(exito:ResultEvent):void 
 			{				
 				if(exito.result != null)
 					currentState = 'Dashboard';
@@ -74,18 +71,18 @@
 					currentState = '';// Si el usuario no fue encontrado nos llevara al login.......
 			}
 			
-			private function errorAlVerificar(error:FaultEvent):void
+			internal function errorAlVerificar(error:FaultEvent):void
 			{
 				Alert.show(error.fault.faultString, "Acceso denegado",0,null,null,icono_error_verificar,0);
 			}
 			
-			protected function changecurrentState():void
+			internal function changecurrentState():void
 			{
 				cargarSWF();
 				tabNavigatorSearch.selectedIndex = 1;
 			}
 			
-			protected function cargarSWF():void
+			internal function cargarSWF():void
 			{
 				if(Contenedor != null) Contenedor.removeAllElements();
 				swfLoader = new SWFLoader();  
@@ -113,21 +110,24 @@
 					 focusColor="#C0C0C0" fontSize="16" fontStyle="normal" horizontalCenter="-22"
 					 prompt="Usuario"/>
 		<s:TextInput id="txtContrasena" width="200" borderVisible="false" color="#A4A4A4"
-					 displayAsPassword="true" focusColor="#C0C0C0" fontSize="16" fontStyle="normal"
-					 horizontalCenter="-22" prompt="Contraseña" verticalCenter="-83" enter="iniciarSession()"/>
-		<s:Image right="323" source="img/skin_adelantee.png" verticalCenter="-19" click="iniciarSession()" buttonMode="true"/>
+					 displayAsPassword="true" enter="iniciarSession()" focusColor="#C0C0C0"
+					 fontSize="16" fontStyle="normal" horizontalCenter="-22" prompt="Contraseña"
+					 verticalCenter="-83"/>
+		<s:Image right="323" buttonMode="true" click="iniciarSession()"
+				 source="img/skin_adelantee.png" verticalCenter="-19"/>
 		<s:RichText x="396" y="277" color="#BABABA" fontSize="13" fontStyle="italic" text="Siguiente"/>
 	</s:Group>
-	<mx:TabNavigator id="tabNavigatorSearch" includeIn="Dashboard" width="100%" height="100%"
-					 backgroundColor="#FFFFFF" borderVisible="false" creationPolicy="all"
-					 styleName="tabNavigator" tabWidth="0" top="-35">
+	<mx:TabNavigator id="tabNavigatorSearch" includeIn="Dashboard" top="-35" width="100%"
+					 height="100%" backgroundColor="#FFFFFF" borderVisible="false"
+					 creationPolicy="all" styleName="tabNavigator" tabWidth="0">
 		<mx:Canvas id="canvas_principal" width="100%" height="100%" label="Buscar"
-				   hideEffect="{hideEffect2}" showEffect="{showEffect2}" borderVisible="false">
+				   borderVisible="false" hideEffect="{hideEffect2}" showEffect="{showEffect2}">
 			<s:Group horizontalCenter="0" verticalCenter="0"
 					 horizontalCenter.Dashboard="20" verticalCenter.Dashboard="10">
 				<s:Image horizontalCenter="0" source="{btnMain}" verticalCenter="0"/>
 				<buttons:GlowButton x="95" y="122" buttonMode="true" source="{btnMorado}"/>
-				<buttons:GlowButton x="223" y="28" buttonMode="true" source="{btnAzul}" id="btnProductos" click="changecurrentState()"/>
+				<buttons:GlowButton id="btnProductos" x="223" y="28" buttonMode="true"
+									click="changecurrentState()" source="{btnAzul}"/>
 				<buttons:GlowButton x="349" y="124" buttonMode="true" source="{btnAmarillo}"/>
 				<buttons:GlowButton x="353" y="258" buttonMode="true" source="{btnverde}"/>
 				<buttons:GlowButton x="234" y="330" buttonMode="true" source="{btnRojo}"/>
@@ -152,17 +152,17 @@
 			<s:Scroller left="0" right="0" top="0" bottom="0">
 				<s:Group>
 					<s:Scroller width="100%" height="100%" skinClass="skins.SkinVScrollBarMainMenu"> 
-						<s:Group id="Contenedor" width="100%" height="100%" top="0">
+						<s:Group id="Contenedor" top="0" width="100%" height="100%">
 						</s:Group> 
 					</s:Scroller>
 				</s:Group>
 			</s:Scroller>		
 		</mx:Canvas>
 	</mx:TabNavigator>
-	<s:Image right="0" top="0" width="100" height="104"
-			 smooth.Dashboard="true"
-			 smoothingQuality.Dashboard="high" source.Dashboard="img/myHome.jpg" id="imgbackground_home"/>
+	<s:Image id="imgbackground_home" right="0" top="0" width="100" height="104"
+			 smooth.Dashboard="true" smoothingQuality.Dashboard="high"
+			 source.Dashboard="img/myHome.jpg"/>
 	<buttons:GlowButton id="btnHome" includeIn="Dashboard" right="8" top="5" width="32" height="32"
-						click="returnHome()"
-						source.Dashboard="{btnHomeDashboard}" buttonMode="true"/>
+						buttonMode="true" click="returnHome()"
+						source.Dashboard="{btnHomeDashboard}"/>
 </s:WindowedApplication>

@@ -5,22 +5,9 @@
 					clipAndEnableScrolling="true" creationComplete="creationCompleteHandler(event)">
 	<fx:Script>
 		<![CDATA[
-			import mx.collections.ArrayCollection;
 			import mx.events.FlexEvent;
 			
 			import spark.events.IndexChangeEvent;
-			private var queryString:String;
-			protected var queryComboCargo:String = "";
-			
-			[Bindable] private var arrayGrupos:ArrayCollection;
-			
-			[Bindable]
-			public var array:ArrayCollection = new ArrayCollection(
-				[   
-					{value:"Pieza(s)"},
-					{value:"A granel Kg/gr"}	
-				]                
-			);
 			
 			override public function set data(value:Object):void
 			{
@@ -50,6 +37,6 @@
 		]]>
 	</fx:Script>
 	<s:ComboBox id="comboBox" width="100%" height="100%" change="changeHandler(event)"
-				dataProvider="{array}" labelField="value" selectedIndex="-1"
-				styleName="defaultStyleCombobox" click="comboBox.openDropDown()"/>
+				click="comboBox.openDropDown()" dataProvider="{parentApplication.arrayTipoVenta}"
+				labelField="value" selectedIndex="-1" styleName="defaultStyleCombobox"/>
 </s:GridItemRenderer>
