@@ -32,7 +32,7 @@ package clases
 		
 		public function Utileria(){}
 		
-		public static function position(Arr:Array, Str:String):Number {
+		internal static function position(Arr:Array, Str:String):Number {
 			for (var i:int = 0; i < Arr.length; i++) {
 				if (Arr[i].value == Str) {
 					return i;
@@ -50,6 +50,7 @@ package clases
 					info.push({value:Arr[i].marca});
 				}
 			}
+			memory = null;
 			return info;
 		}
 		

@@ -27,7 +27,7 @@
 		}
 	</fx:Style>
 	<fx:Declarations>
-		<mx:HTTPService id="service" fault="service_faultHandler(event)" result="onJSONLoad(event)"
+		<mx:HTTPService id="service" fault="errorGeneral(event)" result="onJSONLoad(event)"
 						resultFormat="text"
 						url="http://localhost/Ventas/amfphp/services/getAllProducts.php"
 						useProxy="false"/>
@@ -35,7 +35,7 @@
 		
 		<mx:RemoteObject id="MiObjetoRemotoProducto" destination="amfphp" showBusyCursor="true"
 						 source="producto"> 
-			<s:method fault="service_faultHandler(event)" name="callStoreProcedure"
+			<s:method fault="errorGeneral(event)" name="callStoreProcedure"
 					  result="resultCallStoreProcedure(event)"/>
 		</mx:RemoteObject>
 		
@@ -59,6 +59,7 @@
 	
 	<fx:Script>
 		<![CDATA[		
+			import clases.Cleanner;
 			import clases.GlobalStatic;
 			import clases.Productos;
 			import clases.Utileria;
@@ -77,33 +78,20 @@
 			import mx.rpc.events.ResultEvent;
 			
 			[Bindable] internal var dp:ArrayCollection = new ArrayCollection();
-			[Bindable] internal var producto:clases.Productos = new clases.Productos();
+			[Bindable] internal var producto:clases.Productos;
 			[Bindable] public var arrayMarcas:ArrayCollection;
-			
-			[Bindable]
-			public var arrayOferta:ArrayCollection = new ArrayCollection(
-				[   
-					{value:"SI"},
-					{value:"NO"}	
-				]                
-			);
-			
-			[Bindable]
-			public var arrayTipoVenta:ArrayCollection = new ArrayCollection(
-				[   
-					{value:"Pieza(s)"},
-					{value:"A granel Kg/gr"}	
-				]                
-			);
+			[Bindable] public var arrayOferta:ArrayCollection = new ArrayCollection([{value:"SI"},{value:"NO"}]);
+			[Bindable] public var arrayTipoVenta:ArrayCollection = new ArrayCollection([{value:"Pieza(s)"},{value:"A granel Kg/gr"}]);
+			internal var arrayOriginal:ArrayCollection;
 			
 			internal function resultCallStoreProcedure(exito:ResultEvent):void
 			{
+				removeEventListener(ResultEvent.RESULT, resultCallStoreProcedure);
 				PopUpManager.removePopUp(GlobalStatic.utility.progress);
 				switch(exito.result.response)
 				{
 					case "0":
 						service.send();
-						//Alert.show("La información se ha guardo de forma exitosa", 'Atención');
 						AlertInfo.show("La información se ha guardo de forma exitosa", 'Atención');
 						break;
 					case "1":
@@ -116,7 +104,7 @@
 			
 			internal function onJSONLoad(event:ResultEvent):void
 			{
-				maximize();
+				removeEventListener(ResultEvent.RESULT, onJSONLoad);
 				dp.removeAll();
 				dp = encapsulado((com.adobe.serialization.json.JSON.decode(String(event.result)) as Array));
 				arrayMarcas = new ArrayCollection(Utileria.group(dp));
@@ -124,15 +112,16 @@
 			
 			internal function preinitializeHandler(event:FlexEvent):void
 			{
+				removeEventListener(FlexEvent.PREINITIALIZE,preinitializeHandler);
+				maximize();
 				service.send();
 			}
 			
-			internal function service_faultHandler(error:FaultEvent):void
+			internal function errorGeneral(error:FaultEvent):void
 			{
+				removeEventListener(FaultEvent.FAULT, errorGeneral);
 				Alert.show(error.fault.faultString, "Ocurrio un error");
 			}
-			
-			internal var arrayOriginal:ArrayCollection;
 			
 			internal function encapsulado(collection:*):ArrayCollection{
 				
@@ -160,6 +149,7 @@
 					producto.indice = item.indice;
 					
 					array.addItem(producto);
+					producto = null;
 				}
 				arrayOriginal = Utileria.clonar(array);
 				return array;
@@ -187,7 +177,8 @@
 							
 							queryString += " WHERE id_producto = " + item.id_producto;
 							GlobalStatic.utility.queryMasivo(queryString);
-							lista.removeAll();
+							lista = null;
+							queryString = null;
 						}
 						break;	
 					}
@@ -234,7 +225,7 @@
 			
 			internal function filterMyArrayCollection(item:Object):Boolean 
 			{				
-				return ((item.nom_producto.toLowerCase().indexOf(palabra) != -1) || (item.marca.toLowerCase().indexOf(palabra) != -1) || (item.descripcion.toLowerCase().indexOf(palabra) != -1))//coincidencias;
+				return ((item.nom_producto.toLowerCase().indexOf(palabra) != -1) || (item.marca.toLowerCase().indexOf(palabra) != -1) || (item.descripcion.toLowerCase().indexOf(palabra) != -1))
 			}
 			
 			internal function changeBusqueda():void{
@@ -257,6 +248,7 @@
 			{
 				defaultCallout.close();
 			}
+			
 		]]>
 		
 	</fx:Script>
