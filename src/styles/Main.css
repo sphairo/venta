@@ -123,13 +123,14 @@ mx1|Alert
 
 .comboEditorError
 {
-	cornerRadius: 0;
-	left: 5; 
-	right: 5;
-	top: 3;
-	bottom:3;
-	fontSize: 10;
-	chromeColor:#FF0000;
+	left:2;
+	right:2;
+	top:2;
+	bottom:2;
+	borderVisible: false;
+	contentBackgroundAlpha: 0.0;
+	dropShadowVisible: true;
+	skinClass: ClassReference("skinComboboxError");
 }
 
 .comboEditorDefault

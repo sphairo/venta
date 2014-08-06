@@ -8,6 +8,8 @@
 	
 	<fx:Script>
 		<![CDATA[
+			import clases.GlobalStatic;
+			
 			import com.anotherflexdev.ui.AlertInfo;
 			
 			internal function over():void
@@ -70,7 +72,7 @@
 			 source="@Embed('img/background_producto.png')"/>
 	<s:Image id="img" y="10" width="124" height="124" complete="cargaCompleta()" horizontalCenter="0"
 			 rollOut="img_rollOutHandler(event)" rollOver="img_rollOverHandler(event)"
-			 scaleMode="letterbox" smooth="true" smoothingQuality="high" source="{data.img}"/>
+			 scaleMode="letterbox" smooth="true" smoothingQuality="high" source="{GlobalStatic.url_image +data.path}"/>
 	<s:BusyIndicator id="loader" width="64" height="64" horizontalCenter="0" verticalCenter="-40"/>
 	<s:Label x="15" y="172" width="130" color="#929292" fontSize="12" text="{data.nom_producto}"
 			 textAlign="left"/>

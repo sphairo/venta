@@ -16,7 +16,18 @@
 					if(value == null) return;
 					super.data = value;
 					
-					comboBox.textInput.text = data.ofertas_Especiales;
+					if(data.ofertas_Especiales == "S")
+						comboBox.textInput.text = "SI";
+					else if(data.ofertas_Especiales == "N")
+						comboBox.textInput.text = "NO";
+					
+					if(data.error == true)
+					{
+						relleno.color = 0xee7970;
+						relleno.alpha = .8;
+					}
+					else
+						relleno.alpha = .0;
 				}
 				catch(error:Error)
 				{
@@ -26,7 +37,7 @@
 			
 			internal function changeHandler(event:IndexChangeEvent):void
 			{
-				data.ofertas_Especiales = comboBox.selectedItem.value;
+				data.ofertas_Especiales = comboBox.selectedItem.value.charAt(0);
 			}
 			
 			internal function creationCompleteHandler(event:FlexEvent):void
@@ -36,7 +47,12 @@
 			
 		]]>
 	</fx:Script>
+	<s:Rect width="100%" height="100%" id="background">
+		<s:fill>
+			<s:SolidColor id="relleno"/>
+		</s:fill>
+	</s:Rect>
 	<s:ComboBox id="comboBox" width="100%" height="100%" change="changeHandler(event)"
 				click="comboBox.openDropDown()" dataProvider="{parentApplication.arrayOferta}" labelField="value"
-				selectedIndex="-1" styleName="defaultStyleCombobox"/>
+				selectedIndex="-1" styleName="defaultStyleCombobox" prompt="Seleccione"/>
 </s:GridItemRenderer>

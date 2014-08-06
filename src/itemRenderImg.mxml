@@ -5,6 +5,8 @@
 	
 	<fx:Script>
 		<![CDATA[
+			import clases.GlobalStatic;
+			
 			import mx.events.FlexMouseEvent;
 			internal function onMouseDownOutside(event:FlexMouseEvent):void {
 				event.target.close();
@@ -18,6 +20,34 @@
 			internal function onShowDefaultCalloutClick():void {
 				defaultCallout.open(img);
 			}
+			
+			override public function set data(value:Object):void
+			{
+				try
+				{
+					if(value == null) return;
+					super.data = value;
+					
+					if(data.isNew == false)
+						img.source = GlobalStatic.url_image + data.path;
+					else
+						img.source="img/camara.png";
+						
+					
+					if(data.error == true)
+					{
+						relleno.color = 0xee7970;
+						relleno.alpha = .8;
+					}
+					else
+						relleno.alpha = .0;
+				}
+				catch(error:Error)
+				{
+					trace(error);
+				}   
+			}
+			
 		]]>
 	</fx:Script>
 	<fx:Declarations>
@@ -28,10 +58,16 @@
 				<s:VerticalLayout>
 				</s:VerticalLayout>
 			</s:layout>
-			<s:Image width="152" height="152" source="{data.img}" top="5"/>
+			<s:Image width="152" height="152" source="{img.source}" top="5"/>
 			<renders:renderCambiarFoto/>
 		</s:Callout>
 		<components:SparkCallout/>
 	</fx:Declarations>
-	<s:Image id="img" width="32" height="32" horizontalCenter="0" source="{data.img}" verticalCenter="0" click="onShowDefaultCalloutClick()"/>
+	<s:Rect width="100%" height="100%" id="background">
+		<s:fill>
+			<s:SolidColor id="relleno"/>
+		</s:fill>
+	</s:Rect>
+	<s:Image id="img" width="32" height="32" click="onShowDefaultCalloutClick()"
+			 horizontalCenter="0" verticalCenter="0"/>
 </s:GridItemRenderer>

@@ -48,7 +48,7 @@
 			<renders:renderCatalogoProductos includeIn="catalogo_productos"
 											 click="currentState='dashboard_productos'"/>
 			<renders:renderAdministrarProductos includeIn="dashboard_productos"
-												click="currentState='catalogo_productos'"/>
+												click="administrarProductos(event)"/>
 			<renders:renderSoporte/>
 			<renders:renderConfiguracion/>
 			<renders:renderCerrarSession/>
@@ -60,6 +60,7 @@
 	<fx:Script>
 		<![CDATA[		
 			import clases.Cleanner;
+			import clases.ConvertFechaToDate;
 			import clases.GlobalStatic;
 			import clases.Productos;
 			import clases.Utileria;
@@ -107,9 +108,7 @@
 				removeEventListener(ResultEvent.RESULT, onJSONLoad);
 				dp.removeAll();
 				dp = encapsulado((com.adobe.serialization.json.JSON.decode(String(event.result))));
-				arrayMarcas = new ArrayCollection(Utileria.group(dp));
 				arrayOriginal = Utileria.clonar(dp);
-				System.gc();
 			}
 			
 			internal function preinitializeHandler(event:FlexEvent):void
@@ -137,18 +136,95 @@
 				return array;
 			}
 			
-			internal var lista:IList = new ArrayList();
-			internal var queryString:String;
+			[Bindable] protected var convertir:ConvertFechaToDate = new ConvertFechaToDate();
+			
 			internal function btnGuardar_clickHandler():void
 			{
 				var foundObject:Array = new Array(), index:uint = 0;
+				var lista:IList = new ArrayList();
+				var queryString:String;
+				var newDate:String, oldDate:String, isCompleted:Boolean = false;
 				GlobalStatic.utility.showLoading("Espere un momento mientras se guarda la información"); 
 				for each(var item:Object in datagrid_productos.dataProvider)
 				{
-					foundObject = GlobalStatic.utility.findMatchesByIDReturnArray(item.id_producto, arrayOriginal,"id_producto");
-					for each(var originalItem:Object in foundObject)
-					{							
-						originalItem.nom_producto != item.nom_producto ? lista.addItem(" nom_producto = \'" + item.nom_producto + "\'") : "";
+						if(item.isNew == true){
+							
+							if(item.nom_producto != "")
+							{
+								if(item.codigo_barra != "")
+								{
+									if(item.descripcion != "")
+									{
+										if(item.cantidad != Utileria.defaultValue)
+										{
+											if(item.precio != Utileria.defaultValue)
+											{
+												if(item.precio_compra != Utileria.defaultValue)
+												{
+													if(item.marca != "")
+													{
+														if(item.tipoVenta != "")
+														{
+															if(item.ofertas_Especiales != "")
+															{
+																if(item.fecha_entrada != null)
+																{
+																	isCompleted = true;
+																}
+															}
+														}
+													}
+												}	
+											}
+										}
+									}
+								}
+							}
+							
+							if(isCompleted == true)
+							{
+								lista.addItem(" nom_producto = '" + item.nom_producto + "'");
+								lista.addItem(" codigo_barra = '" + item.codigo_barra + "'");
+								lista.addItem(" descripcion = '" + item.descripcion + "'");
+								lista.addItem(" precio = " + item.precio);
+								lista.addItem(" precio_compra = " + item.precio_compra);
+								lista.addItem(" tipoVenta = '" + item.tipoVenta + "'");
+								lista.addItem(" ofertas_Especiales = '" + item.ofertas_Especiales + "'");
+								
+								newDate = convertir.formatoFechaYYYYMMDD(item.fecha_entrada);
+								lista.addItem(" fecha_entrada = Date('" + newDate + "')")
+								
+								GlobalStatic.utility.obtenerCamposValores(lista);
+								GlobalStatic.utility.queryMasivo("INSERT INTO " + GlobalStatic.DataBaseName + ".producto (" + GlobalStatic.utility.campos + ") VALUES (" + GlobalStatic.utility.valores + ")");
+								lista.removeAll();
+								
+								isCompleted = false;
+							}else
+							{
+								item.error = true;
+								excepcion();
+								return;	
+							}
+							
+						}else{
+							for each(var originalItem:Object in foundObject)
+							{
+								foundObject = GlobalStatic.utility.findMatchesByIDReturnArray(item.id_producto, arrayOriginal,"id_producto");
+								
+								originalItem.nom_producto != item.nom_producto ? lista.addItem(" nom_producto = '" + item.nom_producto + "'") : "";
+								originalItem.codigo_barra != item.codigo_barra ? lista.addItem(" codigo_barra = '" + item.codigo_barra + "'") : "";
+								originalItem.descripcion != item.descripcion ? lista.addItem(" descripcion = '" + item.descripcion + "'") : "";
+								originalItem.cantidad != item.cantidad ? lista.addItem(" cantidad = " + item.cantidad) : "";
+								originalItem.precio != item.precio ? lista.addItem(" precio = " + item.precio) : "";
+								originalItem.precio_compra != item.precio_compra ? lista.addItem(" precio_compra = " + item.precio_compra) : "";
+								originalItem.marca != item.marca ? lista.addItem(" marca = '" + item.marca + "'") : "";
+								originalItem.tipoVenta != item.tipoVenta ? lista.addItem(" tipoVenta = '" + item.tipoVenta + "'") : "";
+								originalItem.ofertas_Especiales != item.ofertas_Especiales ? lista.addItem(" ofertas_Especiales = '" + item.ofertas_Especiales + "'") : "";
+								newDate = convertir.formatoFechaYYYYMMDD(item.fecha_entrada);
+								oldDate = convertir.formatoFechaYYYYMMDD(originalItem.fecha_entrada);
+								oldDate != newDate ? lista.addItem(" fecha_entrada = Date('" + newDate + "')") : "";
+							}
+						}
 						
 						if(lista.length > 0)
 						{
@@ -159,17 +235,24 @@
 							
 							queryString += " WHERE id_producto = " + item.id_producto;
 							GlobalStatic.utility.queryMasivo(queryString);
-							lista = null;
-							queryString = null;
+							lista.removeAll();
 						}
 						break;	
-					}
+					
 				}
 				if(GlobalStatic.utility.listaQuerys.length > 0)
 					contruirQuery();
-				else
-					trace("error");
-					
+				else{
+					PopUpManager.removePopUp(GlobalStatic.utility.progress);
+					AlertInfo.show("Usted no ha realizado ningun cambio en la información de productos.");
+				}	
+			}
+			
+			internal function excepcion():void{
+				PopUpManager.removePopUp(GlobalStatic.utility.progress);	
+				dp.refresh();
+				datagrid_productos.grid.setFocus();
+				AlertError.show("La información proporcionada no esta completa o contiene un error, por favor verifique la información e intente guardar nuevamente.");
 			}
 			
 			internal function contruirQuery():void
@@ -180,7 +263,7 @@
 				index-- == 0 ? superQuery += query : superQuery += query + "|()|";
 				GlobalStatic.utility.listaQuerys.removeAll();//AHORA REMOVEMOS TODO LO QUE HAY EN LA LISTA PARA OCUPARLA LA PROXIMA VEZ.
 				trace("call " + GlobalStatic.DataBaseName + ".Procedure_SqlTable(\"" + superQuery +"\")");
-				MiObjetoRemotoProducto.callStoreProcedure.send(superQuery);
+				//MiObjetoRemotoProducto.callStoreProcedure.send(superQuery);
 			}
 			
 			internal var palabra:String;
@@ -217,6 +300,27 @@
 				defaultCallout.close();
 			}
 			
+			protected function administrarProductos(event:MouseEvent):void
+			{
+				currentState='catalogo_productos';
+				
+				if(arrayMarcas == null)	
+					arrayMarcas = new ArrayCollection(Utileria.group(dp));
+			}
+			
+			protected function btnNuevo_clickHandler(event:MouseEvent):void
+			{
+				var newItem:clases.Productos = new clases.Productos();
+				newItem.isNew = true;
+				dp.sort = null;
+				dp.filterFunction = null;
+				datagrid_productos.sortableColumns = false;
+				dp.addItemAt(newItem,0);
+				datagrid_productos.setSelectedIndex(0);
+				datagrid_productos.startItemEditorSession(0,0);
+				datagrid_productos.scroller.viewport.verticalScrollPosition = -1;
+			}
+			
 		]]>
 		
 	</fx:Script>
@@ -228,7 +332,6 @@
 							   borderVisible="false">
 				<s:backgroundFill>
 					<s:LinearGradient rotation="90">
-						
 						<s:GradientEntry color="#f29c2e"/>
 						<s:GradientEntry color="#f9a73c"/>
 					</s:LinearGradient>
@@ -248,7 +351,7 @@
 						 source="img/ModIco.png" verticalCenter="-1"/>
 				<s:HGroup x="550" y="5" height="40">
 					<renders:renderAdd id="btnNuevo" includeIn="catalogo_productos"
-									   click="AlertError.show('Ocurrio un error al guardar la información.')"/>
+									   click="btnNuevo_clickHandler(event)"/>
 					<renders:renderDelete id="btnEliminar" includeIn="catalogo_productos"/>
 					<renders:renderSave id="btnGuardar" includeIn="catalogo_productos"
 										click="btnGuardar_clickHandler()"/>
@@ -259,42 +362,40 @@
 				</s:HGroup>
 			</s:BorderContainer>
 			
-			<s:List id="list" includeIn="dashboard_productos" left="20" right="0" top="50" bottom="0"
-					borderVisible="false" contentBackgroundAlpha="0.5" dataProvider="{dp}"
-					focusColor="#F48D08" itemRenderer="skins.itemRenderProducto"
-					rollOverColor="#D1D1D1" selectionColor="#ADADAD">
+			<s:List id="list" includeIn="dashboard_productos" left="20" right="0" top="51" bottom="0"
+					borderVisible="false" contentBackgroundAlpha="0.0" dataProvider="{dp}"
+					focusColor="#ffffff" itemRenderer="skins.itemRenderProducto" allowMultipleSelection="true"
+					rollOverColor="#D1D1D1" selectionColor="#ADADAD" >
 				<s:layout>
 					<s:TileLayout horizontalGap="10" verticalGap="10"/>
 				</s:layout>
 			</s:List>
-			<s:DataGrid id="datagrid_productos" includeIn="catalogo_productos" x="0" y="50"
-						width="100%" height="100%" dataProvider="{dp}" editable="true">
+			<s:DataGrid id="datagrid_productos" includeInLayout="true" includeIn="catalogo_productos" x="0" y="50"
+						width="100%" height="100%" dataProvider="{dp}" editable="true"
+						hasFocusableChildren="true">
 				<s:columns>
 					<s:ArrayList>
-						<s:GridColumn dataField="nom_producto" headerText="Nombre"></s:GridColumn>
-						<s:GridColumn dataField="marca" editable="false" headerText="Marca"
-									  itemRenderer="renders.itemRenderMarcas"></s:GridColumn>
-						<s:GridColumn dataField="descripcion" headerText="Descripción"></s:GridColumn>
-						
-						<s:GridColumn dataField="cantidad" headerText="Cantidad"></s:GridColumn>
-						<s:GridColumn dataField="precio" headerText="Precio"></s:GridColumn>
-						<s:GridColumn dataField="precio_compra" headerText="Precio compra"></s:GridColumn>
-						
-						<s:GridColumn editable="false" headerText="Foto" itemRenderer="itemRenderImg"></s:GridColumn>
-						
-						<s:GridColumn dataField="fecha_entrada" editable="false"
-									  headerText="Fecha Entrada" itemRenderer="renderFechaEntrada"></s:GridColumn>
-						<s:GridColumn dataField="tipoVenta" editable="false" headerText="Tipo Venta"
-									  itemRenderer="renders.itemRenderTipoVenta"></s:GridColumn>
-						
-						<s:GridColumn dataField="ofertas_Especiales" editable="false"
+						<s:GridColumn id="c" dataField="codigo_barra" headerText="Codigo" itemRenderer="itemRenderCodigoBarras" rendererIsEditable="true"/>
+						<s:GridColumn dataField="nom_producto" headerText="Nombre" itemRenderer="itemRenderNombreProducto" rendererIsEditable="true"/>
+						<s:GridColumn dataField="marca" headerText="Marca"
+									  itemRenderer="renders.itemRenderMarcas" rendererIsEditable="true"/>
+						<s:GridColumn dataField="descripcion" headerText="Descripción" itemRenderer="itemRenderDescripcion" rendererIsEditable="true"/>
+						<s:GridColumn dataField="cantidad" headerText="Cantidad" itemRenderer="itemRenderCantidad" rendererIsEditable="true"/>
+						<s:GridColumn dataField="precio" headerText="Precio" itemRenderer="itemRenderPrecio" rendererIsEditable="true"/>
+						<s:GridColumn dataField="precio_compra" headerText="Precio compra" itemRenderer="itemRenderPrecioCompra" rendererIsEditable="true"/>
+						<s:GridColumn editable="false" headerText="Foto" itemRenderer="itemRenderImg" rendererIsEditable="true"/>
+						<s:GridColumn dataField="fecha_entrada" rendererIsEditable="true"
+									  headerText="Fecha Entrada" itemRenderer="renderFechaEntrada"/>
+						<s:GridColumn dataField="tipoVenta" headerText="Tipo Venta" rendererIsEditable="true"
+									  itemRenderer="renders.itemRenderTipoVenta"/>
+						<s:GridColumn dataField="ofertas_Especiales" rendererIsEditable="true"
 									  headerText="Oferta"
-									  itemRenderer="renders.itemRenderOfertaEspecial"></s:GridColumn>
+									  itemRenderer="renders.itemRenderOfertaEspecial"/>
 						
 						
 					</s:ArrayList>
 				</s:columns>
-			</s:DataGrid>
+			</s:DataGrid> 
 		</s:Group>
 	</s:Scroller>	
 </s:WindowedApplication>

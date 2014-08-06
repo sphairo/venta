@@ -16,7 +16,18 @@
 					if(value == null) return;
 					super.data = value;
 					
-					comboBox.textInput.text = data.tipoVenta;
+					if(data.tipoVenta == "P")
+						comboBox.textInput.text = "Pieza(s)";
+					else if(data.tipoVenta == "A")
+						comboBox.textInput.text = "A granel Kg/gr";
+					
+					if(data.error == true)
+					{
+						relleno.color = 0xee7970;
+						relleno.alpha = .8;
+					}
+					else
+						relleno.alpha = .0;
 				}
 				catch(error:Error)
 				{
@@ -26,7 +37,7 @@
 			
 			internal function changeHandler(event:IndexChangeEvent):void
 			{
-				data.tipoVenta = comboBox.selectedItem.value;
+				data.tipoVenta = comboBox.selectedItem.value.charAt(0);
 			}
 			
 			internal function creationCompleteHandler(event:FlexEvent):void
@@ -36,7 +47,12 @@
 			
 		]]>
 	</fx:Script>
+	<s:Rect width="100%" height="100%" id="background">
+		<s:fill>
+			<s:SolidColor id="relleno"/>
+		</s:fill>
+	</s:Rect>
 	<s:ComboBox id="comboBox" width="100%" height="100%" change="changeHandler(event)"
 				click="comboBox.openDropDown()" dataProvider="{parentApplication.arrayTipoVenta}"
-				labelField="value" selectedIndex="-1" styleName="defaultStyleCombobox"/>
+				labelField="value" selectedIndex="-1" styleName="defaultStyleCombobox" prompt="Seleccione"/>
 </s:GridItemRenderer>

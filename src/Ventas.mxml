@@ -86,8 +86,6 @@
 			{
 				if(Contenedor != null) Contenedor.removeAllElements();
 				swfLoader = new SWFLoader();  
-				swfLoader.x = 0; 
-				swfLoader.y = 0;
 				swfLoader.percentHeight = 100;
 				swfLoader.percentWidth = 100;
 				swfLoader.source = "Productos.swf";
@@ -104,7 +102,7 @@
 	
 	<s:Group includeIn="login" width="800" height="600" horizontalCenter="-20" verticalCenter="10">
 		<s:Image y="0" width="100%" height="100%" horizontalCenter="0" scaleMode="letterbox"
-				 smooth="true" smoothingQuality="high" source="img/login800X6002.png"/>
+				 smooth="true" smoothingQuality="high" source="@Embed('img/login800X6002.png')"/>
 		
 		<s:TextInput id="txtUsuario" top="148" width="200" borderVisible="false" color="#A4A4A4"
 					 focusColor="#C0C0C0" fontSize="16" fontStyle="normal" horizontalCenter="-22"

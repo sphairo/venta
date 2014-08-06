@@ -12,38 +12,35 @@ package clases
 		private var _codigo_barra:String;
 		private var _nom_producto:String;
 		private var _descripcion:String;	
-		private var _cantidad:int;	
-		private var _precio:Number;	
-		private var _precio_compra:Number;	
+		private var _cantidad:int = Utileria.defaultValue;	
+		private var _precio:Number = Utileria.defaultValue;	
+		private var _precio_compra:Number = Utileria.defaultValue;
 		private var _marca:String;	
-		private var _img:String;	
-		private var _link:String;
-		private var _path:String;
-		private var _binario:String;	
-		private var _fecha_entrada:Date;	
-		private var _tipoVenta:String;	
-		private var _ofertas_Especiales:String;	
+		private var _path:String;	
+		private var _fecha_entrada:Date = Utileria.DateToday();	
+		private var _tipoVenta:String = "P";
+		private var _ofertas_Especiales:String = "N";
 		private var _indice:int;	
-		private var _value:String;
+		private var _isNew:Boolean = false;
+		private var _error:Boolean = false;
 		
-		public function Productos(producto:Object){
-			id_producto = producto.id_producto;
-			id_sucursal = producto.id_sucursal;
-			codigo_barra = producto.codigo_barra;
-			nom_producto = producto.nom_producto;
-			descripcion = producto.descripcion;
-			cantidad = producto.cantidad;	
-			precio = producto.precio;
-			precio_compra = Number(producto.precio_compra);	
-			marca = producto.marca;
-			img = producto.img;	
-			link = producto.link;
-			path = producto.path;
-			binario = producto.binario;
-			fecha_entrada = Utileria.format(producto.fecha_entrada);
-			tipoVenta = producto.tipoVenta;	
-			ofertas_Especiales =  producto.ofertas_Especiales;	
-			indice = producto.indice;
+		public function Productos(producto:Object = null){
+			if(producto != null){
+				id_producto = producto.id_producto;
+				id_sucursal = producto.id_sucursal;
+				codigo_barra = producto.codigo_barra;
+				nom_producto = producto.nom_producto;
+				descripcion = producto.descripcion;
+				cantidad = producto.cantidad;	
+				precio = producto.precio;
+				precio_compra = Number(producto.precio_compra);	
+				marca = producto.marca;
+				path = producto.path;
+				fecha_entrada = Utileria.format(producto.fecha_entrada);
+				tipoVenta = producto.tipoVenta;	
+				ofertas_Especiales =  producto.ofertas_Especiales;	
+				indice = producto.indice;
+			}
 		}
 		
 		[Bindable(event="propertyChange")]
@@ -56,7 +53,7 @@ package clases
 		{
 			if (newValue != id_producto)
 			{
-				_id_producto = newValue
+				_id_producto = newValue;
 				
 				if (hasEventListener("valueChanged"))
 				{
@@ -75,7 +72,7 @@ package clases
 		{
 			if (newValue != id_sucursal)
 			{
-				_id_sucursal = newValue
+				_id_sucursal = newValue;
 				
 				if (hasEventListener("valueChanged"))
 				{
@@ -95,7 +92,7 @@ package clases
 		{
 			if (newValue != codigo_barra)
 			{
-				_codigo_barra = newValue
+				_codigo_barra = newValue;
 				
 				if (hasEventListener("valueChanged"))
 				{
@@ -115,7 +112,7 @@ package clases
 		{
 			if (newValue != descripcion)
 			{
-				_descripcion = newValue
+				_descripcion = newValue;
 				
 				if (hasEventListener("valueChanged"))
 				{
@@ -135,7 +132,7 @@ package clases
 		{
 			if (newValue != cantidad)
 			{
-				_cantidad = newValue
+				_cantidad = newValue;
 				
 				if (hasEventListener("valueChanged"))
 				{
@@ -155,55 +152,14 @@ package clases
 		{
 			if (newValue != marca)
 			{
-				_marca = newValue
+				_marca = newValue;
 				
 				if (hasEventListener("valueChanged"))
 				{
 					dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
 				}
 			}
-		}
-		
-		
-		[Bindable(event="propertyChange")]
-		public function get link():String
-		{
-			return _link;
-		}
-		
-		public function set link(newValue:String):void
-		{
-			if (newValue != link)
-			{
-				_link = newValue
-				
-				if (hasEventListener("valueChanged"))
-				{
-					dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
-				}
-			}
-		}
-		
-		
-		[Bindable(event="propertyChange")]
-		public function get binario():String
-		{
-			return _binario;
-		}
-		
-		public function set binario(newValue:String):void
-		{
-			if (newValue != binario)
-			{
-				_binario = newValue
-				
-				if (hasEventListener("valueChanged"))
-				{
-					dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
-				}
-			}
-		}
-		
+		}		
 		
 		[Bindable(event="propertyChange")]
 		public function get fecha_entrada():Date
@@ -215,7 +171,7 @@ package clases
 		{
 			if (newValue != fecha_entrada)
 			{
-				_fecha_entrada = newValue
+				_fecha_entrada = newValue;
 				
 				if (hasEventListener("valueChanged"))
 				{
@@ -234,7 +190,7 @@ package clases
 		{
 			if (newValue != tipoVenta)
 			{
-				_tipoVenta = newValue
+				_tipoVenta = newValue;
 				
 				if (hasEventListener("valueChanged"))
 				{
@@ -253,7 +209,7 @@ package clases
 		{
 			if (newValue != ofertas_Especiales)
 			{
-				_ofertas_Especiales = newValue
+				_ofertas_Especiales = newValue;
 				
 				if (hasEventListener("valueChanged"))
 				{
@@ -272,7 +228,7 @@ package clases
 		{
 			if (newValue != indice)
 			{
-				_indice = newValue
+				_indice = newValue;
 				
 				if (hasEventListener("valueChanged"))
 				{
@@ -292,25 +248,7 @@ package clases
 		{
 			if (newValue != path)
 			{
-				_path = newValue
-				
-				if (hasEventListener("valueChanged"))
-				{
-					dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
-				}
-			}
-		}
-		
-		
-		[Bindable]
-		public function get img():String {
-			return _img;
-		}
-		
-		public function set img(newValue:String):void {
-			if (newValue != img)
-			{
-				_img = newValue
+				_path = newValue;
 				
 				if (hasEventListener("valueChanged"))
 				{
@@ -319,7 +257,7 @@ package clases
 			}
 		}
 				
-		[Bindable]
+		[Bindable(event="propertyChange")]
 		public function get nom_producto():String {
 			return _nom_producto;
 		}
@@ -327,7 +265,7 @@ package clases
 		public function set nom_producto(newValue:String):void {
 			if (newValue != nom_producto)
 			{
-				_nom_producto = newValue
+				_nom_producto = newValue;
 				
 				if (hasEventListener("valueChanged"))
 				{
@@ -336,7 +274,7 @@ package clases
 			}
 		}
 		
-		[Bindable]
+		[Bindable(event="propertyChange")]
 		public function get precio():Number {
 			return _precio;
 		}
@@ -344,7 +282,7 @@ package clases
 		public function set precio(newValue:Number):void {
 			if (newValue != precio)
 			{
-				_precio = newValue
+				_precio = newValue;
 				
 				if (hasEventListener("valueChanged"))
 				{
@@ -353,7 +291,7 @@ package clases
 			}
 		}
 		
-		[Bindable]
+		[Bindable(event="propertyChange")]
 		public function get precio_compra():Number {
 			return _precio_compra;
 		}
@@ -361,7 +299,41 @@ package clases
 		public function set precio_compra(newValue:Number):void {
 			if (newValue != precio_compra)
 			{
-				_precio_compra = newValue
+				_precio_compra = newValue;
+				
+				if (hasEventListener("valueChanged"))
+				{
+					dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
+				}
+			}
+		}
+		
+		[Bindable(event="propertyChange")]
+		public function get isNew():Boolean {
+			return _isNew;
+		}
+		
+		public function set isNew(newValue:Boolean):void {
+			if (newValue != isNew)
+			{
+				_isNew = newValue;
+				
+				if (hasEventListener("valueChanged"))
+				{
+					dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
+				}
+			}
+		}
+		
+		[Bindable(event="propertyChange")]
+		public function get error():Boolean {
+			return _error;
+		}
+		
+		public function set error(newValue:Boolean):void {
+			if (newValue != error)
+			{
+				_error = newValue;
 				
 				if (hasEventListener("valueChanged"))
 				{

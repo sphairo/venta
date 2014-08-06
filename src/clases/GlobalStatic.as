@@ -20,6 +20,7 @@ package clases
 		/*public static var wsdl:String = "http://201.116.66.148/STRMserviciosweb/SQLconsultas/ConsultaSQL.asmx?wsdl";*/// IP EXTERNA STRM
 		private static const _puerto:String = "8080";
 		/**PrivilegiosUsuario: return id_modulo, id_aplicaciones, Priv_Total, id_user, usuario, password, nombre_modulo, nombre_aplicaciones, nombre_archivo_fisico, contenedor*/
+		public static const url_image:String = "http://127.0.0.1/Ventas/amfphp/services/";
 		private static var _PrivilegiosUsuario:ArrayCollection = new ArrayCollection();
 		private static var _aplicacion:Object = new Object();
 		private static var _defaultDateRange:Object = new Object();

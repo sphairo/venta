@@ -65,6 +65,7 @@ package clases
 				}
 			}
 			memory = null;
+			info.sortOn(['value']);
 			return info;
 		}
 		
@@ -145,7 +146,7 @@ package clases
 			return item.data + " - " + item.label;
 		}
 		
-		public function DateToday():Date
+		public static function DateToday():Date
 		{
 			var fecha:Date = new Date();
 			return new Date((fecha.fullYear + "/" + ((fecha.month) + 1)  + "/" + fecha.date).toString());
@@ -291,7 +292,7 @@ package clases
 		
 		public static function get defaultValue():int
 		{
-			return -1;
+			return 0;
 		}
 		
 		/** Esta funcion permite comparar 2 Fechas y validar SI una es MAYOR que la otra o si son IGUALES, la funcion retorna lo siguiente:
