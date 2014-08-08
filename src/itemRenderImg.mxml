@@ -7,7 +7,10 @@
 		<![CDATA[
 			import clases.GlobalStatic;
 			
+			import com.anotherflexdev.ui.AlertError;
+			
 			import mx.events.FlexMouseEvent;
+			import mx.utils.StringUtil;
 			internal function onMouseDownOutside(event:FlexMouseEvent):void {
 				event.target.close();
 			}
@@ -21,31 +24,55 @@
 				defaultCallout.open(img);
 			}
 			
-			override public function set data(value:Object):void
+			private const textFilter:FileFilter = new FileFilter("Images", ".gif;*.jpeg;*.jpg;*.png");
+			private var variables:URLVariables = new URLVariables();
+			[Bindable] private var fileReferenceListImagen:FileReferenceList;
+			
+			protected function seleccionarImagen():void
 			{
-				try
+				fileReferenceListImagen = new FileReferenceList();
+				fileReferenceListImagen.addEventListener(Event.SELECT, fileSelectedHandler);
+				
+				var imageTypes:FileFilter = new FileFilter("Images (*.jpg, *.jpeg, *.gif, *.png)", "*.jpg; *.jpeg; *.gif; *.png");
+				var textTypes:FileFilter = new FileFilter("Text Files (*.txt, *.rtf)", "*.txt; *.rtf");
+				var allTypes:Array = new Array(imageTypes, textTypes);
+				var fileRef:FileReference = new FileReference();
+				
+				fileReferenceListImagen.browse(allTypes);
+			}
+			
+			private function fileSelectedHandler(event:Event):void 
+			{
+				var fileReference:FileReference;
+				var fileReferenceList:FileReferenceList = FileReferenceList(event.target);
+				var fileList:Array = fileReferenceList.fileList;
+				
+				for (var indice:uint = 0; indice < fileList.length; indice++)
 				{
-					if(value == null) return;
-					super.data = value;
-					
-					if(data.isNew == false)
-						img.source = GlobalStatic.url_image + data.path;
-					else
-						img.source="img/camara.png";
-						
-					
-					if(data.error == true)
+					fileReference = FileReference(fileList[indice]);
+					fileReference.addEventListener(DataEvent.UPLOAD_COMPLETE_DATA, uploadCompleteData);
+					try
 					{
-						relleno.color = 0xee7970;
-						relleno.alpha = .8;
+						var urlRequest:URLRequest = new URLRequest("http://localhost/ventas/amfphp/services/subirImagen.php");
+						fileReference.upload(urlRequest);
 					}
-					else
-						relleno.alpha = .0;
+					catch(error:Error)
+					{
+						AlertError.show("Error al cargar la imagen " + error.message.toString());	
+					}
 				}
-				catch(error:Error)
-				{
-					trace(error);
-				}   
+			}
+			
+			private function uploadCompleteData(evt:DataEvent):void {
+				data.path = StringUtil.trim(evt.data);
+			}
+			
+			protected function img_clickHandler():void
+			{
+				if(data.isNew == true && data.path == null)
+					seleccionarImagen();
+				else
+					onShowDefaultCalloutClick();
 			}
 			
 		]]>
@@ -59,15 +86,15 @@
 				</s:VerticalLayout>
 			</s:layout>
 			<s:Image width="152" height="152" source="{img.source}" top="5"/>
-			<renders:renderCambiarFoto/>
+			<renders:renderCambiarFoto click="seleccionarImagen()"/>
 		</s:Callout>
 		<components:SparkCallout/>
 	</fx:Declarations>
-	<s:Rect width="100%" height="100%" id="background">
+	<s:Rect id="background" visible="{data.error}" width="100%" height="100%">
 		<s:fill>
-			<s:SolidColor id="relleno"/>
+			<s:SolidColor id="relleno" alpha=".5" color="red"/>
 		</s:fill>
 	</s:Rect>
-	<s:Image id="img" width="32" height="32" click="onShowDefaultCalloutClick()"
-			 horizontalCenter="0" verticalCenter="0"/>
+	<s:Image id="img" width="32" height="32" click="img_clickHandler()"
+			 horizontalCenter="0" verticalCenter="0" source="{data.path != null ? (GlobalStatic.url_image+data.path) : 'img/camara.png'}"/>
 </s:GridItemRenderer>

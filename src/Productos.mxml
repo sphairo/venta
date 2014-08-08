@@ -31,7 +31,10 @@
 						resultFormat="text"
 						url="http://localhost/Ventas/amfphp/services/getAllProducts.php"
 						useProxy="false"/>
-		
+		<mx:HTTPService id="service2" fault="errorGeneral(event)" result="onJSONLoad2(event)"
+						resultFormat="text"
+						url="http://localhost/Ventas/amfphp/services/getAllProducts.php"
+						useProxy="false"/>
 		
 		<mx:RemoteObject id="MiObjetoRemotoProducto" destination="amfphp" showBusyCursor="true"
 						 source="producto"> 
@@ -59,7 +62,6 @@
 	
 	<fx:Script>
 		<![CDATA[		
-			import clases.Cleanner;
 			import clases.ConvertFechaToDate;
 			import clases.GlobalStatic;
 			import clases.Productos;
@@ -72,6 +74,7 @@
 			import mx.collections.ArrayCollection;
 			import mx.collections.IList;
 			import mx.controls.Alert;
+			import mx.events.CloseEvent;
 			import mx.events.FlexEvent;
 			import mx.events.FlexMouseEvent;
 			import mx.managers.PopUpManager;
@@ -79,7 +82,6 @@
 			import mx.rpc.events.ResultEvent;
 			
 			[Bindable] internal var dp:ArrayCollection = new ArrayCollection();
-			[Bindable] internal var producto:clases.Productos;
 			[Bindable] public var arrayMarcas:ArrayCollection;
 			[Bindable] public var arrayOferta:ArrayCollection = new ArrayCollection([{value:"SI"},{value:"NO"}]);
 			[Bindable] public var arrayTipoVenta:ArrayCollection = new ArrayCollection([{value:"Pieza(s)"},{value:"A granel Kg/gr"}]);
@@ -88,28 +90,32 @@
 			internal function resultCallStoreProcedure(exito:ResultEvent):void
 			{
 				removeEventListener(ResultEvent.RESULT, resultCallStoreProcedure);
-				PopUpManager.removePopUp(GlobalStatic.utility.progress);
 				switch(exito.result.response)
 				{
 					case "0":
-						service.send();
-						AlertInfo.show("La información se ha guardo de forma exitosa", 'Atención');
+						service2.send();
 						break;
 					case "1":
 					case "2":
 						AlertError.show("Ocurrio un error al guardar la información.", "Error");
 						break;
 				}
-				
 			}
 			
 			internal function onJSONLoad(event:ResultEvent):void
 			{
 				removeEventListener(ResultEvent.RESULT, onJSONLoad);
-				dp.removeAll();
-				dp = encapsulado((com.adobe.serialization.json.JSON.decode(String(event.result))));
-				arrayOriginal = Utileria.clonar(dp);
+				encapsulado((com.adobe.serialization.json.JSON.decode(String(event.result))));
 			}
+			
+			internal function onJSONLoad2(event:ResultEvent):void
+			{
+				removeEventListener(ResultEvent.RESULT, onJSONLoad2);
+				encapsulado((com.adobe.serialization.json.JSON.decode(String(event.result))));
+				AlertInfo.show("La información se ha guardo de forma exitosa", 'Atención');
+				PopUpManager.removePopUp(GlobalStatic.utility.progress);
+			}
+			
 			
 			internal function preinitializeHandler(event:FlexEvent):void
 			{
@@ -124,27 +130,23 @@
 				Alert.show(error.fault.faultString, "Ocurrio un error");
 			}
 			
-			internal function encapsulado(collection:*):ArrayCollection{
-				
-				var array:ArrayCollection = new ArrayCollection();
-				
-				for each(var item:Object in collection)
-				{
-					producto = new clases.Productos(item);
-					array.addItem(producto);
+			internal function encapsulado(collection:*):void{
+				dp.removeAll();
+				for each(var item:Object in collection){
+					dp.addItem(new clases.Productos(item));
 				}
-				return array;
+				arrayOriginal = Utileria.clonar(dp);
 			}
 			
 			[Bindable] protected var convertir:ConvertFechaToDate = new ConvertFechaToDate();
 			
 			internal function btnGuardar_clickHandler():void
 			{
+				GlobalStatic.utility.avance();
 				var foundObject:Array = new Array(), index:uint = 0;
 				var lista:IList = new ArrayList();
 				var queryString:String;
-				var newDate:String, oldDate:String, isCompleted:Boolean = false;
-				GlobalStatic.utility.showLoading("Espere un momento mientras se guarda la información"); 
+				var newDate:String, oldDate:String, isCompleted:Boolean = false, operacion:uint = 0;
 				for each(var item:Object in datagrid_productos.dataProvider)
 				{
 						if(item.isNew == true){
@@ -191,8 +193,11 @@
 								lista.addItem(" tipoVenta = '" + item.tipoVenta + "'");
 								lista.addItem(" ofertas_Especiales = '" + item.ofertas_Especiales + "'");
 								
+								if(item.path != null)
+									lista.addItem(" path = '" + item.path + "'");
+								
 								newDate = convertir.formatoFechaYYYYMMDD(item.fecha_entrada);
-								lista.addItem(" fecha_entrada = Date('" + newDate + "')")
+								lista.addItem(" fecha_entrada = Date('" + newDate + "')");
 								
 								GlobalStatic.utility.obtenerCamposValores(lista);
 								GlobalStatic.utility.queryMasivo("INSERT INTO " + GlobalStatic.DataBaseName + ".producto (" + GlobalStatic.utility.campos + ") VALUES (" + GlobalStatic.utility.valores + ")");
@@ -207,10 +212,10 @@
 							}
 							
 						}else{
+							foundObject = GlobalStatic.utility.findMatchesByIDReturnArray(item.id_producto, arrayOriginal,"id_producto");
 							for each(var originalItem:Object in foundObject)
 							{
-								foundObject = GlobalStatic.utility.findMatchesByIDReturnArray(item.id_producto, arrayOriginal,"id_producto");
-								
+
 								originalItem.nom_producto != item.nom_producto ? lista.addItem(" nom_producto = '" + item.nom_producto + "'") : "";
 								originalItem.codigo_barra != item.codigo_barra ? lista.addItem(" codigo_barra = '" + item.codigo_barra + "'") : "";
 								originalItem.descripcion != item.descripcion ? lista.addItem(" descripcion = '" + item.descripcion + "'") : "";
@@ -220,25 +225,26 @@
 								originalItem.marca != item.marca ? lista.addItem(" marca = '" + item.marca + "'") : "";
 								originalItem.tipoVenta != item.tipoVenta ? lista.addItem(" tipoVenta = '" + item.tipoVenta + "'") : "";
 								originalItem.ofertas_Especiales != item.ofertas_Especiales ? lista.addItem(" ofertas_Especiales = '" + item.ofertas_Especiales + "'") : "";
+								originalItem.path != item.path ? lista.addItem(" path = '" + item.path + "'") : "";
+								
 								newDate = convertir.formatoFechaYYYYMMDD(item.fecha_entrada);
 								oldDate = convertir.formatoFechaYYYYMMDD(originalItem.fecha_entrada);
 								oldDate != newDate ? lista.addItem(" fecha_entrada = Date('" + newDate + "')") : "";
+								
+								if(lista.length > 0)
+								{
+									queryString = "UPDATE " + GlobalStatic.DataBaseName + ".producto SET";
+									index = lista.length - 1;
+									for each(var obj:Object in lista.toArray())
+									index-- == 0 ? queryString += obj : queryString += obj + " ,";
+									
+									queryString += " WHERE id_producto = " + item.id_producto;
+									GlobalStatic.utility.queryMasivo(queryString);
+									lista.removeAll();
+								}
+								break;
 							}
 						}
-						
-						if(lista.length > 0)
-						{
-							queryString = "UPDATE " + GlobalStatic.DataBaseName + ".producto SET";
-							index = lista.length - 1;
-							for each(var obj:Object in lista.toArray())
-							index-- == 0 ? queryString += obj : queryString += obj + " ,";
-							
-							queryString += " WHERE id_producto = " + item.id_producto;
-							GlobalStatic.utility.queryMasivo(queryString);
-							lista.removeAll();
-						}
-						break;	
-					
 				}
 				if(GlobalStatic.utility.listaQuerys.length > 0)
 					contruirQuery();
@@ -300,7 +306,7 @@
 				defaultCallout.close();
 			}
 			
-			protected function administrarProductos(event:MouseEvent):void
+			internal function administrarProductos(event:MouseEvent):void
 			{
 				currentState='catalogo_productos';
 				
@@ -308,7 +314,7 @@
 					arrayMarcas = new ArrayCollection(Utileria.group(dp));
 			}
 			
-			protected function btnNuevo_clickHandler(event:MouseEvent):void
+			internal function btnNuevo_clickHandler(event:MouseEvent):void
 			{
 				var newItem:clases.Productos = new clases.Productos();
 				newItem.isNew = true;
@@ -321,6 +327,51 @@
 				datagrid_productos.scroller.viewport.verticalScrollPosition = -1;
 			}
 			
+			internal function btnEliminar_clickHandler():void
+			{
+				GlobalStatic.utility.alert('¿ Deseas eliminar el Producto seleccionado ?');
+			}
+			
+			public function accion(opcion:uint):void{
+				if(opcion == 0)
+					trace("cero");
+				else
+					trace("uno");
+				return;
+				if(datagrid_productos.selectedItem != null)
+				{
+					if(datagrid_productos.selectedItem.nom_producto != null && datagrid_productos.selectedItem.descripcion)
+						AlertError.show('¿ Deseas eliminar el Producto ' + datagrid_productos.selectedItem.nom_producto+ ' - ' + datagrid_productos.selectedItem.descripcion ,'Atención', Alert.YES | Alert.NO, this, eliminarCargo, null);
+					else
+						AlertError.show('¿ Deseas eliminar el Producto seleccionado ?', 'Atención', Alert.YES | Alert.NO, this, eliminarCargo, null);
+				}
+				else
+					AlertInfo.show("Usted no ha seleccionado ningun Cargo para eliminarlo.", "Atención", 0, this, null, null);	
+			}
+			protected function eliminarCargo(event:CloseEvent):void
+			{
+				if(event.detail == Alert.YES)
+				{
+					if(dp.getItemAt(datagrid_productos.selectedIndex).isNew == false)//SI EL ITEM SELECCIONADO NO ES UNO NUEVO, ENTONCES ELIMINAMOS FISICAMENTE EL REGISTRO EN LA BASE DE DATOS
+						ejecutarConsultaSQLDelete(datagrid_productos.selectedItem.id_producto);
+					else if(dp.getItemAt(datagrid_productos.selectedIndex).isNew == true)//SI ES UN NUEVO ITEM AGREGADO AL dataGridSeccionesSindicales SIGNIFICA QUE ES UN ITEM QUE NO EXISTE EN LA BASE DE DATOS Y QUE POR LO TANTO PUEDE SER REMOVIDO DEL dataprovider.
+					{
+						datagrid_productos.dataProvider.removeItemAt(datagrid_productos.selectedIndex);
+						dp.refresh();
+						arrayOriginal = Utileria.clonar(dp);
+						btnEliminar.enabled = false;
+						datagrid_productos.selectedIndex = 0;
+						Alert.show("Se elimino correctamente el Cargo en el Sindicato.", "Éxito", 0, this, null, null);		
+					}
+				}
+			}
+			
+			internal function ejecutarConsultaSQLDelete(id_producto:int):void
+			{
+				GlobalStatic.utility.showLoading("Espere mietras se elimina el Cargo en el Sindicato seleccionado.");
+				var queryString:String = "UPDATE " + GlobalStatic.DataBaseName + ".producto SET status = 0 WHERE id_producto = " + id_producto;
+				trace(queryString);
+			}
 		]]>
 		
 	</fx:Script>
@@ -352,7 +403,7 @@
 				<s:HGroup x="550" y="5" height="40">
 					<renders:renderAdd id="btnNuevo" includeIn="catalogo_productos"
 									   click="btnNuevo_clickHandler(event)"/>
-					<renders:renderDelete id="btnEliminar" includeIn="catalogo_productos"/>
+					<renders:renderDelete id="btnEliminar" includeIn="catalogo_productos" click="btnEliminar_clickHandler()"/>
 					<renders:renderSave id="btnGuardar" includeIn="catalogo_productos"
 										click="btnGuardar_clickHandler()"/>
 					<renders:renderPrint id="btnImprimir" includeIn="catalogo_productos"

@@ -26,6 +26,7 @@ package clases
 		
 		public function Productos(producto:Object = null){
 			if(producto != null){
+				path = producto.path;
 				id_producto = producto.id_producto;
 				id_sucursal = producto.id_sucursal;
 				codigo_barra = producto.codigo_barra;
@@ -35,7 +36,6 @@ package clases
 				precio = producto.precio;
 				precio_compra = Number(producto.precio_compra);	
 				marca = producto.marca;
-				path = producto.path;
 				fecha_entrada = Utileria.format(producto.fecha_entrada);
 				tipoVenta = producto.tipoVenta;	
 				ofertas_Especiales =  producto.ofertas_Especiales;	
@@ -238,7 +238,7 @@ package clases
 		}
 		
 		
-		[Bindable(event="propertyChange")]
+		[Bindable]
 		public function get path():String
 		{
 			return _path;

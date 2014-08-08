@@ -25,6 +25,8 @@ package clases
 	import mx.managers.PopUpManager;
 	import mx.utils.StringUtil;
 	
+	import renders.CustomAlert;
+	
 	public class Utileria extends EventDispatcher
 	{
 		private var _coincidencias:Array;
@@ -249,12 +251,28 @@ package clases
 			return null;
 		}
 		
-		public function showLoading(mensaje:String):void 
+		public function showLoading(mensaje:String, operation:uint = 0):void 
 		{ 
 			progress = new Progress();
 			progress.message(mensaje);
 			PopUpManager.addPopUp(progress, FlexGlobals.topLevelApplication as DisplayObject, true);
 			PopUpManager.centerPopUp(progress);
+		}
+		
+		
+		public function avance():void 
+		{ 
+			progress = new Progress();
+			PopUpManager.addPopUp(progress, FlexGlobals.topLevelApplication as DisplayObject, true);
+			PopUpManager.centerPopUp(progress);
+		}
+		
+		public function alert(msj:String):void 
+		{ 
+			var alert:CustomAlert = new CustomAlert();
+			alert.msj = msj;
+			PopUpManager.addPopUp(alert, FlexGlobals.topLevelApplication as DisplayObject, true);
+			PopUpManager.centerPopUp(alert);
 		}
 		
 		private var campo:String, valor:String;

@@ -68,11 +68,22 @@
 		</s:Callout>
 		<components:SparkCallout/>
 	</fx:Declarations>	
-	<s:Image id="img_background" width="100%" height="100%" scaleMode="stretch" smooth="true"
-			 source="@Embed('img/background_producto.png')"/>
+	<!--<s:Image id="img_background" width="100%" height="100%" scaleMode="stretch" smooth="true"
+			 source="@Embed('img/background_producto.png')"/>-->
+	
+	<s:BorderContainer id="background" left="10" right="10" top="10" bottom="15"
+					   borderVisible="false" dropShadowVisible="true">
+		<s:backgroundFill>
+			<s:LinearGradient rotation="90">
+				<s:GradientEntry color="#ffffff"/>
+			</s:LinearGradient>
+		</s:backgroundFill> 		
+	</s:BorderContainer>
+
 	<s:Image id="img" y="10" width="124" height="124" complete="cargaCompleta()" horizontalCenter="0"
 			 rollOut="img_rollOutHandler(event)" rollOver="img_rollOverHandler(event)"
-			 scaleMode="letterbox" smooth="true" smoothingQuality="high" source="{GlobalStatic.url_image +data.path}"/>
+			 scaleMode="letterbox" smooth="true" smoothingQuality="high"
+			 source="{GlobalStatic.url_image +data.path}"/>
 	<s:BusyIndicator id="loader" width="64" height="64" horizontalCenter="0" verticalCenter="-40"/>
 	<s:Label x="15" y="172" width="130" color="#929292" fontSize="12" text="{data.nom_producto}"
 			 textAlign="left"/>

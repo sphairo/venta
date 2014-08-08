@@ -20,14 +20,6 @@
 						comboBox.textInput.text = "SI";
 					else if(data.ofertas_Especiales == "N")
 						comboBox.textInput.text = "NO";
-					
-					if(data.error == true)
-					{
-						relleno.color = 0xee7970;
-						relleno.alpha = .8;
-					}
-					else
-						relleno.alpha = .0;
 				}
 				catch(error:Error)
 				{
@@ -47,9 +39,9 @@
 			
 		]]>
 	</fx:Script>
-	<s:Rect width="100%" height="100%" id="background">
+	<s:Rect id="background" visible="{data.error}" width="100%" height="100%">
 		<s:fill>
-			<s:SolidColor id="relleno"/>
+			<s:SolidColor id="relleno" alpha=".5" color="red"/>
 		</s:fill>
 	</s:Rect>
 	<s:ComboBox id="comboBox" width="100%" height="100%" change="changeHandler(event)"

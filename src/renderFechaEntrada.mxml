@@ -20,39 +20,17 @@
 			{
 				data.fecha_entrada = event.newDate;
 			}
-			
-			override public function set data(value:Object):void
-			{
-				try
-				{
-					if(value == null) return;
-					super.data = value;
-					
-					dateFieldFechaNacimiento.selectedDate = data.fecha_entrada;
-					
-					if(data.error == true)
-					{
-						relleno.color = 0xee7970;
-						relleno.alpha = .8;
-					}
-					else
-						relleno.alpha = .0;
-				}
-				catch(error:Error)
-				{
-					trace(error);
-				}   
-			}
 		]]>
 	</fx:Script>
-	<s:Rect width="100%" height="100%" id="background">
+	<s:Rect id="background" visible="{data.error}" width="100%" height="100%">
 		<s:fill>
-			<s:SolidColor id="relleno"/>
+			<s:SolidColor id="relleno" alpha=".5" color="red"/>
 		</s:fill>
 	</s:Rect>
-	<mx:DateField id="dateFieldFechaNacimiento" width="90%" change="selectedDate(event)" buttonMode="true"
-				  editable="false" formatString="DD-MM-YYYY" horizontalCenter="0"
-				  labelFunction="convertFechaToDate" selectedDate="@{data.fecha_entrada}"
-				  toolTip="Fecha: Dia-Mes-Año" verticalCenter="0" yearNavigationEnabled="true" contentBackgroundAlpha="0.0"/>
+	<mx:DateField id="dateFieldFechaNacimiento" width="90%" buttonMode="true"
+				  change="selectedDate(event)" contentBackgroundAlpha="0.0" editable="false"
+				  formatString="DD-MM-YYYY" horizontalCenter="0" labelFunction="convertFechaToDate"
+				  selectedDate="@{data.fecha_entrada}" toolTip="Fecha: Dia-Mes-Año"
+				  verticalCenter="0" yearNavigationEnabled="true"/>
 	
 </s:GridItemRenderer>

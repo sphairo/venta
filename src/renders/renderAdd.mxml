@@ -8,5 +8,5 @@
 	<s:Image left="10" width="32" height="32" scaleMode="letterbox" smooth="true"
 			 source="img/btn_zoom_more.png" verticalCenter="0"/>
 	<s:Label id="lblAgregar" left="45" color="#FFFFFF" fontStyle="italic" fontWeight="normal"
-			 text="Agregar" verticalCenter="0"/>
+			 text="Nuevo" verticalCenter="0"/>
 </s:Group>
