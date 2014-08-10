@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" width="115" height="40" buttonMode="true" contentBackgroundAlpha="0.0" rollOut="rollOutHandler(event)"
+		 rollOver="btnrollOverHandler(event)">
+	
+	<fx:Script>
+		<![CDATA[
+			protected function btnrollOverHandler(event:MouseEvent):void
+			{
+				lblCancelar.setStyle("color","#f93d6f");
+				img.source='img/botonTache2.png';
+			}
+			
+			protected function rollOutHandler(event:MouseEvent):void
+			{
+				lblCancelar.setStyle("color","#B3B0B0");
+				img.source='img/botonTache.png';
+			}
+		]]>
+	</fx:Script>
+	
+	
+	<s:Image left="10" width="32" height="32" scaleMode="letterbox" smooth="true"
+			 source="img/botonTache.png" verticalCenter="0" id="img"/>
+	<s:Label id="lblCancelar" left="45" color="#B3B0B0" fontStyle="italic" fontWeight="normal"
+			 text="Cancelar" verticalCenter="0"/>
+</s:Group>

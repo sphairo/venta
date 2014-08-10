@@ -4,8 +4,10 @@
 					   xmlns:mx="library://ns.adobe.com/flex/mx"
 					   xmlns:buttons="com.anotherflexdev.ui.buttons.*"
 					   xmlns:components="components.*"
-					   xmlns:renders="renders.*" currentState="dashboard_productos"
-					   preinitialize="preinitializeHandler(event)" skinClass="skins.skinProductos">
+					   xmlns:renders="renders.*"
+					   currentState="dashboard_productos"
+					   preinitialize="preinitializeHandler(event)" showStatusBar="false"
+					   skinClass="skins.skinProductos">
 	<s:states>
 		<s:State name="catalogo_productos"/>
 		<s:State name="dashboard_productos"/>
@@ -56,7 +58,7 @@
 			<renders:renderConfiguracion/>
 			<renders:renderCerrarSession/>
 		</s:Callout>
-			
+		
 		<components:SparkCallout/>
 	</fx:Declarations>
 	
@@ -73,8 +75,6 @@
 			
 			import mx.collections.ArrayCollection;
 			import mx.collections.IList;
-			import mx.controls.Alert;
-			import mx.events.CloseEvent;
 			import mx.events.FlexEvent;
 			import mx.events.FlexMouseEvent;
 			import mx.managers.PopUpManager;
@@ -112,7 +112,7 @@
 			{
 				removeEventListener(ResultEvent.RESULT, onJSONLoad2);
 				encapsulado((com.adobe.serialization.json.JSON.decode(String(event.result))));
-				AlertInfo.show("La información se ha guardo de forma exitosa", 'Atención');
+				AlertInfo.show("La información se ha guardo exitosamente.", 'Atención');
 				PopUpManager.removePopUp(GlobalStatic.utility.progress);
 			}
 			
@@ -127,124 +127,124 @@
 			internal function errorGeneral(error:FaultEvent):void
 			{
 				removeEventListener(FaultEvent.FAULT, errorGeneral);
-				Alert.show(error.fault.faultString, "Ocurrio un error");
+				PopUpManager.removePopUp(GlobalStatic.utility.progress);
+				AlertError.show(error.fault.faultString, "Ocurrio un error");
 			}
 			
 			internal function encapsulado(collection:*):void{
 				dp.removeAll();
-				for each(var item:Object in collection){
-					dp.addItem(new clases.Productos(item));
-				}
+				for each(var item:Object in collection)
+				dp.addItem(new clases.Productos(item));
 				arrayOriginal = Utileria.clonar(dp);
 			}
 			
-			[Bindable] protected var convertir:ConvertFechaToDate = new ConvertFechaToDate();
+			[Bindable] internal var convertir:ConvertFechaToDate = new ConvertFechaToDate();
 			
 			internal function btnGuardar_clickHandler():void
 			{
-				GlobalStatic.utility.avance();
+				GlobalStatic.utility.showLoad();
 				var foundObject:Array = new Array(), index:uint = 0;
 				var lista:IList = new ArrayList();
 				var queryString:String;
 				var newDate:String, oldDate:String, isCompleted:Boolean = false, operacion:uint = 0;
 				for each(var item:Object in datagrid_productos.dataProvider)
 				{
-						if(item.isNew == true){
-							
-							if(item.nom_producto != "")
+					if(item.isNew == true){
+						
+						if(item.nom_producto != "")
+						{
+							if(item.codigo_barra != "")
 							{
-								if(item.codigo_barra != "")
+								if(item.descripcion != "")
 								{
-									if(item.descripcion != "")
+									if(item.cantidad != Utileria.defaultValue)
 									{
-										if(item.cantidad != Utileria.defaultValue)
+										if(item.precio != Utileria.defaultValue)
 										{
-											if(item.precio != Utileria.defaultValue)
+											if(item.precio_compra != Utileria.defaultValue)
 											{
-												if(item.precio_compra != Utileria.defaultValue)
+												if(item.marca != "")
 												{
-													if(item.marca != "")
+													if(item.tipoVenta != "")
 													{
-														if(item.tipoVenta != "")
+														if(item.ofertas_Especiales != "")
 														{
-															if(item.ofertas_Especiales != "")
+															if(item.fecha_entrada != null)
 															{
-																if(item.fecha_entrada != null)
-																{
-																	isCompleted = true;
-																}
+																isCompleted = true;
 															}
 														}
 													}
-												}	
-											}
+												}
+											}	
 										}
 									}
 								}
 							}
-							
-							if(isCompleted == true)
-							{
-								lista.addItem(" nom_producto = '" + item.nom_producto + "'");
-								lista.addItem(" codigo_barra = '" + item.codigo_barra + "'");
-								lista.addItem(" descripcion = '" + item.descripcion + "'");
-								lista.addItem(" precio = " + item.precio);
-								lista.addItem(" precio_compra = " + item.precio_compra);
-								lista.addItem(" tipoVenta = '" + item.tipoVenta + "'");
-								lista.addItem(" ofertas_Especiales = '" + item.ofertas_Especiales + "'");
-								
-								if(item.path != null)
-									lista.addItem(" path = '" + item.path + "'");
-								
-								newDate = convertir.formatoFechaYYYYMMDD(item.fecha_entrada);
-								lista.addItem(" fecha_entrada = Date('" + newDate + "')");
-								
-								GlobalStatic.utility.obtenerCamposValores(lista);
-								GlobalStatic.utility.queryMasivo("INSERT INTO " + GlobalStatic.DataBaseName + ".producto (" + GlobalStatic.utility.campos + ") VALUES (" + GlobalStatic.utility.valores + ")");
-								lista.removeAll();
-								
-								isCompleted = false;
-							}else
-							{
-								item.error = true;
-								excepcion();
-								return;	
-							}
-							
-						}else{
-							foundObject = GlobalStatic.utility.findMatchesByIDReturnArray(item.id_producto, arrayOriginal,"id_producto");
-							for each(var originalItem:Object in foundObject)
-							{
-
-								originalItem.nom_producto != item.nom_producto ? lista.addItem(" nom_producto = '" + item.nom_producto + "'") : "";
-								originalItem.codigo_barra != item.codigo_barra ? lista.addItem(" codigo_barra = '" + item.codigo_barra + "'") : "";
-								originalItem.descripcion != item.descripcion ? lista.addItem(" descripcion = '" + item.descripcion + "'") : "";
-								originalItem.cantidad != item.cantidad ? lista.addItem(" cantidad = " + item.cantidad) : "";
-								originalItem.precio != item.precio ? lista.addItem(" precio = " + item.precio) : "";
-								originalItem.precio_compra != item.precio_compra ? lista.addItem(" precio_compra = " + item.precio_compra) : "";
-								originalItem.marca != item.marca ? lista.addItem(" marca = '" + item.marca + "'") : "";
-								originalItem.tipoVenta != item.tipoVenta ? lista.addItem(" tipoVenta = '" + item.tipoVenta + "'") : "";
-								originalItem.ofertas_Especiales != item.ofertas_Especiales ? lista.addItem(" ofertas_Especiales = '" + item.ofertas_Especiales + "'") : "";
-								originalItem.path != item.path ? lista.addItem(" path = '" + item.path + "'") : "";
-								
-								newDate = convertir.formatoFechaYYYYMMDD(item.fecha_entrada);
-								oldDate = convertir.formatoFechaYYYYMMDD(originalItem.fecha_entrada);
-								oldDate != newDate ? lista.addItem(" fecha_entrada = Date('" + newDate + "')") : "";
-								
-								if(lista.length > 0)
-								{
-									queryString = "UPDATE " + GlobalStatic.DataBaseName + ".producto SET";
-									index = lista.length - 1;
-									for each(var obj:Object in lista.toArray())
-									index-- == 0 ? queryString += obj : queryString += obj + " ,";
-									
-									queryString += " WHERE id_producto = " + item.id_producto;
-									GlobalStatic.utility.queryMasivo(queryString);
-									lista.removeAll();
-								}
-								break;
-							}
 						}
+						
+						if(isCompleted == true)
+						{
+							lista.addItem(" nom_producto = '" + item.nom_producto + "'");
+							lista.addItem(" codigo_barra = '" + item.codigo_barra + "'");
+							lista.addItem(" descripcion = '" + item.descripcion + "'");
+							lista.addItem(" precio = " + item.precio);
+							lista.addItem(" precio_compra = " + item.precio_compra);
+							lista.addItem(" tipoVenta = '" + item.tipoVenta + "'");
+							lista.addItem(" ofertas_Especiales = '" + item.ofertas_Especiales + "'");
+							
+							if(item.path != null)
+								lista.addItem(" path = '" + item.path + "'");
+							
+							newDate = convertir.formatoFechaYYYYMMDD(item.fecha_entrada);
+							lista.addItem(" fecha_entrada = Date('" + newDate + "')");
+							
+							GlobalStatic.utility.obtenerCamposValores(lista);
+							GlobalStatic.utility.queryMasivo("INSERT INTO " + GlobalStatic.DataBaseName + ".producto (" + GlobalStatic.utility.campos + ") VALUES (" + GlobalStatic.utility.valores + ")");
+							lista.removeAll();
+							
+							isCompleted = false;
+						}else
+						{
+							item.error = true;
+							excepcion();
+							return;	
+						}
+						
+					}else{
+						foundObject = GlobalStatic.utility.findMatchesByIDReturnArray(item.id_producto, arrayOriginal,"id_producto");
+						for each(var originalItem:Object in foundObject)
+						{
+							
+							originalItem.nom_producto != item.nom_producto ? lista.addItem(" nom_producto = '" + item.nom_producto + "'") : "";
+							originalItem.codigo_barra != item.codigo_barra ? lista.addItem(" codigo_barra = '" + item.codigo_barra + "'") : "";
+							originalItem.descripcion != item.descripcion ? lista.addItem(" descripcion = '" + item.descripcion + "'") : "";
+							originalItem.cantidad != item.cantidad ? lista.addItem(" cantidad = " + item.cantidad) : "";
+							originalItem.precio != item.precio ? lista.addItem(" precio = " + item.precio) : "";
+							originalItem.precio_compra != item.precio_compra ? lista.addItem(" precio_compra = " + item.precio_compra) : "";
+							originalItem.marca != item.marca ? lista.addItem(" marca = '" + item.marca + "'") : "";
+							originalItem.tipoVenta != item.tipoVenta ? lista.addItem(" tipoVenta = '" + item.tipoVenta + "'") : "";
+							originalItem.ofertas_Especiales != item.ofertas_Especiales ? lista.addItem(" ofertas_Especiales = '" + item.ofertas_Especiales + "'") : "";
+							originalItem.path != item.path ? lista.addItem(" path = '" + item.path + "'") : "";
+							
+							newDate = convertir.formatoFechaYYYYMMDD(item.fecha_entrada);
+							oldDate = convertir.formatoFechaYYYYMMDD(originalItem.fecha_entrada);
+							oldDate != newDate ? lista.addItem(" fecha_entrada = Date('" + newDate + "')") : "";
+							
+							if(lista.length > 0)
+							{
+								queryString = "UPDATE " + GlobalStatic.DataBaseName + ".producto SET";
+								index = lista.length - 1;
+								for each(var obj:Object in lista.toArray())
+								index-- == 0 ? queryString += obj : queryString += obj + " ,";
+								
+								queryString += " WHERE id_producto = " + item.id_producto;
+								GlobalStatic.utility.queryMasivo(queryString);
+								lista.removeAll();
+							}
+							break;
+						}
+					}
 				}
 				if(GlobalStatic.utility.listaQuerys.length > 0)
 					contruirQuery();
@@ -300,7 +300,7 @@
 			internal function onMouseDownOutside(event:FlexMouseEvent):void {
 				event.target.close();
 			}
-						
+			
 			internal function defaultCallout_mouseDownHandler(event:MouseEvent):void
 			{
 				defaultCallout.close();
@@ -316,8 +316,23 @@
 			
 			internal function btnNuevo_clickHandler(event:MouseEvent):void
 			{
-				var newItem:clases.Productos = new clases.Productos();
-				newItem.isNew = true;
+				var newItem:clases.Productos = new clases.Productos(
+					{path:null,
+						id_producto:-1,
+						id_sucursal:1,
+						codigo_barra:null,
+						nom_producto:null,
+						descripcion:null,
+						cantidad:Utileria.defaultValue,
+						precio:Utileria.defaultValue,
+						precio_compra:Utileria.defaultValue,
+						marca:null,
+						fecha_entrada:Utileria.DateTodayToString(),
+						tipoVenta:'P',	
+						ofertas_Especiales:'N',	
+						indice:Utileria.defaultValue,
+						isNew:true}
+				);
 				dp.sort = null;
 				dp.filterFunction = null;
 				datagrid_productos.sortableColumns = false;
@@ -329,46 +344,36 @@
 			
 			internal function btnEliminar_clickHandler():void
 			{
-				GlobalStatic.utility.alert('¿ Deseas eliminar el Producto seleccionado ?');
+				if(datagrid_productos.selectedItem == null)
+					AlertInfo.show("Es necesario que seleccione un producto para poder eliminarlo.");
+				else if(datagrid_productos.selectedItem != null)
+				{
+					if(datagrid_productos.selectedItem.nom_producto != null)
+						GlobalStatic.utility.customAlert("¿Seguro que deseas eliminar el producto "+datagrid_productos.selectedItem.nom_producto+"?", this);
+					else if(datagrid_productos.selectedItem.descripcion != null)
+						GlobalStatic.utility.customAlert("¿Seguro que deseas eliminar el producto "+datagrid_productos.selectedItem.descripcion+"?", this);
+					else
+						GlobalStatic.utility.customAlert("¿Seguro que deseas eliminar el producto seleccionado?", this);
+				}
 			}
 			
-			public function accion(opcion:uint):void{
-				if(opcion == 0)
-					trace("cero");
-				else
-					trace("uno");
-				return;
-				if(datagrid_productos.selectedItem != null)
+			public function eliminar():void{
+				PopUpManager.removePopUp(GlobalStatic.utility.alert);	
+				if(dp.getItemAt(datagrid_productos.selectedIndex).isNew == false)//SI EL ITEM SELECCIONADO NO ES UNO NUEVO, ENTONCES ELIMINAMOS FISICAMENTE EL REGISTRO EN LA BASE DE DATOS
+					ejecutarConsultaSQLDelete(datagrid_productos.selectedItem.id_producto);
+				else if(dp.getItemAt(datagrid_productos.selectedIndex).isNew == true)//SI ES UN NUEVO ITEM AGREGADO AL dataGridSeccionesSindicales SIGNIFICA QUE ES UN ITEM QUE NO EXISTE EN LA BASE DE DATOS Y QUE POR LO TANTO PUEDE SER REMOVIDO DEL dataprovider.
 				{
-					if(datagrid_productos.selectedItem.nom_producto != null && datagrid_productos.selectedItem.descripcion)
-						AlertError.show('¿ Deseas eliminar el Producto ' + datagrid_productos.selectedItem.nom_producto+ ' - ' + datagrid_productos.selectedItem.descripcion ,'Atención', Alert.YES | Alert.NO, this, eliminarCargo, null);
-					else
-						AlertError.show('¿ Deseas eliminar el Producto seleccionado ?', 'Atención', Alert.YES | Alert.NO, this, eliminarCargo, null);
-				}
-				else
-					AlertInfo.show("Usted no ha seleccionado ningun Cargo para eliminarlo.", "Atención", 0, this, null, null);	
-			}
-			protected function eliminarCargo(event:CloseEvent):void
-			{
-				if(event.detail == Alert.YES)
-				{
-					if(dp.getItemAt(datagrid_productos.selectedIndex).isNew == false)//SI EL ITEM SELECCIONADO NO ES UNO NUEVO, ENTONCES ELIMINAMOS FISICAMENTE EL REGISTRO EN LA BASE DE DATOS
-						ejecutarConsultaSQLDelete(datagrid_productos.selectedItem.id_producto);
-					else if(dp.getItemAt(datagrid_productos.selectedIndex).isNew == true)//SI ES UN NUEVO ITEM AGREGADO AL dataGridSeccionesSindicales SIGNIFICA QUE ES UN ITEM QUE NO EXISTE EN LA BASE DE DATOS Y QUE POR LO TANTO PUEDE SER REMOVIDO DEL dataprovider.
-					{
-						datagrid_productos.dataProvider.removeItemAt(datagrid_productos.selectedIndex);
-						dp.refresh();
-						arrayOriginal = Utileria.clonar(dp);
-						btnEliminar.enabled = false;
-						datagrid_productos.selectedIndex = 0;
-						Alert.show("Se elimino correctamente el Cargo en el Sindicato.", "Éxito", 0, this, null, null);		
-					}
+					datagrid_productos.dataProvider.removeItemAt(datagrid_productos.selectedIndex);
+					dp.refresh();
+					arrayOriginal = Utileria.clonar(dp);
+					datagrid_productos.selectedIndex = 0;
+					AlertInfo.show("Se elimino correctamente el producto.");		
 				}
 			}
 			
 			internal function ejecutarConsultaSQLDelete(id_producto:int):void
 			{
-				GlobalStatic.utility.showLoading("Espere mietras se elimina el Cargo en el Sindicato seleccionado.");
+				GlobalStatic.utility.showLoad();
 				var queryString:String = "UPDATE " + GlobalStatic.DataBaseName + ".producto SET status = 0 WHERE id_producto = " + id_producto;
 				trace(queryString);
 			}
@@ -403,7 +408,8 @@
 				<s:HGroup x="550" y="5" height="40">
 					<renders:renderAdd id="btnNuevo" includeIn="catalogo_productos"
 									   click="btnNuevo_clickHandler(event)"/>
-					<renders:renderDelete id="btnEliminar" includeIn="catalogo_productos" click="btnEliminar_clickHandler()"/>
+					<renders:renderDelete id="btnEliminar" includeIn="catalogo_productos"
+										  click="btnEliminar_clickHandler()"/>
 					<renders:renderSave id="btnGuardar" includeIn="catalogo_productos"
 										click="btnGuardar_clickHandler()"/>
 					<renders:renderPrint id="btnImprimir" includeIn="catalogo_productos"
@@ -414,34 +420,46 @@
 			</s:BorderContainer>
 			
 			<s:List id="list" includeIn="dashboard_productos" left="20" right="0" top="51" bottom="0"
-					borderVisible="false" contentBackgroundAlpha="0.0" dataProvider="{dp}"
-					focusColor="#ffffff" itemRenderer="skins.itemRenderProducto" allowMultipleSelection="true"
-					rollOverColor="#D1D1D1" selectionColor="#ADADAD" >
+					allowMultipleSelection="true" borderVisible="false" contentBackgroundAlpha="0.0"
+					dataProvider="{dp}" focusColor="#ffffff" itemRenderer="skins.itemRenderProducto"
+					rollOverColor="#D1D1D1" selectionColor="#ADADAD">
 				<s:layout>
-					<s:TileLayout horizontalGap="10" verticalGap="10"/>
+					<s:TileLayout horizontalGap="12" verticalGap="12"/>
 				</s:layout>
 			</s:List>
-			<s:DataGrid id="datagrid_productos" includeInLayout="true" includeIn="catalogo_productos" x="0" y="50"
+			<s:DataGrid id="datagrid_productos" includeIn="catalogo_productos" x="0" y="50"
 						width="100%" height="100%" dataProvider="{dp}" editable="true"
-						hasFocusableChildren="true">
+						hasFocusableChildren="true" includeInLayout="true">
 				<s:columns>
 					<s:ArrayList>
-						<s:GridColumn id="c" dataField="codigo_barra" headerText="Codigo" itemRenderer="itemRenderCodigoBarras" rendererIsEditable="true"/>
-						<s:GridColumn dataField="nom_producto" headerText="Nombre" itemRenderer="itemRenderNombreProducto" rendererIsEditable="true"/>
+						<s:GridColumn id="c" dataField="codigo_barra" headerText="Codigo"
+									  itemRenderer="itemRenderCodigoBarras"
+									  rendererIsEditable="true"/>
+						<s:GridColumn dataField="nom_producto" headerText="Nombre"
+									  itemRenderer="itemRenderNombreProducto"
+									  rendererIsEditable="true"/>
 						<s:GridColumn dataField="marca" headerText="Marca"
-									  itemRenderer="renders.itemRenderMarcas" rendererIsEditable="true"/>
-						<s:GridColumn dataField="descripcion" headerText="Descripción" itemRenderer="itemRenderDescripcion" rendererIsEditable="true"/>
-						<s:GridColumn dataField="cantidad" headerText="Cantidad" itemRenderer="itemRenderCantidad" rendererIsEditable="true"/>
-						<s:GridColumn dataField="precio" headerText="Precio" itemRenderer="itemRenderPrecio" rendererIsEditable="true"/>
-						<s:GridColumn dataField="precio_compra" headerText="Precio compra" itemRenderer="itemRenderPrecioCompra" rendererIsEditable="true"/>
-						<s:GridColumn editable="false" headerText="Foto" itemRenderer="itemRenderImg" rendererIsEditable="true"/>
-						<s:GridColumn dataField="fecha_entrada" rendererIsEditable="true"
-									  headerText="Fecha Entrada" itemRenderer="renderFechaEntrada"/>
-						<s:GridColumn dataField="tipoVenta" headerText="Tipo Venta" rendererIsEditable="true"
-									  itemRenderer="renders.itemRenderTipoVenta"/>
-						<s:GridColumn dataField="ofertas_Especiales" rendererIsEditable="true"
-									  headerText="Oferta"
-									  itemRenderer="renders.itemRenderOfertaEspecial"/>
+									  itemRenderer="renders.itemRenderMarcas"
+									  rendererIsEditable="true"/>
+						<s:GridColumn dataField="descripcion" headerText="Descripción"
+									  itemRenderer="itemRenderDescripcion" rendererIsEditable="true"/>
+						<s:GridColumn dataField="cantidad" headerText="Cantidad"
+									  itemRenderer="itemRenderCantidad" rendererIsEditable="true"/>
+						<s:GridColumn dataField="precio" headerText="Precio"
+									  itemRenderer="itemRenderPrecio" rendererIsEditable="true"/>
+						<s:GridColumn dataField="precio_compra" headerText="Precio compra"
+									  itemRenderer="itemRenderPrecioCompra"
+									  rendererIsEditable="true"/>
+						<s:GridColumn editable="false" headerText="Foto" itemRenderer="itemRenderImg"
+									  rendererIsEditable="true"/>
+						<s:GridColumn dataField="fecha_entrada" headerText="Fecha Entrada"
+									  itemRenderer="renderFechaEntrada" rendererIsEditable="true"/>
+						<s:GridColumn dataField="tipoVenta" headerText="Tipo Venta"
+									  itemRenderer="renders.itemRenderTipoVenta"
+									  rendererIsEditable="true"/>
+						<s:GridColumn dataField="ofertas_Especiales" headerText="Oferta"
+									  itemRenderer="renders.itemRenderOfertaEspecial"
+									  rendererIsEditable="true"/>
 						
 						
 					</s:ArrayList>

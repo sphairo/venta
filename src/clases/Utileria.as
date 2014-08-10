@@ -31,6 +31,7 @@ package clases
 	{
 		private var _coincidencias:Array;
 		public var progress:Progress;
+		public var alert:CustomAlert;
 		
 		public function Utileria(){}
 		
@@ -154,6 +155,12 @@ package clases
 			return new Date((fecha.fullYear + "/" + ((fecha.month) + 1)  + "/" + fecha.date).toString());
 		}
 		
+		public static function DateTodayToString():String
+		{
+			var fecha:Date = new Date();
+			return (fecha.fullYear + "/" + ((fecha.month) + 1)  + "/" + fecha.date).toString();
+		}
+		
 		public function findMatchesByID(ID:int, array:ArrayCollection, columnName:String):Object
 		{
 			coincidencias = findInCollection(array, findFunction(columnName, ID));
@@ -260,18 +267,19 @@ package clases
 		}
 		
 		
-		public function avance():void 
+		public function showLoad():void 
 		{ 
 			progress = new Progress();
 			PopUpManager.addPopUp(progress, FlexGlobals.topLevelApplication as DisplayObject, true);
 			PopUpManager.centerPopUp(progress);
 		}
 		
-		public function alert(msj:String):void 
+		public function customAlert(msj:String, parent:*):void 
 		{ 
-			var alert:CustomAlert = new CustomAlert();
+			alert = new CustomAlert();
 			alert.msj = msj;
-			PopUpManager.addPopUp(alert, FlexGlobals.topLevelApplication as DisplayObject, true);
+			alert._parent = parent;
+			PopUpManager.addPopUp(alert, parent as DisplayObject, true);
 			PopUpManager.centerPopUp(alert);
 		}
 		
@@ -314,9 +322,9 @@ package clases
 		}
 		
 		/** Esta funcion permite comparar 2 Fechas y validar SI una es MAYOR que la otra o si son IGUALES, la funcion retorna lo siguiente:
-		1 - fecha1 es mayor que fecha2, 
-		0 - fecha1 es igual a la fecha2, 
-		2 - fecha1 es menor que fecha2 */
+		 1 - fecha1 es mayor que fecha2, 
+		 0 - fecha1 es igual a la fecha2, 
+		 2 - fecha1 es menor que fecha2 */
 		public function compararFechas(fecha1:Date, fecha2:Date):uint
 		{
 			if(fecha1.time > fecha2.time)

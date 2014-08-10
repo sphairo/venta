@@ -23,9 +23,7 @@
 			internal function onShowDefaultCalloutClick():void {
 				defaultCallout.open(img);
 			}
-			
-			private const textFilter:FileFilter = new FileFilter("Images", ".gif;*.jpeg;*.jpg;*.png");
-			private var variables:URLVariables = new URLVariables();
+		
 			[Bindable] private var fileReferenceListImagen:FileReferenceList;
 			
 			protected function seleccionarImagen():void
@@ -47,19 +45,16 @@
 				var fileReferenceList:FileReferenceList = FileReferenceList(event.target);
 				var fileList:Array = fileReferenceList.fileList;
 				
-				for (var indice:uint = 0; indice < fileList.length; indice++)
+				fileReference = FileReference(fileList[0]);
+				fileReference.addEventListener(DataEvent.UPLOAD_COMPLETE_DATA, uploadCompleteData);
+				try
 				{
-					fileReference = FileReference(fileList[indice]);
-					fileReference.addEventListener(DataEvent.UPLOAD_COMPLETE_DATA, uploadCompleteData);
-					try
-					{
-						var urlRequest:URLRequest = new URLRequest("http://localhost/ventas/amfphp/services/subirImagen.php");
-						fileReference.upload(urlRequest);
-					}
-					catch(error:Error)
-					{
-						AlertError.show("Error al cargar la imagen " + error.message.toString());	
-					}
+					var urlRequest:URLRequest = new URLRequest("http://localhost/ventas/amfphp/services/subirImagen.php");
+					fileReference.upload(urlRequest);
+				}
+				catch(error:Error)
+				{
+					AlertError.show("Error al cargar la imagen " + error.message.toString());	
 				}
 			}
 			

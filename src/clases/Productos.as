@@ -24,23 +24,22 @@ package clases
 		private var _isNew:Boolean = false;
 		private var _error:Boolean = false;
 		
-		public function Productos(producto:Object = null){
-			if(producto != null){
-				path = producto.path;
-				id_producto = producto.id_producto;
-				id_sucursal = producto.id_sucursal;
-				codigo_barra = producto.codigo_barra;
-				nom_producto = producto.nom_producto;
-				descripcion = producto.descripcion;
-				cantidad = producto.cantidad;	
-				precio = producto.precio;
-				precio_compra = Number(producto.precio_compra);	
-				marca = producto.marca;
-				fecha_entrada = Utileria.format(producto.fecha_entrada);
-				tipoVenta = producto.tipoVenta;	
-				ofertas_Especiales =  producto.ofertas_Especiales;	
-				indice = producto.indice;
-			}
+		public function Productos(producto:Object){
+			path = producto.path;
+			id_producto = producto.id_producto;
+			id_sucursal = producto.id_sucursal;
+			codigo_barra = producto.codigo_barra;
+			nom_producto = producto.nom_producto;
+			descripcion = producto.descripcion;
+			cantidad = producto.cantidad;	
+			precio = producto.precio;
+			precio_compra = Number(producto.precio_compra);	
+			marca = producto.marca;
+			fecha_entrada = Utileria.format(producto.fecha_entrada);
+			tipoVenta = producto.tipoVenta;	
+			ofertas_Especiales =  producto.ofertas_Especiales;	
+			indice = producto.indice;
+			isNew = producto.isNew;
 		}
 		
 		[Bindable(event="propertyChange")]

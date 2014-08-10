@@ -4,7 +4,7 @@
 					   xmlns:mx="library://ns.adobe.com/flex/mx"
 					   xmlns:buttons="com.anotherflexdev.ui.buttons.*"
 					   width="100%" height="100%" creationComplete="maximize()" currentState="login"
-					   title="Marketplace">
+					   title="Marketplace" showStatusBar="false">
 	<fx:Style source="Styles/Main.css"/>
 	<fx:Style source="styles/Main.css"/>
 	

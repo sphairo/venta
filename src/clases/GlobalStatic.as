@@ -25,6 +25,7 @@ package clases
 		private static var _aplicacion:Object = new Object();
 		private static var _defaultDateRange:Object = new Object();
 		private static var _ServidorFechaHora:Date = new Date();
+		private static var _opcion:uint;
 		
 		[Bindable] public static var utility:Utileria = new Utileria();
 
@@ -78,6 +79,17 @@ package clases
 			var oldValue:Object = _defaultDateRange;
 			if (oldValue !== value)
 				_defaultDateRange = value;
+		}
+		
+		public static function set opcion(value:uint):void
+		{
+			if (value != opcion)
+				_opcion = value;
+		}
+		
+		public static function get opcion():uint 
+		{
+			return _opcion;
 		}
 		
 		/**Getters*/
