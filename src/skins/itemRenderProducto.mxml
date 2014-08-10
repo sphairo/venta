@@ -2,7 +2,6 @@
 <s:ItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009"
 				xmlns:s="library://ns.adobe.com/flex/spark"
 				xmlns:mx="library://ns.adobe.com/flex/mx"
-				xmlns:components="components.*"
 				xmlns:renders="renders.*"
 				width="155" height="220" autoDrawBackground="true" contentBackgroundAlpha="0.0"
 				rollOut="out()" rollOver="over()">
@@ -97,9 +96,7 @@
 			}
 			
 			internal function uploadCompleteData(evt:DataEvent):void {
-				data.path = StringUtil.trim(evt.data);
-				//img.source = GlobalStatic.url_image +data.path;				
-					
+				data.path = StringUtil.trim(evt.data);					
 				var queryString:String = "UPDATE " + GlobalStatic.DataBaseName + ".producto SET path = '" + data.path + "'";
 				queryString += " WHERE id_producto = " + data.id_producto;
 				parentApplication.MiObjetoRemotoProducto.callStoreProcedure.send(queryString);
@@ -115,7 +112,6 @@
 				   verticalCenter="0">
 			<renders:renderCambiarFoto click="seleccionarImagen()"/>
 		</s:Callout>
-		<components:SparkCallout/>
 	</fx:Declarations>		
 	<s:BorderContainer id="background" left="10" right="10" top="10" bottom="15"
 					   borderVisible="false" dropShadowVisible="true" cornerRadius="5">

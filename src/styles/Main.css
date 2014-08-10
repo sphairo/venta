@@ -7,6 +7,7 @@
 @namespace ah "com.hulstkamp.flex.spark.components.*";
 @namespace spark "spark.skins.spark.*";
 @namespace spark1 "mx.skins.spark.*";
+@namespace components "components.*";
 
 TextInput{
 	skinClass:ClassReference("spark.skins.spark.TextInputSkin");

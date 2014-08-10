@@ -217,7 +217,7 @@ package clases
 			}
 		}
 		
-		[Bindable(event="propertyChange")]
+		[Bindable]
 		public function get indice():int
 		{
 			return _indice;

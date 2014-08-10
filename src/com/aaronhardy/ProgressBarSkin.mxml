@@ -1,28 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
-		xmlns:s="library://ns.adobe.com/flex/spark" 
+<s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009"
+		xmlns:s="library://ns.adobe.com/flex/spark"
 		xmlns:mx="library://ns.adobe.com/flex/mx"
-		width="350" height="35" xmlns:components="com.rain.pg.download.view.components.*" horizontalCenter="0" verticalCenter="0">
+		xmlns:components="com.rain.pg.download.view.components.*"
+		width="350" height="35" horizontalCenter="0" verticalCenter="0">
 	<!-- host component -->
 	<fx:Metadata>
 		[HostComponent("com.aaronhardy.ProgressBar")]
 	</fx:Metadata>
-	<fx:Script>
-		<![CDATA[
-			import com.aaronhardy.ProgressBar;
-			
-		]]>
-	</fx:Script>
 	
 	<s:Rect id="track" width="100%" height="100%" radiusX="15" radiusY="15">
 		<s:fill>
-			<s:SolidColor color="#ffffff" alpha="0.6"/>
+			<s:SolidColor alpha="0.6" color="#ffffff"/>
 		</s:fill>
 	</s:Rect>
 	
-	<s:Rect id="bar" radiusX="10" radiusY="10" left="10" top="8"
-			width="{330 * (ProgressBar(hostComponent).value / ProgressBar(hostComponent).maximum)}"
-			height="20">
+	<s:Rect id="bar" left="10" top="8" width="{330 * (ProgressBar(hostComponent).value / 1)}"
+			height="20" radiusX="10" radiusY="10">
 		<s:fill>
 			<s:LinearGradient rotation="90">
 				<s:GradientEntry color="#f29c2e"/>

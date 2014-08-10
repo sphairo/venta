@@ -5,29 +5,18 @@
 					   xmlns:buttons="com.anotherflexdev.ui.buttons.*"
 					   xmlns:components="components.*"
 					   xmlns:renders="renders.*"
-					   currentState="dashboard_productos"
-					   preinitialize="preinitializeHandler(event)" showStatusBar="false"
-					   skinClass="skins.skinProductos">
+					   xmlns:com_internal="http://www.amcharts.com/com_internal"
+					   xmlns:chartClasses="com.amcharts.chartClasses.*"
+					   currentState="productos" preinitialize="preinitializeHandler(event)"
+					   showStatusBar="false" skinClass="skins.skinProductos">
 	<s:states>
-		<s:State name="catalogo_productos"/>
-		<s:State name="dashboard_productos"/>
+		<s:State name="mantenimiento_productos"/>
+		<s:State name="productos"/>
+		<s:State name="estadisticas"/>
 	</s:states>
 	
 	<fx:Style source="Styles/Main.css"/>
 	
-	<fx:Style>
-		@namespace s "library://ns.adobe.com/flex/spark";
-		@namespace mx "library://ns.adobe.com/flex/mx";
-		@namespace buttons "com.anotherflexdev.ui.buttons.*";
-		@namespace components "components.*";
-		
-		/*Setup callout styles*/
-		components|SparkCallout {
-			backgroundColor:		#FFFFFF;
-			borderColor:			#f29c2e;
-			borderThickness:		3;
-		}
-	</fx:Style>
 	<fx:Declarations>
 		<mx:HTTPService id="service" fault="errorGeneral(event)" result="onJSONLoad(event)"
 						resultFormat="text"
@@ -44,22 +33,22 @@
 					  result="resultCallStoreProcedure(event)"/>
 		</mx:RemoteObject>
 		
-		<s:Callout id="defaultCallout" width="230" height="380"
+		<s:Callout id="defaultCallout" width="230" height="470"
 				   mouseDown="defaultCallout_mouseDownHandler(event)"
 				   mouseDownOutside="onMouseDownOutside(event)" verticalPosition="after">
 			<s:layout>
 				<s:VerticalLayout/>
 			</s:layout> 
-			<renders:renderCatalogoProductos includeIn="catalogo_productos"
-											 click="currentState='dashboard_productos'"/>
-			<renders:renderAdministrarProductos includeIn="dashboard_productos"
+			<renders:renderCatalogoProductos includeIn="mantenimiento_productos,estadisticas"
+											 click="currentState='productos'"/>
+			<renders:renderAdministrarProductos includeIn="estadisticas,productos"
 												click="administrarProductos(event)"/>
+			<renders:renderEstadisticasProductos includeIn="mantenimiento_productos,productos" click="currentState='estadisticas'"/>
 			<renders:renderSoporte/>
 			<renders:renderConfiguracion/>
 			<renders:renderCerrarSession/>
 		</s:Callout>
-		
-		<components:SparkCallout/>
+		<components:SparkCallout includeInLayout="false"/>
 	</fx:Declarations>
 	
 	<fx:Script>
@@ -81,10 +70,19 @@
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
 			
+			import flash.filters.DropShadowFilter;
+			
 			[Bindable] internal var dp:ArrayCollection = new ArrayCollection();
 			[Bindable] public var arrayMarcas:ArrayCollection;
 			[Bindable] public var arrayOferta:ArrayCollection = new ArrayCollection([{value:"SI"},{value:"NO"}]);
 			[Bindable] public var arrayTipoVenta:ArrayCollection = new ArrayCollection([{value:"Pieza(s)"},{value:"A granel Kg/gr"}]);
+			
+			[Bindable]
+			private var chartData:Array = [{country:"USA",visits:4252},{country:"China",visits:1882},{country:"Japan",visits:1809},{country:"Germany",visits:1322},{country:"UK",visits:1122},{country:"France",visits:1114},{country:"India",visits:984},{country:"Spain",visits:711},{country:"Netherlands",visits:665},{country:"Russia",visits:580},{country:"South Korea",visits:443},{country:"Canada",visits:441},{country:"Brazil",visits:395},{country:"Italy",visits:386},{country:"Australia",visits:384},{country:"Taiwan",visits:338},{country:"Poland",visits:328}];
+			
+			[Bindable]
+			private var shadow:DropShadowFilter = new DropShadowFilter(2,45,0,0.5);
+			
 			internal var arrayOriginal:ArrayCollection;
 			
 			internal function resultCallStoreProcedure(exito:ResultEvent):void
@@ -308,7 +306,7 @@
 			
 			internal function administrarProductos(event:MouseEvent):void
 			{
-				currentState='catalogo_productos';
+				currentState='mantenimiento_productos';
 				
 				if(arrayMarcas == null)	
 					arrayMarcas = new ArrayCollection(Utileria.group(dp));
@@ -381,8 +379,7 @@
 		
 	</fx:Script>
 	
-	<s:Scroller id="scroll" includeIn="catalogo_productos,dashboard_productos" width="100%"
-				height="100%">
+	<s:Scroller id="scroll" width="100%" height="100%">
 		<s:Group id="Contenedor" width="100%" height="100%">
 			<s:BorderContainer id="border_header" x="0" y="0" width="100%" height="50"
 							   borderVisible="false">
@@ -392,34 +389,33 @@
 						<s:GradientEntry color="#f9a73c"/>
 					</s:LinearGradient>
 				</s:backgroundFill> 
-				<s:TextInput id="txtBuscar" includeIn="dashboard_productos,catalogo_productos" y="12"
+				<s:TextInput id="txtBuscar" includeIn="mantenimiento_productos,productos" y="12"
 							 left="60" width="400" borderColor="#FFA800" borderVisible="true"
 							 change="changeBusqueda()" chromeColor="#FFA800" enter="doSearch();"
 							 focusColor="#FF8A00" fontSize="16" fontStyle="normal" maxChars="30"
 							 prompt="Buscar"/>
-				<s:Image id="btn_buscar" includeIn="dashboard_productos,catalogo_productos" x="440"
+				<s:Image id="btn_buscar" includeIn="mantenimiento_productos,productos" x="440"
 						 width="50" height="50" buttonMode="true" click="doSearch();"
 						 scaleMode="letterbox" smooth="true" smoothingQuality="high"
 						 source="img/btnSearch.png" verticalCenter="-1"/>
-				<s:Image id="btnMenu" includeIn="dashboard_productos,catalogo_productos" x="25"
-						 width="24" height="24" buttonMode="true"
+				<s:Image id="btnMenu" x="25" width="24" height="24" buttonMode="true"
 						 click="onShowDefaultCalloutClick()" smooth="true" smoothingQuality="high"
 						 source="img/ModIco.png" verticalCenter="-1"/>
-				<s:HGroup x="550" y="5" height="40">
-					<renders:renderAdd id="btnNuevo" includeIn="catalogo_productos"
+				<s:HGroup includeIn="mantenimiento_productos,productos" x="550" y="5" height="40">
+					<renders:renderAdd id="btnNuevo" includeIn="mantenimiento_productos"
 									   click="btnNuevo_clickHandler(event)"/>
-					<renders:renderDelete id="btnEliminar" includeIn="catalogo_productos"
+					<renders:renderDelete id="btnEliminar" includeIn="mantenimiento_productos"
 										  click="btnEliminar_clickHandler()"/>
-					<renders:renderSave id="btnGuardar" includeIn="catalogo_productos"
+					<renders:renderSave id="btnGuardar" includeIn="mantenimiento_productos"
 										click="btnGuardar_clickHandler()"/>
-					<renders:renderPrint id="btnImprimir" includeIn="catalogo_productos"
+					<renders:renderPrint id="btnImprimir" includeIn="mantenimiento_productos"
 										 click="AlertInfo.show('Ocurrio un error al guardar la información.')"/>
-					<renders:renderHelp id="btnAyuda" includeIn="catalogo_productos"
+					<renders:renderHelp id="btnAyuda" includeIn="mantenimiento_productos"
 										click="AlertInfo.show('Ocurrio un error al guardar la información.')"/>
 				</s:HGroup>
 			</s:BorderContainer>
 			
-			<s:List id="list" includeIn="dashboard_productos" left="20" right="0" top="51" bottom="0"
+			<s:List id="list" includeIn="productos" left="20" right="0" top="51" bottom="0"
 					allowMultipleSelection="true" borderVisible="false" contentBackgroundAlpha="0.0"
 					dataProvider="{dp}" focusColor="#ffffff" itemRenderer="skins.itemRenderProducto"
 					rollOverColor="#D1D1D1" selectionColor="#ADADAD">
@@ -427,7 +423,7 @@
 					<s:TileLayout horizontalGap="12" verticalGap="12"/>
 				</s:layout>
 			</s:List>
-			<s:DataGrid id="datagrid_productos" includeIn="catalogo_productos" x="0" y="50"
+			<s:DataGrid id="datagrid_productos" includeIn="mantenimiento_productos" x="0" y="50"
 						width="100%" height="100%" dataProvider="{dp}" editable="true"
 						hasFocusableChildren="true" includeInLayout="true">
 				<s:columns>
@@ -465,6 +461,18 @@
 					</s:ArrayList>
 				</s:columns>
 			</s:DataGrid> 
+			<com_internal:AmPieChart includeIn="estadisticas" top="30" width="100%" height="100%"
+									 angle="5" dataProvider="{chartData}" depth3D="5"
+									 filters="{[shadow]}" gradient="radial" groupPercent="3"
+									 horizontalCenter="0" innerRadius="10" labelWidth="100"
+									 marginLeft="0" marginRight="0" startDuration="2"
+									 startRadius="300" titleField="country" valueField="visits">
+				<com_internal:balloon>
+					<com_internal:AmBalloon cornerRadius="10" borderThickness="2" borderColor="#FFFFFF" borderAlpha="1"/>                
+				</com_internal:balloon>
+				
+		</com_internal:AmPieChart>
+				
 		</s:Group>
 	</s:Scroller>	
 </s:WindowedApplication>
