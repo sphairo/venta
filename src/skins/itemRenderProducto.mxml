@@ -96,9 +96,9 @@
 			}
 			
 			internal function uploadCompleteData(evt:DataEvent):void {
-				data.path = StringUtil.trim(evt.data);					
-				var queryString:String = "UPDATE " + GlobalStatic.DataBaseName + ".producto SET path = '" + data.path + "'";
-				queryString += " WHERE id_producto = " + data.id_producto;
+				this.data.path = StringUtil.trim(evt.data);					
+				var queryString:String = "UPDATE " + GlobalStatic.DataBaseName + ".producto SET path = '" + this.data.path + "'";
+				queryString += " WHERE id_producto = " + this.data.id_producto;
 				parentApplication.MiObjetoRemotoProducto.callStoreProcedure.send(queryString);
 			}
 			
@@ -125,12 +125,12 @@
 	<s:Image id="img" y="10" width="124" height="124" complete="cargaCompleta()" horizontalCenter="0"
 			 rollOut="img_rollOutHandler(event)" rollOver="img_rollOverHandler(event)"
 			 scaleMode="letterbox" smooth="true" smoothingQuality="high"
-			 source="{GlobalStatic.url_image +data.path}"/>
+			 source="{'http://127.0.0.1/Ventas/amfphp/services/files/' + this.data.path}"/>
 	<s:BusyIndicator id="loader" width="64" height="64" horizontalCenter="0" verticalCenter="-40"/>
-	<s:Label x="15" y="172" width="130" color="#929292" fontSize="12" text="{data.nom_producto}"
+	<s:Label x="15" y="172" width="130" color="#929292" fontSize="12" text="{this.data.nom_producto}"
 			 textAlign="left"/>
-	<s:Label x="15" y="159" color="#A4A4A4" fontSize="12" fontWeight="bold" text="${data.precio} MXN"/>
-	<s:Label visible="false" fontSize="21" fontWeight="bold" text="{data.id_producto}"/>
+	<s:Label x="15" y="159" color="#A4A4A4" fontSize="12" fontWeight="bold" text="${this.data.precio} MXN"/>
+	<s:Label visible="false" fontSize="21" fontWeight="bold" text="{this.data.id_producto}"/>
 	<s:Image id="ranking" x="15" y="136" buttonMode="true" click="ranking_clickHandler(event)"
 			 smooth="true" source="img/rankingCeroStarss.png"/>
 	<s:Image id="imgCamara" visible="false" y="45" buttonMode="true"

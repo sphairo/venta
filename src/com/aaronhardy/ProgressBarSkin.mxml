@@ -11,20 +11,17 @@
 	
 	<s:Rect id="track" width="100%" height="100%" radiusX="15" radiusY="15">
 		<s:fill>
-			<s:SolidColor alpha="0.6" color="#ffffff"/>
+			<s:SolidColor alpha="0.8" color="#ffffff"/>
 		</s:fill>
 	</s:Rect>
 	
 	<s:Rect id="bar" left="10" top="8" width="{330 * (ProgressBar(hostComponent).value / 1)}"
 			height="20" radiusX="10" radiusY="10">
 		<s:fill>
-			<s:LinearGradient rotation="90">
-				<s:GradientEntry color="#f29c2e"/>
-				<s:GradientEntry color="#f9a73c"/>
-			</s:LinearGradient>
+			<s:SolidColor id="borderStroke" color="#f29c2e"/>
 		</s:fill>
 	</s:Rect>
 	
 	<s:Label id="lblStatus" color="#636262" fontStyle="italic" horizontalCenter="0"
-			 text="{uint(bar.width/330*100)+'%'}" verticalCenter="2"/>
+			 text="{bar.width/330*100+'%'}" verticalCenter="2"/>
 </s:Skin>

@@ -37,7 +37,7 @@
 			
 			internal function timer_tickHandler(event:TimerEvent):void
 			{
-				progress.value += 0.09;	
+				progress.value += 0.05;	
 				if (progress.value >= 1)
 				{
 					timer.removeEventListener(TimerEvent.TIMER, timer_tickHandler);

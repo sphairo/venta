@@ -92,6 +92,6 @@
 		</s:fill>
 	</s:Rect>
 	<s:Image id="img" width="32" height="32" click="img_clickHandler()" horizontalCenter="0"
-			 source="{data.path != null ? (GlobalStatic.url_image+data.path) : 'img/camara.png'}"
+			 source="{data.path != null ? ('http://127.0.0.1/Ventas/amfphp/services/files/'+this.data.path) : 'img/camara.png'}"
 			 verticalCenter="0"/>
 </s:GridItemRenderer>
