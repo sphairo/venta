@@ -10,7 +10,7 @@
 					   currentState="productos" preinitialize="preinitializeHandler(event)"
 					   showStatusBar="false" skinClass="skins.skinProductos">
 	<s:states>
-		<s:State name="mantenimiento_productos"/>
+		<s:State name="mantenimiento_productos" enterState="enterStateMantenimiento(event)"/>
 		<s:State name="productos"/>
 		<s:State enterState="enterStateEstadisticas(event)" name="estadisticas"/>
 		<s:State name="ganancias"/>
@@ -32,6 +32,23 @@
 		</s:Parallel>
 		<s:Parallel id="parallel4" duration="2000" target="{btnVentasEmpleado}" startDelay="1">
 			<s:Move yFrom="400" yTo="0"/>
+		</s:Parallel>
+		
+		
+		<s:Parallel id="parallel5" duration="500" target="{btnNuevo}" startDelay="1">
+			<s:Move yFrom="-100" yTo="0"/>
+		</s:Parallel>
+		<s:Parallel id="parallel6" duration="1000" target="{btnEliminar}" startDelay="1">
+			<s:Move yFrom="200" yTo="0"/>
+		</s:Parallel>
+		<s:Parallel id="parallel7" duration="1500" target="{btnGuardar}" startDelay="1">
+			<s:Move yFrom="-300" yTo="0"/>
+		</s:Parallel>
+		<s:Parallel id="parallel8" duration="2000" target="{btnImprimir}" startDelay="1">
+			<s:Move yFrom="400" yTo="0"/>
+		</s:Parallel>
+		<s:Parallel id="parallel9" duration="2500" target="{btnAyuda}" startDelay="1">
+			<s:Move yFrom="-500" yTo="0"/>
 		</s:Parallel>
 		
 		<mx:HTTPService id="service" fault="errorGeneral(event)" result="onJSONLoad(event)"
@@ -400,12 +417,21 @@
 				currentState = "ventas_empleado";
 			}
 			
-			protected function enterStateEstadisticas(event:FlexEvent):void
+			internal function enterStateEstadisticas(event:FlexEvent):void
 			{
 				parallel.play();
 				parallel2.play();
 				parallel3.play();
 				parallel4.play();
+			}
+			
+			internal function enterStateMantenimiento(event:FlexEvent):void
+			{
+				parallel5.play();
+				parallel6.play();
+				parallel7.play();
+				parallel8.play();
+				parallel9.play();
 			}
 			
 		]]>
@@ -434,20 +460,18 @@
 				<s:Image id="btnMenu" x="25" width="24" height="24" buttonMode="true"
 						 click="onShowDefaultCalloutClick()" smooth="true" smoothingQuality="high"
 						 source="img/ModIco.png" verticalCenter="-1"/>
-				<s:HGroup includeIn="mantenimiento_productos,productos" x="550" y="5" height="40">
-					<renders:renderAdd id="btnNuevo" includeIn="mantenimiento_productos"
-									   click="btnNuevo_clickHandler(event)"/>
-					<renders:renderDelete id="btnEliminar" includeIn="mantenimiento_productos"
-										  click="btnEliminar_clickHandler()"/>
-					<renders:renderSave id="btnGuardar" includeIn="mantenimiento_productos"
-										click="btnGuardar_clickHandler()"/>
-					<renders:renderPrint id="btnImprimir" includeIn="mantenimiento_productos"
-										 click="AlertInfo.show('Ocurrio un error al guardar la información.')"/>
-					<renders:renderHelp id="btnAyuda" includeIn="mantenimiento_productos"
-										click="AlertInfo.show('Ocurrio un error al guardar la información.')"/>
-				</s:HGroup>
 			</s:BorderContainer>
-			
+			<renders:renderAdd id="btnNuevo" includeIn="mantenimiento_productos" x="548" y="-50"
+							   click="btnNuevo_clickHandler(event)"/>
+			<renders:renderDelete id="btnEliminar" includeIn="mantenimiento_productos" x="656"
+								  y="-50" click="btnEliminar_clickHandler()"/>
+			<renders:renderSave id="btnGuardar" includeIn="mantenimiento_productos" x="772" y="-50"
+								click="btnGuardar_clickHandler()"/>
+			<renders:renderPrint id="btnImprimir" includeIn="mantenimiento_productos" x="882"
+								 y="-50"
+								 click="AlertInfo.show('Ocurrio un error al guardar la información.')"/>
+			<renders:renderHelp id="btnAyuda" includeIn="mantenimiento_productos" x="989" y="-50"
+								click="AlertInfo.show('Ocurrio un error al guardar la información.')"/>
 			<renders:renderMasVendidos id="btnMasVendidos"
 									   includeIn="estadisticas,ganancias,mas_vendidos,ventas_empleado"
 									   click="onClickMasVendidos(event)"
