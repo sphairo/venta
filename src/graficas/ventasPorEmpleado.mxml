@@ -3,30 +3,28 @@
 				   xmlns:s="library://ns.adobe.com/flex/spark"
 				   xmlns:mx="library://ns.adobe.com/flex/mx"
 				   xmlns:amcharts="http://www.amcharts.com/com_internal"
-				   width="100%" height="100%"
-				   preinitialize="preinitializeHandler(event)">
+				   width="100%" height="100%" preinitialize="preinitializeHandler(event)">
 	<fx:Declarations>
-		<mx:RemoteObject id="MiObjetoRemotoEmpleado" destination="amfphp" fault="errorGeneral(event)"
-						 showBusyCursor="true" source="empleado">
-			<s:method name="totalDeVentasPorEmpleado" result="totalDeVentasPorEmpleadoExito(event)"/>
-		</mx:RemoteObject>
+		<mx:HTTPService id="service" fault="errorGeneral(event)"
+						result="totalDeVentasPorEmpleadoExito(event)" resultFormat="text"
+						showBusyCursor="true"
+						url="http://localhost/Ventas/amfphp/services/ventasPorEmpleado.php"
+						useProxy="false"/>
 	</fx:Declarations>
 	<fx:Script>
 		<![CDATA[
 			import com.adobe.serialization.json.JSON;
 			
-			import flash.filters.DropShadowFilter;
-			
 			import mx.collections.ArrayCollection;
 			import mx.events.FlexEvent;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
-			
+			import flash.filters.DropShadowFilter;
 			[Bindable] internal var shadow:DropShadowFilter = new DropShadowFilter(2,45,0,0.5);
 			
 			internal function preinitializeHandler(event:FlexEvent):void
 			{
-				MiObjetoRemotoEmpleado.totalDeVentasPorEmpleado.send();
+				service.send();
 			}
 			
 			internal function errorGeneral(error:FaultEvent):void

@@ -11,23 +11,23 @@
 		<mx:SeriesSlide id="deslizamientoEntrada" direction="up" duration="1000"/>
 		<mx:SeriesSlide id="deslizamientoSalida" direction="down" duration="1000"/>
 		
-		<mx:RemoteObject id="MiObjetoRemotoVentas" destination="amfphp" fault="errorGeneral(event)"
-						 showBusyCursor="true" source="ventas">
-			<s:method name="llenarReporteGrafico" result="ReporteGraficoExito(event)"/>
-		</mx:RemoteObject>
+		<mx:HTTPService id="service" fault="errorGeneral(event)" result="gananciasVentasExito(event)"
+						resultFormat="text"
+						url="http://localhost/Ventas/amfphp/services/gananciasVentas.php"
+						useProxy="false" showBusyCursor="true"/>
 	</fx:Declarations>
 	<fx:Script>
 		<![CDATA[
 			import com.adobe.serialization.json.JSON;
+			import com.anotherflexdev.ui.AlertError;
 			
 			import mx.collections.ArrayCollection;
 			import mx.events.FlexEvent;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
-			import mx.effects.easing.Elastic;
 			
 			[Bindable] internal var arrayReporte:ArrayCollection = new ArrayCollection();
-			internal function ReporteGraficoExito(event:ResultEvent):void {
+			internal function gananciasVentasExito(event:ResultEvent):void {
 				arrayReporte.removeAll();
 				for each(var item:Object in (com.adobe.serialization.json.JSON.decode(String(event.result)))){
 					switch(item.mes)
@@ -134,12 +134,12 @@
 			
 			internal function preinitializeHandler(event:FlexEvent):void
 			{
-				MiObjetoRemotoVentas.llenarReporteGrafico.send('2008-01-01','2014-12-01');
+				service.send();
 			}
 			
 			internal function errorGeneral(error:FaultEvent):void
 			{
-				trace(error.fault.faultString);
+				AlertError.show(error.fault.faultString);
 			}
 			
 		]]>
