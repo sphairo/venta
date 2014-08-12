@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 width="225" height="48" focusColor="#737373" rollOver="rollOverHandler(event)" buttonMode="true" rollOut="rollOutHandler(event)">
+	<fx:Script>
+		<![CDATA[
+			internal function rollOverHandler(event:MouseEvent):void
+			{
+				img.source = "img/btnVentasPorEmpleadoOver.png";
+			}
+			
+			internal function rollOutHandler(event:MouseEvent):void
+			{
+				img.source = "img/btnVentasPorEmpleado.png";
+			}
+			
+		]]>
+	</fx:Script>
+	<s:Image id="img" left="10" width="54" height="44" scaleMode="letterbox" smooth="true"
+			 smoothingQuality="high" source="img/btnVentasPorEmpleado.png" verticalCenter="0"/>
+	<s:Label id="lblCambiarFoto" right="10" color="#FFFFFF" fontSize="16" fontStyle="italic"
+			 text="Ventas por empleado" verticalCenter="0"/>
+</s:Group>

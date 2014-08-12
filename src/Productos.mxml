@@ -5,26 +5,34 @@
 					   xmlns:buttons="com.anotherflexdev.ui.buttons.*"
 					   xmlns:components="components.*"
 					   xmlns:renders="renders.*"
+					   xmlns:local="*"
+					   xmlns:graficas="graficas.*"
 					   currentState="productos" preinitialize="preinitializeHandler(event)"
 					   showStatusBar="false" skinClass="skins.skinProductos">
 	<s:states>
 		<s:State name="mantenimiento_productos"/>
 		<s:State name="productos"/>
-		<s:State name="estadisticas" enterState="generarGrafica()"/>
+		<s:State enterState="enterStateEstadisticas(event)" name="estadisticas"/>
+		<s:State name="ganancias"/>
+		<s:State name="ventas_empleado"/>
+		<s:State name="mas_vendidos"/>
 	</s:states>
 	
 	<fx:Style source="Styles/Main.css"/>
 	
 	<fx:Declarations>
-		
-		<mx:SolidColor id="sc1" alpha=".3" color="gray"/>
-		<mx:SolidColor id="sc2" alpha=".1" color="red"/>
-		<mx:SolidColor id="sc3" alpha=".1" color="blue"/>
-		
-		<mx:RemoteObject id="MiObjetoRemotoVentas" destination="amfphp" fault="errorGeneral(event)"
-						 showBusyCursor="true" source="ventas">
-			<s:method name="llenarReporteGrafico" result="ReporteGraficoExito(event)"/>
-		</mx:RemoteObject>
+		<s:Parallel id="parallel" duration="500" target="{btnMasVendidos}" startDelay="1">
+			<s:Move yFrom="-100" yTo="0"/>
+		</s:Parallel>
+		<s:Parallel id="parallel2" duration="1000" target="{btnNoVendidos}" startDelay="1">
+			<s:Move yFrom="200" yTo="0"/>
+		</s:Parallel>
+		<s:Parallel id="parallel3" duration="1500" target="{btnGananciasVentas}" startDelay="1">
+			<s:Move yFrom="-300" yTo="0"/>
+		</s:Parallel>
+		<s:Parallel id="parallel4" duration="2000" target="{btnVentasEmpleado}" startDelay="1">
+			<s:Move yFrom="400" yTo="0"/>
+		</s:Parallel>
 		
 		<mx:HTTPService id="service" fault="errorGeneral(event)" result="onJSONLoad(event)"
 						resultFormat="text"
@@ -47,9 +55,9 @@
 			<s:layout>
 				<s:VerticalLayout/>
 			</s:layout> 
-			<renders:renderCatalogoProductos includeIn="mantenimiento_productos,estadisticas"
+			<renders:renderCatalogoProductos includeIn="estadisticas,ganancias,mantenimiento_productos,mas_vendidos,ventas_empleado"
 											 click="currentState='productos'"/>
-			<renders:renderAdministrarProductos includeIn="estadisticas,productos"
+			<renders:renderAdministrarProductos includeIn="estadisticas,ganancias,mas_vendidos,productos,ventas_empleado"
 												click="administrarProductos(event)"/>
 			<renders:renderEstadisticasProductos includeIn="mantenimiento_productos,productos"
 												 click="currentState='estadisticas'"/>
@@ -377,131 +385,29 @@
 				trace(queryString);
 			}
 			
-			[Bindable] internal var arrayReporte:ArrayCollection = new ArrayCollection();
-			[Bindable] internal var arrayConversion:ArrayCollection = new ArrayCollection();
-			internal function ReporteGraficoExito(exito:ResultEvent):void {
-				arrayReporte.removeAll();
-				arrayReporte = exito.result as ArrayCollection;
-				
-				if(exito.result != null)
-				{
-					arrayConversion.removeAll();
-					
-					for(var indiceConversion:uint=0;indiceConversion<arrayReporte.length;indiceConversion++)
-					{
-						var mesConversion:uint = uint(arrayReporte.getItemAt(indiceConversion).mes);		
-						switch(mesConversion)
-						{
-							case 1:	
-								this.arrayConversion.addItem({
-									ano:arrayReporte.getItemAt(indiceConversion).ano,
-									mes:"ENERO",
-									vendido:arrayReporte.getItemAt(indiceConversion).vendido,
-									ganancias:arrayReporte.getItemAt(indiceConversion).ganancias
-								});	
-								break;
-							case 2:
-								this.arrayConversion.addItem({
-									ano:arrayReporte.getItemAt(indiceConversion).ano,
-									mes:"FEBRERO",
-									vendido:arrayReporte.getItemAt(indiceConversion).vendido,
-									ganancias:arrayReporte.getItemAt(indiceConversion).ganancias
-								});	
-								break;
-							case 3:
-								this.arrayConversion.addItem({
-									ano:arrayReporte.getItemAt(indiceConversion).ano,
-									mes:"MARZO",
-									vendido:arrayReporte.getItemAt(indiceConversion).vendido,
-									ganancias:arrayReporte.getItemAt(indiceConversion).ganancias
-								});	
-								break;
-							case 4:
-								this.arrayConversion.addItem({
-									ano:arrayReporte.getItemAt(indiceConversion).ano,
-									mes:"ABRIL",
-									vendido:arrayReporte.getItemAt(indiceConversion).vendido,
-									ganancias:arrayReporte.getItemAt(indiceConversion).ganancias
-								});	
-								break;
-							case 5:
-								this.arrayConversion.addItem({
-									ano:arrayReporte.getItemAt(indiceConversion).ano,
-									mes:"MAYO",
-									vendido:arrayReporte.getItemAt(indiceConversion).vendido,
-									ganancias:arrayReporte.getItemAt(indiceConversion).ganancias
-								});	
-								break;
-							case 6:
-								this.arrayConversion.addItem({
-									ano:arrayReporte.getItemAt(indiceConversion).ano,
-									mes:"JUNIO",
-									vendido:arrayReporte.getItemAt(indiceConversion).vendido,
-									ganancias:arrayReporte.getItemAt(indiceConversion).ganancias
-								});	
-								break;
-							case 7:
-								this.arrayConversion.addItem({
-									ano:arrayReporte.getItemAt(indiceConversion).ano,
-									mes:"JULIO",
-									vendido:arrayReporte.getItemAt(indiceConversion).vendido,
-									ganancias:arrayReporte.getItemAt(indiceConversion).ganancias
-								});	
-								break;
-							case 8:
-								this.arrayConversion.addItem({
-									ano:arrayReporte.getItemAt(indiceConversion).ano,
-									mes:"AGOSTO",
-									vendido:arrayReporte.getItemAt(indiceConversion).vendido,
-									ganancias:arrayReporte.getItemAt(indiceConversion).ganancias
-								});	
-								break;
-							case 9:
-								this.arrayConversion.addItem({
-									ano:arrayReporte.getItemAt(indiceConversion).ano,
-									mes:"SEPTIEMBRE",
-									vendido:arrayReporte.getItemAt(indiceConversion).vendido,
-									ganancias:arrayReporte.getItemAt(indiceConversion).ganancias
-								});	
-								break;
-							case 10:
-								this.arrayConversion.addItem({
-									ano:arrayReporte.getItemAt(indiceConversion).ano,
-									mes:"OCTUBRE",
-									vendido:arrayReporte.getItemAt(indiceConversion).vendido,
-									ganancias:arrayReporte.getItemAt(indiceConversion).ganancias
-								});	
-								break;
-							case 11:
-								this.arrayConversion.addItem({
-									ano:arrayReporte.getItemAt(indiceConversion).ano,
-									mes:"NOVIEMBRE",
-									vendido:arrayReporte.getItemAt(indiceConversion).vendido,
-									ganancias:arrayReporte.getItemAt(indiceConversion).ganancias
-								});	
-								break;
-							case 12:
-								this.arrayConversion.addItem({
-									ano:arrayReporte.getItemAt(indiceConversion).ano,
-									mes:"DICIEMBRE",
-									vendido:arrayReporte.getItemAt(indiceConversion).vendido,
-									ganancias:arrayReporte.getItemAt(indiceConversion).ganancias
-								});	
-								break;
-						}
-					}	
-					column.dataProvider = arrayConversion; 	
-				}
+			internal function onClickVentasGanancias(event:MouseEvent):void
+			{
+				currentState = "ganancias";
 			}
 			
-			private function generarGrafica():void
+			internal function onClickMasVendidos(event:MouseEvent):void
 			{
-				MiObjetoRemotoVentas.llenarReporteGrafico.send
-					(
-						'2008-01-01',
-						'2014-12-01'
-					);
+				currentState = "mas_vendidos";
 			}
+			
+			internal function onClickVentasPorEmpleado(event:MouseEvent):void
+			{
+				currentState = "ventas_empleado";
+			}
+			
+			protected function enterStateEstadisticas(event:FlexEvent):void
+			{
+				parallel.play();
+				parallel2.play();
+				parallel3.play();
+				parallel4.play();
+			}
+			
 		]]>
 		
 	</fx:Script>
@@ -540,13 +446,23 @@
 					<renders:renderHelp id="btnAyuda" includeIn="mantenimiento_productos"
 										click="AlertInfo.show('Ocurrio un error al guardar la información.')"/>
 				</s:HGroup>
-				<s:HGroup includeIn="estadisticas" x="111" y="10" width="80%" height="34" gap="20">
-					<s:Label text="Mas vendidos"/>
-					<s:Label text="No vendidos"/>
-					<s:Label text="Historico de ventas y ganancias"/>
-					<s:Label text="Ventas por empleado"/>
-				</s:HGroup>
 			</s:BorderContainer>
+			
+			<renders:renderMasVendidos id="btnMasVendidos"
+									   includeIn="estadisticas,ganancias,mas_vendidos,ventas_empleado"
+									   click="onClickMasVendidos(event)"
+									   x="60" y="0"/>
+			<renders:renderNoVendidos id="btnNoVendidos"
+									  includeIn="estadisticas,ganancias,mas_vendidos,ventas_empleado"
+									  x="235"/>
+			<renders:renderVentasGanancias id="btnGananciasVentas"
+										   includeIn="estadisticas,ganancias,mas_vendidos,ventas_empleado"
+										   click="onClickVentasGanancias(event)"
+										   x="405"/>
+			<renders:renderVentasPorEmpleado id="btnVentasEmpleado"
+											 includeIn="estadisticas,ganancias,mas_vendidos,ventas_empleado"
+											 click="onClickVentasPorEmpleado(event)"
+											 x="615"/>
 			
 			<s:List id="list" includeIn="productos" left="20" right="0" top="51" bottom="0"
 					allowMultipleSelection="true" borderVisible="false" contentBackgroundAlpha="0.0"
@@ -589,110 +505,16 @@
 						<s:GridColumn dataField="ofertas_Especiales" headerText="Oferta"
 									  itemRenderer="renders.itemRenderOfertaEspecial"
 									  rendererIsEditable="true"/>
-						
-						
 					</s:ArrayList>
 				</s:columns>
-			</s:DataGrid> 
-			<!--<com_internal:AmPieChart includeIn="estadisticas" width="100%" height="100%" angle="5"
-									 dataProvider="{chartData}" depth3D="5" filters="{[shadow]}"
-									 gradient="radial" groupPercent="3" horizontalCenter="0"
-									 innerRadius="10" labelWidth="100" marginLeft="0"
-									 marginRight="0" startDuration="2" startRadius="300"
-									 titleField="country" valueField="visits" verticalCenter="20">
-				<com_internal:balloon>
-					<com_internal:AmBalloon borderAlpha="1" borderColor="#FFFFFF" borderThickness="2"
-											cornerRadius="10"/>                
-				</com_internal:balloon>
-				
-			</com_internal:AmPieChart>-->
+			</s:DataGrid>    
 			
-			<!--<com_internal:AmSerialChart id="chart" includeIn="estadisticas" left="10" right="10"
-										top="50" bottom="10" categoryField="country"
-										dataProvider="{chartData2}" rotate="false" startDuration="1"> 
-				<com_internal:graphs>
-					<com_internal:AmGraph cornerRadiusTop="10"                
-									  valueField="visits"
-									  balloonText="[[category]]: [[value]]"
-									  colorField="color"
-									  type="column"
-									  lineAlpha="0"
-									  fillAlphas="[0.8]" />                        
-				</com_internal:graphs>
-				
-				<com_internal:valueAxes>
-					<com_internal:ValueAxis title="VISITS PER DAY" titleTextColor="#CC0000"/>
-				</com_internal:valueAxes>		
-				
-				<com_internal:categoryAxis>
-					<com_internal:CategoryAxis gridPosition="start" labelRotation="45" gridCount="{chartData2.length}"/>
-				</com_internal:categoryAxis>
-				
-				<com_internal:balloon>
-					<com_internal:AmBalloon cornerRadius="10" borderThickness="2" borderColor="#FFFFFF" borderAlpha="1"/>                
-				</com_internal:balloon>    
-				
-				<com_internal:chartCursor>
-					<com_internal:ChartCursor zoomable="false" cursorAlpha="0" categoryBalloonEnabled="false"/>                    
-				</com_internal:chartCursor>    
-			</com_internal:AmSerialChart>-->
-			
-			<!--<com_internal:AmSerialChart includeIn="estadisticas"
-				id="chart"
-				width="100%"
-				height="100%"                
-				dataProvider="{chartData3}"
-				categoryField="year"
-				angle="30"
-				depth3D="30">
-				
-				<com_internal:graphs>
-					<com_internal:AmGraph title="Income" id="g0" valueField="income" type="column" lineAlpha="0" fillColors="[#ADD981]" fillAlphas="[1]"/>                       
-					<com_internal:AmGraph title="Expenses" markerType="line" id="g1" valueField="expenses" type="line" lineThickness="2" bullet="round" filters="{[shadow]}"/>                       
-				</com_internal:graphs>
-				<com_internal:valueAxes>
-					<com_internal:ValueAxis dashLength="5"/>                           
-				</com_internal:valueAxes>
-				<com_internal:categoryAxis>
-					<com_internal:CategoryAxis gridPosition="start" dashLength="5"/>
-				</com_internal:categoryAxis>
-			</com_internal:AmSerialChart>
-			
-			<com_internal:AmLegend
-				color="0x000000"
-				x="45"
-				y="10"
-				switchable="false"
-				dataProvider="{chart}"
-				width="100%"
-				marginRight="20"
-				marginLeft="40"
-				textClickEnabled="false"
-				marginBottom="5"/> -->    
-			
-			<mx:ColumnChart id="column" x="0" y="50" width="100%" height="100%"
-							showDataTips="true" includeIn="estadisticas">
-				<mx:horizontalAxis>
-					<mx:CategoryAxis categoryField="mes"/>
-				</mx:horizontalAxis>
-				
-				<mx:series>
-					<mx:ColumnSet type="stacked">
-						<mx:ColumnSeries displayName="Ganancias" fill="{sc1}"
-										 hideDataEffect="deslizamientoSalida"
-										 showDataEffect="deslizamientoEntrada"
-										 xField="mes" yField="ganancias"/>
-						<mx:ColumnSeries displayName="Vendido" fill="{sc2}"
-										 hideDataEffect="deslizamientoSalida"
-										 showDataEffect="deslizamientoEntrada"
-										 xField="mes" yField="vendido"/>
-						<!--<mx:ColumnSeries displayName="Año" fill="{sc3}"
-										 hideDataEffect="deslizamientoSalida"
-										 showDataEffect="deslizamientoEntrada"
-										 yField="ano"/>-->
-					</mx:ColumnSet>
-				</mx:series>
-			</mx:ColumnChart>			
+			<graficas:Top20 id="graficaTop20" includeIn="estadisticas,mas_vendidos" top="50" width="100%"
+							height="100%"/>	
+			<graficas:gananciasVentas id="graficaGananciasVentas" includeIn="ganancias" top="50"
+									  width="100%" height="100%"/>	
+			<graficas:ventasPorEmpleado id="graficaVentasPorEmpleado" includeIn="ventas_empleado"
+										top="50" width="100%" height="100%"/>	
 		</s:Group>
 	</s:Scroller>	
 </s:WindowedApplication>

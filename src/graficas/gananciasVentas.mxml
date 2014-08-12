@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<s:WindowedApplication xmlns:fx="http://ns.adobe.com/mxml/2009"
-					   xmlns:s="library://ns.adobe.com/flex/spark"
-					   xmlns:mx="library://ns.adobe.com/flex/mx"
-					   xmlns:amcharts="http://www.amcharts.com/com_internal"
-					   width="100%" height="100%" preinitialize="preinitializeHandler()">    
-	
+<s:BorderContainer xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 xmlns:amcharts="http://www.amcharts.com/com_internal"
+		 width="100%" height="100%" preinitialize="preinitializeHandler(event)">
 	<fx:Declarations>
-		
-		<mx:SolidColor id="sc1" color="#f29c2e"/>
-		<mx:SolidColor id="sc2" color="#D8E0BD"/>
+		<mx:SolidColor id="sc1" color="0xFF6600" alpha="0.7"/>
+		<mx:SolidColor id="sc2" color="0xB0DE09" alpha="0.7"/>
 		
 		<mx:SeriesSlide id="deslizamientoEntrada" direction="up" duration="1000"/>
 		<mx:SeriesSlide id="deslizamientoSalida" direction="down" duration="1000"/>
@@ -17,74 +15,16 @@
 						 showBusyCursor="true" source="ventas">
 			<s:method name="llenarReporteGrafico" result="ReporteGraficoExito(event)"/>
 		</mx:RemoteObject>
-		
-		<mx:RemoteObject id="MiObjetoRemotoProducto" destination="amfphp" fault="errorGeneral(event)"
-						 showBusyCursor="true" source="producto">
-			<s:method name="top20Productos" result="top20ProductosExito(event)"/>
-		</mx:RemoteObject>
 	</fx:Declarations>
-	
 	<fx:Script>
 		<![CDATA[
 			import com.adobe.serialization.json.JSON;
-			import com.amcharts.events.GraphEvent;
-			
-			import flash.filters.DropShadowFilter;
 			
 			import mx.collections.ArrayCollection;
-			import mx.effects.easing.Elastic;
 			import mx.events.FlexEvent;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
-			
-			
-			[Bindable]
-			private var colores:Array = [
-				{color:0xFF0F00},
-				{color:0xFF6600},
-				{color:0xFF9E01},
-				{color:0xFCD202},
-				{color:0xF8FF01},
-				{color:0xB0DE09},
-				{color:0x04D215},
-				{color:0x999900},
-				{color:0x996666},
-				{color:0x996633},
-				{color:0x0D8ECF},
-				{color:0x0D52D1},
-				{color:0x2A0CD0},
-				{color:0x8A0CCF},
-				{color:0xCD0D74},
-				{color:0x754DEB},
-				{color:0xDDDDDD},
-				{color:0x999999},
-				{color:0x666666},
-				{color:0x333333}];
-			
-			internal function errorGeneral(error:FaultEvent):void
-			{
-				trace(error.fault.faultString);
-			}
-			
-			internal function top20ProductosExito(event:ResultEvent):void {
-				removeEventListener(ResultEvent.RESULT, top20ProductosExito);
-				encapsulado((com.adobe.serialization.json.JSON.decode(String(event.result))));	
-			}
-			
-			[Bindable] internal var dp:ArrayCollection = new ArrayCollection();
-			
-			internal function encapsulado(collection:*):void{
-				var index:uint = 0;
-				for each(var item:Object in collection){
-					dp.addItem({
-						clave:item.clave,
-						total:item.total,
-						nombre:item.nombre,
-						color:colores[index].color
-					});
-					index++;
-				}
-			}
+			import mx.effects.easing.Elastic;
 			
 			[Bindable] internal var arrayReporte:ArrayCollection = new ArrayCollection();
 			internal function ReporteGraficoExito(event:ResultEvent):void {
@@ -192,39 +132,19 @@
 				}
 			}
 			
-			protected function preinitializeHandler():void
+			internal function preinitializeHandler(event:FlexEvent):void
 			{
 				MiObjetoRemotoVentas.llenarReporteGrafico.send('2008-01-01','2014-12-01');
-				MiObjetoRemotoProducto.top20Productos.send();
-				maximize();
+			}
+			
+			internal function errorGeneral(error:FaultEvent):void
+			{
+				trace(error.fault.faultString);
 			}
 			
 		]]>
-		
 	</fx:Script>
-	
-	<!--<fx:Style>
-	@font-face 
-	{
-	src: url("assets/Tahoma.ttf");
-	fontFamily: "Tahoma";
-	embedAsCFF: false;
-	unicode-range:
-	U+0020-U+0040, /* Punctuation, Numbers */
-	U+0041-U+005A, /* Upper-Case A-Z */
-	U+005B-U+0060, /* Punctuation and Symbols */
-	U+0061-U+007A, /* Lower-Case a-z */
-	U+007B-U+007E, /* Punctuation and Symbols */  
-	U+00E1;
-	}
-	
-	.MyTextStyle 
-	{ 
-	font-family: Tahoma; 
-	}
-	</fx:Style>-->
 	<s:HGroup width="100%" height="100%">
-		
 		<mx:BarChart id="barchart1" width="100%" height="100%" dataProvider="{arrayReporte}"
 					 showDataTips="true" styleName="MyTextStyle" type="clustered">
 			
@@ -234,42 +154,12 @@
 			
 			<mx:series>
 				<mx:BarSeries id="obpSeries" displayName="Ganancias"
-							  hideDataEffect="deslizamientoSalida"
-							  showDataEffect="deslizamientoEntrada" xField="ganancias" yField="mes"/>
+							  showDataEffect="deslizamientoEntrada" xField="ganancias" yField="mes" fill="{sc1}"/>
+				
 				<mx:BarSeries id="slgSeries" displayName="Total vendido"
-							  hideDataEffect="deslizamientoSalida"
-							  showDataEffect="deslizamientoEntrada" xField="vendido" yField="mes"/>
+							  showDataEffect="deslizamientoEntrada" xField="vendido" yField="mes" fill="{sc2}"/>
 			</mx:series>
 		</mx:BarChart>
 		<mx:Legend dataProvider="{barchart1}"/>
-		
-		<amcharts:AmSerialChart id="chart" width="100%" height="100%" categoryField="nombre"
-								dataProvider="{dp}" rotate="true" startDuration="2"
-								startEffect="{Elastic.easeOut}">        
-			<amcharts:graphs>
-				<amcharts:AmGraph balloonText="[[value]] : [[category]]" colorField="color"
-								  cornerRadiusTop="10" fillAlphas="[0.8]" labelPosition="bottom"
-								  labelText="[[value]] : [[nombre]]" lineAlpha="0" type="column"
-								  valueField="total"/>                        
-			</amcharts:graphs>
-			
-			<amcharts:valueAxes>
-				<amcharts:ValueAxis title="Los 20 productos más vendidos" titleTextColor="#CC0000"/>
-			</amcharts:valueAxes>		
-			
-			<amcharts:categoryAxis>
-				<amcharts:CategoryAxis axisAlpha="0" gridAlpha="0" labelsEnabled="false"/>
-			</amcharts:categoryAxis>
-			
-			<amcharts:balloon>
-				<amcharts:AmBalloon borderAlpha="1" borderColor="#FFFFFF" borderThickness="2"
-									cornerRadius="10"/>                
-			</amcharts:balloon>    
-			
-			<amcharts:chartCursor>
-				<amcharts:ChartCursor categoryBalloonEnabled="false" cursorAlpha="0" zoomable="false"/>                    
-			</amcharts:chartCursor>    
-		</amcharts:AmSerialChart>
-		
 	</s:HGroup>
-</s:WindowedApplication>
+</s:BorderContainer>
