@@ -1,48 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		 xmlns:s="library://ns.adobe.com/flex/spark" 
-		 xmlns:mx="library://ns.adobe.com/flex/mx" width="105" height="50" buttonMode="true" contentBackgroundAlpha="0.0" rollOver="rollOverHandler()" rollOut="rollOutHandler()">
+		 xmlns:mx="library://ns.adobe.com/flex/mx" width="105" height="50" buttonMode="true" contentBackgroundAlpha="0.0" rollOver="rollOverHandler()" rollOut="rollOutHandler()" mouseChildren="false">
 	
-	<fx:Declarations>
-		<s:Parallel id="parallel" duration="300" target="{rect}" startDelay="1">
-			<s:Move yFrom="-100" yTo="0"/>
+	<fx:Declarations>		
+		<s:Parallel id="parallel" duration="300" target="{img}">
+			<s:Fade alphaFrom="0.5" alphaTo="1" duration="1000"/>
 		</s:Parallel>
-		<s:Parallel id="parallel2" duration="300" target="{rect}" startDelay="1">
-			<s:Move yFrom="0" yTo="-100"/>
+		<s:Parallel id="parallel2" duration="300" target="{img}">
+			<s:Fade alphaFrom="1" alphaTo="0.5" duration="1000"/>
 		</s:Parallel>
 	</fx:Declarations>
 	<fx:Script>
 		<![CDATA[
 			import mx.events.EffectEvent;
-			internal function rollOverHandler():void
-			{
+			internal function rollOverHandler():void{
 				parallel.play();
-				parallel.addEventListener(EffectEvent.EFFECT_START, startEffect);
 			}
 			
-			internal function startEffect(event:EffectEvent):void{
-				rect.includeInLayout = true;
-			}
-			
-			internal function rollOutHandler():void
-			{
+			internal function rollOutHandler():void{
 				parallel2.play();
-				parallel2.addEventListener(EffectEvent.EFFECT_END, endEffect);
 			}
 			
-			internal function endEffect(event:EffectEvent):void{
-				rect.includeInLayout = true;
-			}
 		]]>
 	</fx:Script>
 	
-	<s:Image id="img" left="0" width="35" height="35" scaleMode="letterbox" smooth="true"
-			 smoothingQuality="high" source="img/btnGuardar.png" verticalCenter="0"/>
+	<s:Image id="img" left="0" width="40" height="40" scaleMode="letterbox" smooth="true"
+			 smoothingQuality="high" source="img/btnGuardar2.png" verticalCenter="0" alpha="0.5"/>
 	<s:Label id="lblGuardar" left="42" color="#FFFFFF" fontSize="16" fontStyle="italic"
 			 text="Guardar" verticalCenter="0"/>
-	<s:Rect id="rect" x="0" y="48" width="100%" height="6" includeInLayout="false">
+	<s:Rect id="rect" x="0" y="-100" width="100%" height="6" visible="false">
 		<s:fill>
-			<s:SolidColor color="#ffffff"/>
+			<s:SolidColor color="#860049"/>
 		</s:fill>
 	</s:Rect>
 </s:Group>

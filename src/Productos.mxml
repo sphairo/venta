@@ -22,32 +22,32 @@
 	
 	<fx:Declarations>
 		<s:Parallel id="parallel" duration="500" target="{btnMasVendidos}" startDelay="1">
-			<s:Move yFrom="-100" yTo="0"/>
+			<mx:Zoom zoomWidthFrom="0" zoomHeightFrom="0"/>
 		</s:Parallel>
 		<s:Parallel id="parallel2" duration="1000" target="{btnNoVendidos}" startDelay="1">
-			<s:Move yFrom="200" yTo="0"/>
+			<mx:Zoom zoomWidthFrom="0" zoomHeightFrom="0"/>
 		</s:Parallel>
 		<s:Parallel id="parallel3" duration="1500" target="{btnGananciasVentas}" startDelay="1">
-			<s:Move yFrom="-300" yTo="0"/>
+			<mx:Zoom zoomWidthFrom="0" zoomHeightFrom="0"/>
 		</s:Parallel>
 		<s:Parallel id="parallel4" duration="2000" target="{btnVentasEmpleado}" startDelay="1">
-			<s:Move yFrom="400" yTo="0"/>
+			<mx:Zoom zoomWidthFrom="0" zoomHeightFrom="0"/>
 		</s:Parallel>
-		
 		
 		<s:Parallel id="parallel5" duration="500" target="{btnNuevo}" startDelay="1">
 			<s:Move yFrom="-100" yTo="0"/>
 		</s:Parallel>
-		<s:Parallel id="parallel6" duration="1000" target="{btnEliminar}" startDelay="1">
+		
+		<s:Parallel id="parallel6" duration="800" target="{btnEliminar}" startDelay="1">
 			<s:Move yFrom="200" yTo="0"/>
 		</s:Parallel>
-		<s:Parallel id="parallel7" duration="1500" target="{btnGuardar}" startDelay="1">
+		<s:Parallel id="parallel7" duration="1100" target="{btnGuardar}" startDelay="1">
 			<s:Move yFrom="-300" yTo="0"/>
 		</s:Parallel>
-		<s:Parallel id="parallel8" duration="2000" target="{btnImprimir}" startDelay="1">
+		<s:Parallel id="parallel8" duration="1400" target="{btnImprimir}" startDelay="1">
 			<s:Move yFrom="400" yTo="0"/>
 		</s:Parallel>
-		<s:Parallel id="parallel9" duration="2500" target="{btnAyuda}" startDelay="1">
+		<s:Parallel id="parallel9" duration="1700" target="{btnAyuda}" startDelay="1">
 			<s:Move yFrom="-500" yTo="0"/>
 		</s:Parallel>
 		
@@ -336,6 +336,12 @@
 				
 				if(arrayMarcas == null)	
 					arrayMarcas = new ArrayCollection(Utileria.group(dp));
+				
+				btnNuevo.y = -100;
+				btnEliminar.y = 200;
+				btnGuardar.y = -300;
+				btnImprimir.y = 400;
+				btnAyuda.y = -500;
 			}
 			
 			internal function btnNuevo_clickHandler(event:MouseEvent):void
@@ -461,32 +467,30 @@
 						 click="onShowDefaultCalloutClick()" smooth="true" smoothingQuality="high"
 						 source="img/ModIco.png" verticalCenter="-1"/>
 			</s:BorderContainer>
-			<renders:renderAdd id="btnNuevo" includeIn="mantenimiento_productos" x="548" y="-50"
+			<renders:renderAdd id="btnNuevo" includeIn="mantenimiento_productos" x="548" y="0"
 							   click="btnNuevo_clickHandler(event)"/>
 			<renders:renderDelete id="btnEliminar" includeIn="mantenimiento_productos" x="656"
-								  y="-50" click="btnEliminar_clickHandler()"/>
-			<renders:renderSave id="btnGuardar" includeIn="mantenimiento_productos" x="772" y="-50"
+								  y="0" click="btnEliminar_clickHandler()"/>
+			<renders:renderSave id="btnGuardar" includeIn="mantenimiento_productos" x="775" y="0"
 								click="btnGuardar_clickHandler()"/>
-			<renders:renderPrint id="btnImprimir" includeIn="mantenimiento_productos" x="882"
-								 y="-50"
+			<renders:renderPrint id="btnImprimir" includeIn="mantenimiento_productos" x="891"
+								 y="0"
 								 click="AlertInfo.show('Ocurrio un error al guardar la información.')"/>
-			<renders:renderHelp id="btnAyuda" includeIn="mantenimiento_productos" x="989" y="-50"
+			<renders:renderHelp id="btnAyuda" includeIn="mantenimiento_productos" x="1002" y="0"
 								click="AlertInfo.show('Ocurrio un error al guardar la información.')"/>
 			<renders:renderMasVendidos id="btnMasVendidos"
 									   includeIn="estadisticas,ganancias,mas_vendidos,ventas_empleado"
-									   click="onClickMasVendidos(event)"
-									   x="60" y="0"/>
+									   y="0" click="onClickMasVendidos(event)"
+									   x="81" />
 			<renders:renderNoVendidos id="btnNoVendidos"
 									  includeIn="estadisticas,ganancias,mas_vendidos,ventas_empleado"
-									  x="235"/>
+									  x="256" y="0"/>
 			<renders:renderVentasGanancias id="btnGananciasVentas"
-										   includeIn="estadisticas,ganancias,mas_vendidos,ventas_empleado"
-										   click="onClickVentasGanancias(event)"
-										   x="405"/>
+										   includeIn="estadisticas,ganancias,mas_vendidos,ventas_empleado" click="onClickVentasGanancias(event)"
+										   x="426" y="0"/>
 			<renders:renderVentasPorEmpleado id="btnVentasEmpleado"
-											 includeIn="estadisticas,ganancias,mas_vendidos,ventas_empleado"
-											 click="onClickVentasPorEmpleado(event)"
-											 x="615"/>
+											 includeIn="estadisticas,ganancias,mas_vendidos,ventas_empleado" click="onClickVentasPorEmpleado(event)"
+											 x="636" y="0"/>
 			
 			<s:List id="list" includeIn="productos" left="20" right="0" top="51" bottom="0"
 					allowMultipleSelection="true" borderVisible="false" contentBackgroundAlpha="0.0"
@@ -538,7 +542,19 @@
 			<graficas:gananciasVentas id="graficaGananciasVentas" includeIn="ganancias" top="50"
 									  width="100%" height="100%"/>	
 			<graficas:ventasPorEmpleado id="graficaVentasPorEmpleado" includeIn="ventas_empleado"
-										top="50" width="100%" height="100%"/>	
+										top="50" width="100%" height="100%"/>
+				
+			<s:Rect includeIn="productos" width="150" height="35" bottomLeftRadiusX="10"
+					bottomRightRadiusX="10" horizontalCenter="0">
+				<s:fill>
+					<s:SolidColor color="#ff7f00"/>
+				</s:fill>
+			</s:Rect>
+			
+			<s:Label includeIn="productos" y="5" color="#FFFFFF" fontSize="18" fontStyle="italic"
+					 fontWeight="normal" horizontalCenter="-45" text="5"/>
+			<s:Label includeIn="productos" y="5" color="#FFFFFF" fontSize="18" fontStyle="italic"
+					 horizontalCenter="25" text="$538.50"/>
 		</s:Group>
 	</s:Scroller>	
 </s:WindowedApplication>

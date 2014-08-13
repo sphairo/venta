@@ -1,24 +1,36 @@
-<?xml version="1.0" encoding="utf-8"?>
 <s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
 		 xmlns:s="library://ns.adobe.com/flex/spark"
 		 xmlns:mx="library://ns.adobe.com/flex/mx"
-		 width="225" height="48" focusColor="#737373" rollOver="rollOverHandler(event)" buttonMode="true" rollOut="rollOutHandler(event)">
+		 width="200" height="48" rollOver="rollOverHandler()" buttonMode="true" rollOut="rollOutHandler()">
+	<fx:Declarations>
+		<s:Parallel id="parallel" duration="300" target="{img}">
+			<s:Fade alphaFrom="0.5" alphaTo="1" duration="500"/>
+		</s:Parallel>
+		<s:Parallel id="parallel2" duration="300" target="{img}">
+			<s:Fade alphaFrom="1" alphaTo="0.5" duration="500"/>
+		</s:Parallel>
+	</fx:Declarations>
 	<fx:Script>
 		<![CDATA[
-			internal function rollOverHandler(event:MouseEvent):void
-			{
-				img.source = "img/btnVentasPorEmpleadoOver.png";
+			import mx.events.FlexEvent;
+			
+			internal function rollOverHandler():void{
+				parallel.play();
 			}
 			
-			internal function rollOutHandler(event:MouseEvent):void
-			{
-				img.source = "img/btnVentasPorEmpleado.png";
+			internal function rollOutHandler():void{
+				parallel2.play();
 			}
 			
 		]]>
 	</fx:Script>
-	<s:Image id="img" left="10" width="54" height="44" scaleMode="letterbox" smooth="true"
-			 smoothingQuality="high" source="img/btnVentasPorEmpleado.png" verticalCenter="0"/>
-	<s:Label id="lblCambiarFoto" right="10" color="#FFFFFF" fontSize="16" fontStyle="italic"
+	<s:Image id="img" left="0" width="40" height="40" scaleMode="letterbox" smooth="true"
+			 smoothingQuality="high" source="img/btnVentasPorEmpleado.png" verticalCenter="1"/>
+	<s:Label id="lblCambiarFoto" right="0" color="#FFFFFF" fontSize="16" fontStyle="italic"
 			 text="Ventas por empleado" verticalCenter="0"/>
+	<s:Rect id="rect" x="0" y="-100" width="100%" height="6" visible="false">
+		<s:fill>
+			<s:SolidColor color="#61656f"/>
+		</s:fill>
+	</s:Rect>
 </s:Group>
