@@ -4,11 +4,11 @@
 		 xmlns:mx="library://ns.adobe.com/flex/mx" width="95" height="50" buttonMode="true" contentBackgroundAlpha="0.0" rollOver="rollOverHandler()" rollOut="rollOutHandler()" mouseChildren="false">
 	
 	<fx:Declarations>		
-		<s:Parallel id="parallel" duration="300" target="{img}">
-			<s:Fade alphaFrom="0.5" alphaTo="1" duration="1000"/>
+		<s:Parallel id="parallel" duration="200" target="{img}">
+			<s:Fade alphaFrom="0.5" alphaTo="1"/>
 		</s:Parallel>
-		<s:Parallel id="parallel2" duration="300" target="{img}">
-			<s:Fade alphaFrom="1" alphaTo="0.5" duration="1000"/>
+		<s:Parallel id="parallel2" duration="100" target="{img}">
+			<s:Fade alphaFrom="1" alphaTo="0.5"/>
 		</s:Parallel>
 	</fx:Declarations>
 	<fx:Script>

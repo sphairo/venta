@@ -245,14 +245,11 @@ package clases
 		
 		public function set path(newValue:String):void
 		{
-			if (newValue != path)
-			{
+			if (newValue != path){
 				_path = newValue;
 				
 				if (hasEventListener("valueChanged"))
-				{
 					dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
-				}
 			}
 		}
 				

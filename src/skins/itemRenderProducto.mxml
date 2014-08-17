@@ -13,46 +13,49 @@
 			import com.anotherflexdev.ui.AlertError;
 			import com.anotherflexdev.ui.AlertInfo;
 			
+			import components.customComponents.notificacion;
+			
+			import mx.events.FlexMouseEvent;
 			import mx.utils.StringUtil;
 			
-			internal function over():void
-			{
+			[Bindable] internal var fileReferenceListImagen:FileReferenceList;
+			
+			internal function over():void{
 				ranking.source="img/agregar_carrito.png";
+				parallel.play();
 			}
 			
-			internal function out():void
-			{
+			internal function out():void{
 				ranking.source="img/rankingCeroStarss.png";
 				imgCamara.visible = false;
 			}
 			
-			internal function ranking_clickHandler(event:MouseEvent):void
-			{
-				AlertInfo.show("Producto agregado.");
+			internal function ranking_clickHandler(event:MouseEvent):void{
+				var notify:notificacion = new notificacion();
+				this.parentDocument.parentDocument.containerNotify.visible = true;
+				this.parentDocument.parentDocument.containerNotify.addElement(notify);
+				trace("click");
+				//parent.parent.parent.parent.parent.parent.parent.parent.parent.parent.parent.containerNotify.addElement();
 			}
 			
-			internal function cargaCompleta():void
-			{
+			internal function cargaCompleta():void{
 				loader.visible= false;
 			}
 			
-			internal function img_rollOverHandler(event:MouseEvent):void
-			{
+			internal function img_rollOverHandler(event:MouseEvent):void{
 				imgCamara.visible = true;
 			}
 			
-			internal function img_rollOutHandler(event:MouseEvent):void
-			{
+			internal function img_rollOutHandler(event:MouseEvent):void{
 				imgCamara.visible = false;
 			}
 			
-			import mx.events.FlexMouseEvent;
+			
 			internal function onMouseDownOutside(event:FlexMouseEvent):void {
 				event.target.close();
 			}
 			
-			internal function defaultCallout_mouseDownHandler(event:MouseEvent):void
-			{
+			internal function defaultCallout_mouseDownHandler(event:MouseEvent):void{
 				defaultCallout.close();
 			}
 			
@@ -60,10 +63,7 @@
 				defaultCallout.open(imgCamara);
 			}
 			
-			[Bindable] private var fileReferenceListImagen:FileReferenceList;
-			
-			protected function seleccionarImagen():void
-			{
+			internal function seleccionarImagen():void{
 				fileReferenceListImagen = new FileReferenceList();
 				fileReferenceListImagen.addEventListener(Event.SELECT, fileSelectedHandler);
 				
@@ -75,8 +75,7 @@
 				fileReferenceListImagen.browse(allTypes);
 			}
 			
-			private function fileSelectedHandler(event:Event):void 
-			{
+			internal function fileSelectedHandler(event:Event):void {
 				GlobalStatic.utility.showLoad();
 				var fileReference:FileReference;
 				var fileReferenceList:FileReferenceList = FileReferenceList(event.target);
@@ -112,9 +111,12 @@
 				   verticalCenter="0">
 			<renders:renderCambiarFoto click="seleccionarImagen()"/>
 		</s:Callout>
+		<s:Parallel id="parallel" duration="200" startDelay="1" target="{ranking}">
+			<mx:Zoom zoomHeightFrom="0" zoomWidthFrom="0"/>
+		</s:Parallel>
 	</fx:Declarations>		
 	<s:BorderContainer id="background" left="10" right="10" top="10" bottom="15"
-					   borderVisible="false" dropShadowVisible="true" cornerRadius="5">
+					   borderVisible="false" cornerRadius="5" dropShadowVisible="true">
 		<s:backgroundFill>
 			<s:LinearGradient rotation="90">
 				<s:GradientEntry color="#ffffff"/>
@@ -129,11 +131,12 @@
 	<s:BusyIndicator id="loader" width="64" height="64" horizontalCenter="0" verticalCenter="-40"/>
 	<s:Label x="15" y="172" width="130" color="#929292" fontSize="12" text="{this.data.nom_producto}"
 			 textAlign="left"/>
-	<s:Label x="15" y="159" color="#A4A4A4" fontSize="12" fontWeight="bold" text="${this.data.precio} MXN"/>
+	<s:Label x="15" y="159" color="#A4A4A4" fontSize="12" fontWeight="bold"
+			 text="${this.data.precio} MXN"/>
 	<s:Label visible="false" fontSize="21" fontWeight="bold" text="{this.data.id_producto}"/>
 	<s:Image id="ranking" x="15" y="136" buttonMode="true" click="ranking_clickHandler(event)"
 			 smooth="true" source="img/rankingCeroStarss.png"/>
-	<s:Image id="imgCamara" visible="false" y="45" buttonMode="true"
+	<s:Image id="imgCamara" visible="false" y="45" alpha="0.9" buttonMode="true"
 			 click="onShowDefaultCalloutClick()" horizontalCenter="0"
 			 rollOver="img_rollOverHandler(event)" smooth="true" source="img/camara.png"/>
 </s:ItemRenderer>

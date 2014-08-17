@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 width="255" height="128" creationComplete="init(event)">
+	<fx:Style>
+		@namespace s "library://ns.adobe.com/flex/spark";
+		
+		@font-face { 
+			src: url("fonts/914-SOLID.ttf"); 
+			fontFamily: myFontFamily; 
+			embedAsCFF: true; 
+		}       
+		.customStyle {
+			fontFamily: myFontFamily;
+		}   
+	</fx:Style>
+	<fx:Script>
+		<![CDATA[
+			import mx.events.EffectEvent;
+			import mx.events.FlexEvent;
+			
+			internal function init(event:FlexEvent):void{
+				parallel1.play();
+				parallel1.addEventListener(EffectEvent.EFFECT_END,end);
+			}
+			
+			internal function end(event:EffectEvent):void{
+				parallel2.play();
+				lblNumero.visible = true;
+				parallel3.play();
+			}
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<s:Parallel id="parallel1" duration="500" startDelay="1" target="{container}">
+			<mx:Zoom zoomHeightFrom="0" zoomWidthFrom="0"/>
+		</s:Parallel>
+		<s:Parallel id="parallel2" duration="1500" startDelay="1" target="{borderContainer}">
+			<mx:Fade alphaFrom=".1" alphaTo="1"/>
+		</s:Parallel>
+		<s:Parallel id="parallel3" duration="500" startDelay="1" target="{lblNumero}">
+			<mx:Fade alphaFrom=".1" alphaTo="1"/>
+		</s:Parallel>
+	</fx:Declarations>
+	<s:BorderContainer id="borderContainer" x="21" y="23" width="230" height="80" alpha=".1"
+					   borderVisible="false" cornerRadius="10">
+		<s:backgroundFill>
+			<s:LinearGradient rotation="90">
+				<s:GradientEntry color="#949292"/>
+				<s:GradientEntry color="#a5a5a5"/>
+			</s:LinearGradient>
+		</s:backgroundFill> 
+		
+		<s:Label id="lblTotal" top="10" color="white" fontSize="16" horizontalCenter="45"
+				 text="$128.00 MXN"/>
+		<s:Label bottom="20" buttonMode="true" color="white" fontSize="16" fontWeight="bold"
+				 horizontalCenter="38" text="Ir al carrito"/>
+		<s:Image right="10" bottom="20" source="img/icon_carrito.png"/>
+	</s:BorderContainer>
+	<s:Group id="container" width="128" height="128" buttonMode="true" contentBackgroundAlpha="0.0">
+		<s:Ellipse id="circle" width="100%" height="100%" horizontalCenter="0" verticalCenter="0">
+			<s:stroke>
+				<s:SolidColorStroke alpha="0.5" color="#cbc8c8" weight="10"/>
+			</s:stroke>
+			<s:fill>
+				<s:RadialGradient>
+					<s:GradientEntry alpha="1" color="#f29c2e" ratio="0"/>
+				</s:RadialGradient>
+			</s:fill>
+		</s:Ellipse>
+		<s:Label id="lblNumero" visible="false" alpha=".1" color="#FFFFFF" fontSize="48"
+				 horizontalCenter="0" styleName="customStyle" text="10" verticalCenter="0"/>		
+		<s:Label id="lblVerDetalle" bottom="25" color="#FFFFFF" fontSize="15" fontStyle="italic"
+				 fontWeight="bold" horizontalCenter="0" text="Ver Detalle"/>
+	</s:Group>
+</s:Group>
