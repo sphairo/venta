@@ -10,8 +10,7 @@
 	
 	<fx:Script>
 		<![CDATA[
-			internal function returnHome():void
-			{
+			internal function returnHome():void{
 				imgbackground_home.visible = true;
 				tabNavigatorSearch.selectedIndex = 0;
 			}

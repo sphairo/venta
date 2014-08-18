@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+CalloutButton is a Button and uses the standard Button skins by default. 
+For this example, I explicitly use the beveled ActionBar button skin.
+-->
+<mobile:BeveledActionButtonSkin xmlns:fx="http://ns.adobe.com/mxml/2009" 
+                                xmlns:s="library://ns.adobe.com/flex/spark" 
+                                xmlns:mobile="spark.skins.mobile.*">
+    <fx:Declarations>
+        <!-- 
+        An optional dropDown skin part defines the Callout generated after 
+        (1) pressing a CalloutButton or (2) calling calloutButton.openDropDown().
+        Button skins don't contain a dropDown skin part by default. In this case,
+        CalloutButton creates a default Callout.
+        -->
+        <fx:Component id="dropDown">
+            <s:Callout skinClass="skins.BoxyCalloutSkin"
+                       backgroundColor="gray"
+                       contentBackgroundAlpha="0"/>
+        </fx:Component>
+    </fx:Declarations>
+</mobile:BeveledActionButtonSkin>

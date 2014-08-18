@@ -2,48 +2,86 @@
 <s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
 		 xmlns:s="library://ns.adobe.com/flex/spark"
 		 xmlns:mx="library://ns.adobe.com/flex/mx"
-		 width="255" height="128" creationComplete="init(event)">
-	<fx:Style>
-		@namespace s "library://ns.adobe.com/flex/spark";
-		
-		@font-face { 
-			src: url("fonts/914-SOLID.ttf"); 
-			fontFamily: myFontFamily; 
-			embedAsCFF: true; 
-		}       
-		.customStyle {
-			fontFamily: myFontFamily;
-		}   
-	</fx:Style>
+		 width="255" height="128" creationComplete="init()">
 	<fx:Script>
 		<![CDATA[
-			import mx.events.EffectEvent;
-			import mx.events.FlexEvent;
+			import clases.GlobalStatic;
 			
-			internal function init(event:FlexEvent):void{
+			import mx.collections.ArrayCollection;
+			import mx.events.EffectEvent;
+			
+			import renders.renderProductoEnCarritoOld;
+			
+			internal function init():void{
 				parallel1.play();
 				parallel1.addEventListener(EffectEvent.EFFECT_END,end);
 			}
 			
 			internal function end(event:EffectEvent):void{
 				parallel2.play();
-				lblNumero.visible = true;
 				parallel3.play();
+				lblNumero.visible = true;
 			}
+			[Bindable]
+			private var dp:ArrayCollection;
+			[Bindable]
+			private var total:Number = 0;
+			
+			internal function verDetalle():void{
+				//var newProducto:renderProductoEnCarrito;
+				var newProducto:clases.Productos;
+				dp = new ArrayCollection();
+				for each (var item:Object in GlobalStatic.arrayCarrito){
+					newProducto = new clases.Productos(item);
+					//newProducto.producto = item;
+					//boxyCallout.addElement(newProducto);
+					//list.addElement(newProducto);
+					dp.addItem(newProducto);
+					total += newProducto.precio;
+				}
+				//boxyCallout.height= (GlobalStatic.arrayCarrito.length * 80);
+				boxyCallout.addElement(list);
+				boxyCallout.open(lblVerDetalle);
+			}
+			
+			internal function overCallout():void{
+				parentDocument.parentDocument.notificacionAbierta();
+			}
+			
+			internal function outCallout():void{
+				boxyCallout.close();
+				parentDocument.parentDocument.timer.start();
+			}
+			
 		]]>
 	</fx:Script>
 	<fx:Declarations>
 		<s:Parallel id="parallel1" duration="500" startDelay="1" target="{container}">
 			<mx:Zoom zoomHeightFrom="0" zoomWidthFrom="0"/>
 		</s:Parallel>
-		<s:Parallel id="parallel2" duration="1500" startDelay="1" target="{borderContainer}">
+		<s:Parallel id="parallel2" duration="1000" startDelay="2" target="{borderContainer}">
 			<mx:Fade alphaFrom=".1" alphaTo="1"/>
 		</s:Parallel>
-		<s:Parallel id="parallel3" duration="500" startDelay="1" target="{lblNumero}">
+		<s:Parallel id="parallel3" duration="500" startDelay="2" target="{lblNumero}">
 			<mx:Fade alphaFrom=".1" alphaTo="1"/>
 		</s:Parallel>
+		
+		<s:Callout id="boxyCallout" width="240" backgroundColor="0xFFFFFF"
+				   contentBackgroundAlpha="0" mouseDownOutside="boxyCallout.close()"
+				   rollOut="outCallout()" rollOver="overCallout()" skinClass="skins.BoxyCalloutSkin">
+			<!--<s:layout>
+				<s:VerticalLayout clipAndEnableScrolling="true"/>
+			</s:layout>-->
+		</s:Callout>
+		<s:List width="100%" height="100%" id="list" borderVisible="false" contentBackgroundAlpha="0.0" itemRenderer="renderProductoEnCarrito" 
+				dataProvider="{dp}" rollOverColor="#D1D1D1" selectionColor="#ADADAD" focusColor="#ffffff">
+			<s:layout>
+				<s:VerticalLayout gap="0"/>
+			</s:layout>
+		</s:List>
 	</fx:Declarations>
-	<s:BorderContainer id="borderContainer" x="21" y="23" width="230" height="80" alpha=".1"
+	
+	<s:BorderContainer id="borderContainer" x="21" y="23" width="230" height="80" alpha="0"
 					   borderVisible="false" cornerRadius="10">
 		<s:backgroundFill>
 			<s:LinearGradient rotation="90">
@@ -53,12 +91,12 @@
 		</s:backgroundFill> 
 		
 		<s:Label id="lblTotal" top="10" color="white" fontSize="16" horizontalCenter="45"
-				 text="$128.00 MXN"/>
+				 text="{'$'+total.toFixed(2)+' MXN'}"/>
 		<s:Label bottom="20" buttonMode="true" color="white" fontSize="16" fontWeight="bold"
 				 horizontalCenter="38" text="Ir al carrito"/>
 		<s:Image right="10" bottom="20" source="img/icon_carrito.png"/>
 	</s:BorderContainer>
-	<s:Group id="container" width="128" height="128" buttonMode="true" contentBackgroundAlpha="0.0">
+	<s:Group id="container" width="128" height="128" buttonMode="true" contentBackgroundAlpha="0.0" click="verDetalle()">
 		<s:Ellipse id="circle" width="100%" height="100%" horizontalCenter="0" verticalCenter="0">
 			<s:stroke>
 				<s:SolidColorStroke alpha="0.5" color="#cbc8c8" weight="10"/>
@@ -70,8 +108,9 @@
 			</s:fill>
 		</s:Ellipse>
 		<s:Label id="lblNumero" visible="false" alpha=".1" color="#FFFFFF" fontSize="48"
-				 horizontalCenter="0" styleName="customStyle" text="10" verticalCenter="0"/>		
-		<s:Label id="lblVerDetalle" bottom="25" color="#FFFFFF" fontSize="15" fontStyle="italic"
-				 fontWeight="bold" horizontalCenter="0" text="Ver Detalle"/>
+				 horizontalCenter="0" styleName="customStyle" text="{dp.length}" verticalCenter="0"/>		
+		<s:Label id="lblVerDetalle" bottom="25" 
+				 color="#FFFFFF" fontSize="15" fontStyle="italic" fontWeight="bold"
+				 horizontalCenter="0" text="Ver Detalle"/>
 	</s:Group>
 </s:Group>

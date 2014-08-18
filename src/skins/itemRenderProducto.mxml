@@ -22,7 +22,7 @@
 			
 			internal function over():void{
 				ranking.source="img/agregar_carrito.png";
-				parallel.play();
+				//parallel.play();
 			}
 			
 			internal function out():void{
@@ -31,11 +31,10 @@
 			}
 			
 			internal function ranking_clickHandler(event:MouseEvent):void{
-				var notify:notificacion = new notificacion();
-				this.parentDocument.parentDocument.containerNotify.visible = true;
-				this.parentDocument.parentDocument.containerNotify.addElement(notify);
-				trace("click");
-				//parent.parent.parent.parent.parent.parent.parent.parent.parent.parent.parent.containerNotify.addElement();
+				//var notify:notificacion = new notificacion();
+				//parentDocument.parentDocument.containerNotify.visible = true;
+				GlobalStatic.arrayCarrito.addItem(this.data);
+				parentDocument.parentDocument.containerNotify.addElement(new notificacion());
 			}
 			
 			internal function cargaCompleta():void{

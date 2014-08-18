@@ -204,3 +204,13 @@ mx1|Alert
 	dropShadowVisible: true;
 	skinClass: ClassReference("skinCombobox");
 }
+
+
+@font-face { 
+	src: url("fonts/914-SOLID.ttf"); 
+	fontFamily: myFontFamily; 
+	embedAsCFF: true; 
+}       
+.customStyle {
+	fontFamily: myFontFamily;
+} 

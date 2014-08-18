@@ -16,6 +16,9 @@ package clases
 		private static var _aplicacion:Object = new Object();
 		private static var _defaultDateRange:Object = new Object();
 		private static var _ServidorFechaHora:Date = new Date();
+		public static var _arrayCarrito:ArrayCollection = new ArrayCollection();
+		private static var _newProducto:Object;
+		
 		
 		[Bindable] public static var utility:Utileria = new Utileria();
 
@@ -65,7 +68,20 @@ package clases
 			if (value != DefaultDateRange)
 				_defaultDateRange = value;
 		}
+		
+		public static function set newProducto(value:Object):void{
+				_newProducto = value;
+				//_arrayCarrito.addItem(value);
+		}
 		/**Getters*/
+		
+		public static function get newProducto():Object {
+			return _newProducto;
+		}
+		
+		public static function get arrayCarrito():ArrayCollection {
+			return _arrayCarrito;
+		}
 		
 		public static function get sIpServidor():String 
 		{

@@ -69,8 +69,8 @@
 					  result="resultCallStoreProcedure(event)"/>
 		</mx:RemoteObject>
 		
-		<s:Callout id="defaultCallout" width="230" height="470"
-				   mouseDown="defaultCallout_mouseDownHandler(event)"
+		<s:Callout id="defaultCallout" width="230" height="465"
+				   mouseDown="defaultCallout_mouseDownHandler(event)" rollOut="defaultCallout.close()"
 				   mouseDownOutside="onMouseDownOutside(event)" verticalPosition="after">
 			<s:layout>
 				<s:VerticalLayout/>
@@ -446,24 +446,34 @@
 				parallel9.play();
 			}
 			
-			public var timer:Timer = new Timer(5000,0);
-			public function containerNotify_addedHandler(event:Event):void{
+			public var timer:Timer = new Timer(10000,0);
+			public function notificar():void{
 				containerNotify.alpha = 1;
+				containerNotify.visible = true;
 				timer.stop();
 				timer.start();
 				timer.addEventListener(TimerEvent.TIMER, timerComplete);
 			}
+			
 			internal function timerComplete(event:TimerEvent):void{
 				timer.stop();
-				parallel10.removeEventListener(EffectEvent.EFFECT_END, endMoveContainerNotify);
+				parallel10.removeEventListener(EffectEvent.EFFECT_END, timerComplete);
 				parallel10.play();
 				parallel10.addEventListener(EffectEvent.EFFECT_END, endMoveContainerNotify);
 			}
 			
 			internal function endMoveContainerNotify(event:EffectEvent):void{
 				containerNotify.removeAllElements();
+				containerNotify.visible = false;
 				parallel10.removeEventListener(EffectEvent.EFFECT_END, endMoveContainerNotify);
 			}
+			
+			public function notificacionAbierta():void{
+				containerNotify.alpha = 1;
+				timer.stop();
+				parallel10.removeEventListener(EffectEvent.EFFECT_END, timerComplete);
+			}
+			
 		]]>
 		
 	</fx:Script>
@@ -568,7 +578,7 @@
 			<graficas:ventasPorEmpleado id="graficaVentasPorEmpleado" includeIn="ventas_empleado"
 										top="50" width="100%" height="100%"/>
 			<s:Group id="containerNotify" includeIn="productos" right="50" top="80" width="230"
-					 height="80" visible="false" elementAdd="containerNotify_addedHandler(event)">
+					 height="80" visible="false" elementAdd="notificar()" rollOver="notificacionAbierta()" rollOut="notificar()">
 			</s:Group>
 		</s:Group>
 	</s:Scroller>	
