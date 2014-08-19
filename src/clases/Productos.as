@@ -23,6 +23,7 @@ package clases
 		private var _indice:int;	
 		private var _isNew:Boolean = false;
 		private var _error:Boolean = false;
+		private var _cantidadCarrito:int = 1;
 		
 		public function Productos(producto:Object){
 			path = producto.path;
@@ -223,6 +224,12 @@ package clases
 			return _indice;
 		}
 		
+		[Bindable]
+		public function get cantidadCarrito():int
+		{
+			return _cantidadCarrito;
+		}
+		
 		public function set indice(newValue:int):void
 		{
 			if (newValue != indice)
@@ -236,6 +243,18 @@ package clases
 			}
 		}
 		
+		public function set cantidadCarrito(newValue:int):void
+		{
+			if (newValue != cantidadCarrito)
+			{
+				_cantidadCarrito = newValue;
+				
+				if (hasEventListener("valueChanged"))
+				{
+					dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
+				}
+			}
+		}
 		
 		[Bindable]
 		public function get path():String

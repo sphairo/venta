@@ -6,13 +6,42 @@
 	<fx:Script>
 		<![CDATA[
 			import clases.GlobalStatic;
+			import clases.Productos;
 			
 			import mx.collections.ArrayCollection;
 			import mx.events.EffectEvent;
 			
-			import renders.renderProductoEnCarritoOld;
+			[Bindable]
+			internal var dp2:ArrayCollection;
 			
 			internal function init():void{
+				var producto:clases.Productos;
+				var numeroProductos:int = 0;
+				var total:Number = 0
+					
+				var dp:ArrayCollection = new ArrayCollection();
+				dp = GlobalStatic.arrayCarrito;
+				dp2 = new ArrayCollection();				
+				
+				for (var i:int = 0; i< dp.length ;i++){
+					producto = clases.Productos(dp.getItemAt(i));
+					for (var j:int = i+1; j<dp.length;j++){
+						if (producto.id_producto == dp.getItemAt(j).id_producto){
+							producto.cantidadCarrito++;
+							dp.removeItemAt(j);
+						}
+					}
+					dp2.addItem(producto);
+				}	
+				
+				for each(var item:Object in dp2){
+					total += (item.precio * item.cantidadCarrito);
+					numeroProductos += item.cantidadCarrito;
+				}
+				lblNumero.text = String(numeroProductos);
+				
+				lblTotal.text = "$"+total.toFixed(2)+" MXN";
+				
 				parallel1.play();
 				parallel1.addEventListener(EffectEvent.EFFECT_END,end);
 			}
@@ -22,37 +51,53 @@
 				parallel3.play();
 				lblNumero.visible = true;
 			}
-			[Bindable]
-			private var dp:ArrayCollection;
-			[Bindable]
-			private var total:Number = 0;
+			
 			
 			internal function verDetalle():void{
-				//var newProducto:renderProductoEnCarrito;
-				var newProducto:clases.Productos;
-				dp = new ArrayCollection();
-				for each (var item:Object in GlobalStatic.arrayCarrito){
-					newProducto = new clases.Productos(item);
-					//newProducto.producto = item;
-					//boxyCallout.addElement(newProducto);
-					//list.addElement(newProducto);
-					dp.addItem(newProducto);
-					total += newProducto.precio;
-				}
-				//boxyCallout.height= (GlobalStatic.arrayCarrito.length * 80);
 				boxyCallout.addElement(list);
 				boxyCallout.open(lblVerDetalle);
 			}
 			
 			internal function overCallout():void{
-				parentDocument.parentDocument.notificacionAbierta();
+				if(parentDocument != null)
+					parentDocument.parentDocument.notificacionAbierta();
 			}
 			
 			internal function outCallout():void{
 				boxyCallout.close();
-				parentDocument.parentDocument.timer.start();
+				if(parentDocument != null)
+					parentDocument.parentDocument.timer.start();
 			}
 			
+			public function quitarItem(id_producto:int):void{	
+				var i:int = 0;
+				var numeroProductos:int = 0;
+				var total:Number = 0	
+				
+				for each(var item:Object in dp2){
+					if(item.cantidadCarrito == 0){
+						for each (var original:Object in GlobalStatic.arrayCarrito){
+							if(item.id_producto == original.id_producto){
+								GlobalStatic.arrayCarrito.removeItemAt(i);
+								dp2.removeItemAt(i);
+								break;
+							}
+							i++;
+						}
+					}
+				}
+				
+				for each(var item2:Object in dp2){
+					total += (item2.precio * item2.cantidadCarrito);
+					numeroProductos += item2.cantidadCarrito;
+				}
+				
+				if(dp2.length == 0)
+					boxyCallout.close();
+				
+				lblNumero.text = String(numeroProductos);
+				lblTotal.text = "$"+total.toFixed(2)+" MXN";
+			}
 		]]>
 	</fx:Script>
 	<fx:Declarations>
@@ -66,7 +111,7 @@
 			<mx:Fade alphaFrom=".1" alphaTo="1"/>
 		</s:Parallel>
 		
-		<s:Callout id="boxyCallout" width="240" backgroundColor="0xFFFFFF"
+		<s:Callout id="boxyCallout" width="450" backgroundColor="0xFFFFFF"
 				   contentBackgroundAlpha="0" mouseDownOutside="boxyCallout.close()"
 				   rollOut="outCallout()" rollOver="overCallout()" skinClass="skins.BoxyCalloutSkin">
 			<!--<s:layout>
@@ -74,7 +119,7 @@
 			</s:layout>-->
 		</s:Callout>
 		<s:List width="100%" height="100%" id="list" borderVisible="false" contentBackgroundAlpha="0.0" itemRenderer="renderProductoEnCarrito" 
-				dataProvider="{dp}" rollOverColor="#D1D1D1" selectionColor="#ADADAD" focusColor="#ffffff">
+				dataProvider="{dp2}" rollOverColor="#D1D1D1" selectionColor="#ADADAD" focusColor="#ffffff">
 			<s:layout>
 				<s:VerticalLayout gap="0"/>
 			</s:layout>
@@ -90,8 +135,7 @@
 			</s:LinearGradient>
 		</s:backgroundFill> 
 		
-		<s:Label id="lblTotal" top="10" color="white" fontSize="16" horizontalCenter="45"
-				 text="{'$'+total.toFixed(2)+' MXN'}"/>
+		<s:Label id="lblTotal" top="10" color="white" fontSize="16" horizontalCenter="45"/>
 		<s:Label bottom="20" buttonMode="true" color="white" fontSize="16" fontWeight="bold"
 				 horizontalCenter="38" text="Ir al carrito"/>
 		<s:Image right="10" bottom="20" source="img/icon_carrito.png"/>
@@ -108,7 +152,7 @@
 			</s:fill>
 		</s:Ellipse>
 		<s:Label id="lblNumero" visible="false" alpha=".1" color="#FFFFFF" fontSize="48"
-				 horizontalCenter="0" styleName="customStyle" text="{dp.length}" verticalCenter="0"/>		
+				 horizontalCenter="0" styleName="customStyle" verticalCenter="0"/>		
 		<s:Label id="lblVerDetalle" bottom="25" 
 				 color="#FFFFFF" fontSize="15" fontStyle="italic" fontWeight="bold"
 				 horizontalCenter="0" text="Ver Detalle"/>

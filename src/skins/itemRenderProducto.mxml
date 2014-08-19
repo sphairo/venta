@@ -9,6 +9,7 @@
 	<fx:Script>
 		<![CDATA[
 			import clases.GlobalStatic;
+			import clases.Productos;
 			
 			import com.anotherflexdev.ui.AlertError;
 			import com.anotherflexdev.ui.AlertInfo;
@@ -33,7 +34,8 @@
 			internal function ranking_clickHandler(event:MouseEvent):void{
 				//var notify:notificacion = new notificacion();
 				//parentDocument.parentDocument.containerNotify.visible = true;
-				GlobalStatic.arrayCarrito.addItem(this.data);
+
+				GlobalStatic.arrayCarrito.addItem(new clases.Productos(this.data));
 				parentDocument.parentDocument.containerNotify.addElement(new notificacion());
 			}
 			

@@ -2,7 +2,7 @@
 <s:ItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" 
 				xmlns:s="library://ns.adobe.com/flex/spark" 
 				xmlns:mx="library://ns.adobe.com/flex/mx" 
-				width="100%" height="80">
+				width="100%" height="80" mouseChildren="true">
 	
 	<fx:Script>
 		<![CDATA[
@@ -14,15 +14,44 @@
 			internal function out():void{
 				imgEliminar.alpha = .5;
 			}
+			
+			internal function quitarProducto():void{
+				if(this.data.cantidadCarrito > 0)
+					this.data.cantidadCarrito--;
+				parentDocument.parentDocument.quitarItem(this.data.id_producto);
+			}
+			
 		]]>
 	</fx:Script>
 	
-	<s:Image id="img" left="10" width="64" height="64" scaleMode="letterbox" smooth="true"
-			 smoothingQuality="high" source="{img.source = 'http://127.0.0.1/Ventas/amfphp/services/files/' + data.path}"
-			 verticalCenter="0"/>
-	<s:Label id="lblNombreProducto" left="75" right="35" bottom="5" color="#575757" fontSize="16"
-			 text="{data.nom_producto}" verticalCenter="0"/>
+	<s:Image id="img" left="5" top="5" width="64" height="64" scaleMode="letterbox" smooth="true"
+			 smoothingQuality="high"
+			 source="{img.source = 'http://127.0.0.1/Ventas/amfphp/services/files/' + data.path}"/>
+	<s:Label id="lblNombreProducto" left="75" right="100" color="#6F6D6D" fontSize="16"
+			 fontStyle="italic" text="{data.nom_producto}" verticalCenter="10"/>
 	<s:Image id="imgEliminar" right="5" width="32" height="32" alpha="0.4" smooth="true" buttonMode="true"
-			 smoothingQuality="high" source="img/botonCerrar.png" verticalCenter="0" rollOver="over()" rollOut="out()"/>
+			 smoothingQuality="high" source="img/botonCerrar.png" verticalCenter="0" rollOver="over()" rollOut="out()" click="quitarProducto()"/>
+	
+	<s:HGroup left="75" top="15">
+		<s:Label id="lblPrecio" left="75" top="10" color="#505050" fontSize="14" fontWeight="bold"
+			 text="Precio: "/>
+		<s:Label id="lblPrecio2" left="130" top="10" color="#505050" fontSize="14" fontStyle="italic"
+			 text="{'$' + data.precio}"/>
+	</s:HGroup>
+	
+	<s:HGroup top="15" horizontalCenter="20">
+		<s:Label id="lblCantidad" top="10" color="#505050" fontSize="14" fontWeight="bold"
+				 horizontalCenter="0" text="Cantidad:"/>
+		<s:Label id="lblCantidad2" top="10" color="#505050" fontSize="14" fontStyle="italic"
+				 horizontalCenter="50" text="{data.cantidadCarrito}"/>
+	</s:HGroup>
+	
+	<s:HGroup top="15" horizontalCenter="145">
+		<s:Label id="lblTotal" right="90" top="10" color="#505050" fontSize="14"
+			 fontWeight="bold" text="Total:"/>
+	<s:Label id="lblTotal2" x="1187" y="10" color="#505050" fontSize="14" fontStyle="italic"
+			 fontWeight="normal" text="{'$'+(data.cantidadCarrito * data.precio)}"/>
+	</s:HGroup>
+	
 	
 </s:ItemRenderer>
