@@ -131,7 +131,7 @@ mx1|Alert
 	borderVisible: false;
 	contentBackgroundAlpha: 0.0;
 	dropShadowVisible: true;
-	skinClass: ClassReference("skinComboboxError");
+	skinClass: ClassReference("skins.skinComboboxError");
 }
 
 .comboEditorDefault
@@ -202,7 +202,7 @@ mx1|Alert
 	borderVisible: false;
 	contentBackgroundAlpha: 0.0;
 	dropShadowVisible: true;
-	skinClass: ClassReference("skinCombobox");
+	skinClass: ClassReference("skins.skinCombobox");
 }
 
 

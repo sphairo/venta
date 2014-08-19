@@ -5,6 +5,11 @@
 					clipAndEnableScrolling="true" >
 	<fx:Script>
 		<![CDATA[
+			import clases.Utileria;
+			
+			import mx.collections.ArrayCollection;
+			import mx.collections.Sort;
+			import mx.collections.SortField;
 			import mx.events.FlexEvent;
 			
 			import spark.events.IndexChangeEvent;
@@ -22,12 +27,31 @@
 				}   
 			}
 			
-			internal function changeHandler(event:IndexChangeEvent):void
-			{
+			internal function changeHandler(event:IndexChangeEvent):void{
 				if(comboBox.selectedIndex > -1)
 					data.marca = event.target.selectedItem.value;//;
 				else
 					data.marca = event.target.selectedItem;
+			}
+			
+			internal function out(event:FocusEvent):void{
+				var coincidencias:int = 0;
+				for each(var item:Object in parentApplication.arrayMarcas){
+					if(item.value == comboBox.textInput.text)
+						coincidencias++;
+				}
+				
+				if(coincidencias == 0){
+					parentApplication.arrayMarcas.addItem({value:comboBox.textInput.text});
+					
+					var srt:Sort = new Sort();
+					srt.fields = [new SortField("value")];
+					parentApplication.arrayMarcas.sort = srt;
+					parentApplication.arrayMarcas.refresh();
+					
+				}
+				
+				
 			}
 			
 		]]>
@@ -39,6 +63,6 @@
 	</s:Rect>
 	<s:ComboBox id="comboBox" width="100%" height="100%" change="changeHandler(event)" selectedIndex="-1"
 				dataProvider="{parentApplication.arrayMarcas}" labelField="value" prompt="Seleccione" 
-				click="comboBox.openDropDown()" enterState="comboBox.openDropDown()" styleName="defaultStyleCombobox"/>
+				click="comboBox.openDropDown()" enterState="comboBox.openDropDown()" styleName="defaultStyleCombobox" focusOut="out(event)"/>
 	
 </s:GridItemRenderer>

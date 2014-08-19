@@ -449,6 +449,7 @@
 			public var timer:Timer = new Timer(10000,0);
 			public function notificar():void{
 				containerNotify.alpha = 1;
+				containerNotify.includeInLayout = true;
 				containerNotify.visible = true;
 				timer.stop();
 				timer.start();
@@ -465,6 +466,7 @@
 			internal function endMoveContainerNotify(event:EffectEvent):void{
 				containerNotify.removeAllElements();
 				containerNotify.visible = false;
+				containerNotify.includeInLayout = false;
 				parallel10.removeEventListener(EffectEvent.EFFECT_END, endMoveContainerNotify);
 			}
 			
@@ -540,27 +542,27 @@
 				<s:columns>
 					<s:ArrayList>
 						<s:GridColumn id="c" dataField="codigo_barra" headerText="Codigo"
-									  itemRenderer="itemRenderCodigoBarras"
+									  itemRenderer="renders.itemRenderCodigoBarras"
 									  rendererIsEditable="true"/>
 						<s:GridColumn dataField="nom_producto" headerText="Nombre"
-									  itemRenderer="itemRenderNombreProducto"
+									  itemRenderer="renders.itemRenderNombreProducto"
 									  rendererIsEditable="true"/>
 						<s:GridColumn dataField="marca" headerText="Marca"
 									  itemRenderer="renders.itemRenderMarcas"
 									  rendererIsEditable="true"/>
 						<s:GridColumn dataField="descripcion" headerText="Descripción"
-									  itemRenderer="itemRenderDescripcion" rendererIsEditable="true"/>
+									  itemRenderer="renders.itemRenderDescripcion" rendererIsEditable="true"/>
 						<s:GridColumn dataField="cantidad" headerText="Cantidad"
-									  itemRenderer="itemRenderCantidad" rendererIsEditable="true"/>
+									  itemRenderer="renders.itemRenderCantidad" rendererIsEditable="true"/>
 						<s:GridColumn dataField="precio" headerText="Precio"
-									  itemRenderer="itemRenderPrecio" rendererIsEditable="true"/>
+									  itemRenderer="renders.itemRenderPrecio" rendererIsEditable="true"/>
 						<s:GridColumn dataField="precio_compra" headerText="Precio compra"
-									  itemRenderer="itemRenderPrecioCompra"
+									  itemRenderer="renders.itemRenderPrecioCompra"
 									  rendererIsEditable="true"/>
-						<s:GridColumn editable="false" headerText="Foto" itemRenderer="itemRenderImg"
+						<s:GridColumn editable="false" headerText="Foto" itemRenderer="renders.itemRenderImg"
 									  rendererIsEditable="true"/>
 						<s:GridColumn dataField="fecha_entrada" headerText="Fecha Entrada"
-									  itemRenderer="renderFechaEntrada" rendererIsEditable="true"/>
+									  itemRenderer="renders.renderFechaEntrada" rendererIsEditable="true"/>
 						<s:GridColumn dataField="tipoVenta" headerText="Tipo Venta"
 									  itemRenderer="renders.itemRenderTipoVenta"
 									  rendererIsEditable="true"/>
@@ -577,7 +579,7 @@
 									  width="100%" height="100%"/>	
 			<graficas:ventasPorEmpleado id="graficaVentasPorEmpleado" includeIn="ventas_empleado"
 										top="50" width="100%" height="100%"/>
-			<s:Group id="containerNotify" includeIn="productos" right="50" top="80" width="230"
+			<s:Group id="containerNotify" includeIn="productos" right="50" top="70" width="230"
 					 height="80" visible="false" elementAdd="notificar()" rollOver="notificacionAbierta()" rollOut="notificar()">
 			</s:Group>
 		</s:Group>

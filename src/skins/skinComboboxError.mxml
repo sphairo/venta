@@ -221,12 +221,12 @@ is defined by the ComboBoxTextInputSkin class.
             @copy spark.components.supportClasses.DropDownListBase#openButton
             @see spark.skins.spark.ComboBoxButtonSkin -->
     <s:Button id="openButton" right="0" top="0" bottom="0" width="19" focusEnabled="false"
-			  skinClass="skinOpenButton" tabEnabled="false"
+			  skinClass="skins.skinOpenButton" tabEnabled="false"
 			  cornerRadius="0"/>  <!--skinClass="skinOpenButton"-->
     <!--- @copy spark.components.ComboBox#textInput -->
     <s:TextInput id="textInput" enabled.disabled="false"
                  left="0" right="18" top="0" bottom="0" borderVisible="false" 
-                 skinClass="skinTextInputCombobox"/> 
+                 skinClass="skins.skinTextInputCombobox"/> 
     
 </s:SparkSkin>
 
