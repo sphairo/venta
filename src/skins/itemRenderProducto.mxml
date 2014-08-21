@@ -14,9 +14,12 @@
 			import com.anotherflexdev.ui.AlertError;
 			import com.anotherflexdev.ui.AlertInfo;
 			
+			import components.customComponents.EditorFotos;
 			import components.customComponents.notificacion;
 			
+			import mx.core.FlexGlobals;
 			import mx.events.FlexMouseEvent;
+			import mx.managers.PopUpManager;
 			import mx.utils.StringUtil;
 			
 			[Bindable] internal var fileReferenceListImagen:FileReferenceList;
@@ -32,9 +35,6 @@
 			}
 			
 			internal function ranking_clickHandler(event:MouseEvent):void{
-				//var notify:notificacion = new notificacion();
-				//parentDocument.parentDocument.containerNotify.visible = true;
-
 				GlobalStatic.arrayCarrito.addItem(new clases.Productos(this.data));
 				parentDocument.parentDocument.containerNotify.addElement(new notificacion());
 			}
@@ -102,15 +102,25 @@
 				parentApplication.MiObjetoRemotoProducto.callStoreProcedure.send(queryString);
 			}
 			
+			internal function seleccionarFotoDesdeCamara():void{
+				var camara:EditorFotos = new EditorFotos();
+				PopUpManager.addPopUp(camara, FlexGlobals.topLevelApplication as DisplayObject, true);
+				PopUpManager.centerPopUp(camara);
+			}
+			
 		]]>
 	</fx:Script>
 	
 	<fx:Declarations>
-		<s:Callout id="defaultCallout" width="190" height="66" horizontalCenter="0"
+		<s:Callout id="defaultCallout" width="310" height="122" horizontalCenter="0"
 				   mouseDown="defaultCallout_mouseDownHandler(event)"
 				   mouseDownOutside="onMouseDownOutside(event)" rollOut="defaultCallout.close()"
 				   verticalCenter="0">
-			<renders:renderCambiarFoto click="seleccionarImagen()"/>
+			<s:layout>
+				<s:VerticalLayout/>
+			</s:layout>
+			<renders:renderFotoDesdePC click="seleccionarImagen()"/>
+			<renders:renderFotoDesdeCamara click="seleccionarFotoDesdeCamara()"/>
 		</s:Callout>
 		<s:Parallel id="parallel" duration="200" startDelay="1" target="{ranking}">
 			<mx:Zoom zoomHeightFrom="0" zoomWidthFrom="0"/>

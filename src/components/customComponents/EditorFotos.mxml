@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 xmlns:custom="com.flexblocks.imagecropper.*"
+		 width="600" height="450" currentState="tomarFoto" creationComplete="init()">
+	
+	<fx:Script>
+		<![CDATA[
+			import clases.PopUpUtils;
+			
+			import mx.core.FlexGlobals;
+			import mx.graphics.codec.PNGEncoder;
+			import mx.managers.PopUpManager;
+			
+			private var lastSelectedImage:uint = 0;
+			
+			private var currentCropbox:Rectangle;
+			private var currentHandleSize:uint = 16;
+			private var currentCropConstraint:Boolean = false
+			
+			private var img1Cropbox:Rectangle;
+			private var img1HandleSize:uint = 10;
+			private var img1CropConstraint:Boolean = false;
+			
+			private var img2Cropbox:Rectangle;			
+			private var img2HandleSize:uint = 10;
+			private var img2CropConstraint:Boolean = false;		
+			
+			private function doImageSelect():void {
+				
+				croppedImage.source = null;
+				
+				if (lastSelectedImage == 0) { 
+					img1Cropbox = foto.getCropRect(true);
+					img1HandleSize = foto.handleSize;
+				}
+				else {
+					img2Cropbox = foto.getCropRect(true);
+					img2HandleSize = foto.handleSize;
+				}
+				
+				currentCropbox = lastSelectedImage == 0 ? img1Cropbox : img2Cropbox;
+				currentHandleSize = lastSelectedImage == 0 ? img1HandleSize : img2HandleSize;
+				currentCropConstraint = lastSelectedImage == 0 ? img1CropConstraint : img2CropConstraint;
+				
+				enableControls(false, true);			
+			}
+			
+			private function imageReady():void {
+				
+				enableControls(true, true);
+				
+				foto.handleSize = currentHandleSize;
+				
+				foto.constrainToAspectRatio = currentCropConstraint;
+				
+				if (!currentCropbox) foto.setCropRect();
+				else foto.setCropRect(currentCropbox.width, currentCropbox.height, currentCropbox.x, currentCropbox.y, true);
+				
+				doCrop();				
+			}
+			
+			private function doCrop():void {
+				
+				var newImage:BitmapData = foto.croppedBitmapData;
+				croppedImage.source = new Bitmap(newImage);
+			}	
+			
+			private function enableControls(enable:Boolean, includeEnabled:Boolean = false):void {
+				foto.enabled = enable;
+			}
+			
+			import flash.display.Bitmap;
+			import flash.display.BitmapData;
+			import flash.net.FileReference;
+			
+			import mx.events.FlexEvent;
+			 
+			private var cam:Camera;
+			 
+			internal var bitmapData:BitmapData;
+			 
+			internal var bitmap:Bitmap;
+			 
+			public function captureImage():void {
+				currentState = "editarFoto";
+				bitmapData = new BitmapData(vd.width,vd.height);
+				bitmapData.draw(vd);
+				foto.sourceImage = bitmapData;
+			}
+			 
+			internal var i:Number=1;
+			internal var fileRef:FileReference = new FileReference();
+			 
+			public function saveImage():void{
+				     var encoder:PNGEncoder = new PNGEncoder();
+				
+				bitmapData = new BitmapData(containerFoto.width,containerFoto.height);
+				bitmapData.draw(containerFoto);
+				     var ba:ByteArray = encoder.encode(bitmapData);
+				     fileRef.save(ba,"foto"+i+".png");
+				     i++;
+			}
+			
+			internal function init():void{
+				cam = Camera.getCamera();
+				if(cam){
+					cam.setMode(640, 480, 30);
+					cam.setQuality(0, 100);
+					vd.attachCamera(cam);
+				}else{
+					trace("No hay ninguna camera");
+				} 
+				
+				FlexGlobals.topLevelApplication.addEventListener(KeyboardEvent.KEY_UP , keyHandler);
+			}
+			
+			internal function keyHandler(event:KeyboardEvent):void {
+				if(event.keyCode == 27)
+				{
+					parentApplication.removeEventListener(KeyboardEvent.KEY_UP, keyHandler);
+					PopUpUtils.closeAllPopups(parentApplication);
+				}
+			}
+			
+			internal function rollOutHandler(event:MouseEvent):void{
+				container2.visible = false;
+				lblEstablecerFoto.setStyle("color", "#575757");
+			}
+			
+			internal function rollOverHandler(event:MouseEvent):void{
+				container2.visible = true;
+				lblEstablecerFoto.setStyle("color", "#ffffff");
+			}
+			
+			internal function rollOutHandler2(event:MouseEvent):void{
+				lblCambiarFoto.setStyle("color", "#575757");
+			}
+			
+			internal function rollOverHandler2(event:MouseEvent):void{
+				lblCambiarFoto.setStyle("color", "#ffffff");
+			}
+			
+		]]>
+	</fx:Script>
+	<s:states>
+		<s:State name="editarFoto"/>
+		<s:State name="tomarFoto"/>
+	</s:states>
+	
+	<s:BorderContainer id="container3" width="100%" height="100%" borderVisible="false"
+					   dropShadowVisible="true">
+		<s:backgroundFill>
+			<s:LinearGradient rotation="90">
+				<s:GradientEntry color="#FFFFFF"/>
+			</s:LinearGradient>
+		</s:backgroundFill> 
+	</s:BorderContainer>
+	
+	<s:BorderContainer id="header" includeIn="editarFoto" width="100%" height="10%"
+					   borderVisible="false" dropShadowVisible="false">
+		<s:backgroundFill>
+			<s:LinearGradient rotation="90">
+				<s:GradientEntry color="#f29c2e"/>
+				<s:GradientEntry color="#f9a73c"/>
+			</s:LinearGradient>
+		</s:backgroundFill> 
+		<s:Label left="10" color="#FFFFFF" fontSize="16" fontStyle="normal" fontWeight="normal"
+				 text="Seleccione cualquier esquina y arrastre para recortar la foto."
+				 textDecoration="none" verticalCenter="0"/>
+	</s:BorderContainer>
+	
+	<mx:VideoDisplay id="vd" includeIn="tomarFoto" x="10" y="19" width="580" height="359"/>
+	
+	<s:HGroup id="hbox" y="26" height="328" gap="0" paddingLeft="10" verticalAlign="middle"
+			  y.editarFoto="53" left.editarFoto="15" right.editarFoto="15" height.editarFoto="329"
+			  visible.tomarFoto="false" x.tomarFoto="0" width.tomarFoto="600">
+		<custom:ImageCropper id="foto" x="10" y="10" width="470" height="364"
+							 backgroundColor="#FFFFFF"
+							 cropConstraintChanged="trace('Crop constraint changed'); doCrop()"
+							 cropConstraintDisabled="false"
+							 cropDimensionsChanged="trace('Crop dimensions changed'); doCrop()"
+							 cropPositionChanged="trace('Crop position changed'); doCrop()"
+							 cropRectChanged="doCrop()" enabled="true" handleColor="#FFFFFF"
+							 handleSize="20" maskAlpha="0.5" maskColor="#FFFFFF"
+							 sourceImage="img/botonCerrar.png"
+							 sourceImageLoadError="trace('Error while loading image')"
+							 sourceImageReady="imageReady()"
+							 y.editarFoto="40" width.editarFoto="320" height.editarFoto="240"
+							 width.tomarFoto="320" height.tomarFoto="240"/>
+		
+		<s:Group id="containerFoto" y="37" right="15" width="240" height="240" color="#FFFFFF">
+			<s:Image id="croppedImage" width="94%" height="94%" horizontalCenter="0" verticalCenter="0"/>
+			<s:Image id="circulo" width="100%" height="100%" smooth="true"
+					 smoothingQuality="high" source="img/circle2.png"/>
+			<s:Ellipse id="circle" width="93%" height="93%" horizontalCenter="0" verticalCenter="0">
+				<s:stroke>
+					<s:SolidColorStroke alpha="0.5" color="#cbc8c8" weight="10"/>
+				</s:stroke>
+			</s:Ellipse>
+			<s:Ellipse id="circle2" width="93%" height="93%" horizontalCenter="0" verticalCenter="0">
+				<s:stroke>
+					<s:SolidColorStroke alpha=".9" color="#cbc8c8" weight="2"/>
+				</s:stroke>
+			</s:Ellipse>
+		</s:Group>
+	</s:HGroup>
+	
+	<s:Label id="lblVistaPrevia" includeIn="editarFoto" x="427" y="334" color="#4F4F4F"
+			 fontStyle="normal" fontWeight="normal" text="Vista previa"/>
+	
+	<s:Group id="btnTomarFoto" left="0" bottom="0" width="50%" height="50" buttonMode="true"
+			 click="captureImage()" rollOut="rollOutHandler2(event)"
+			 rollOver="rollOverHandler2(event)" click.editarFoto="currentState='tomarFoto'"
+			 left.editarFoto="10" bottom.editarFoto="10" width.editarFoto="40%"
+			 width.tomarFoto="100%">
+		
+		<s:BorderContainer id="container" bottom="10" height="50" borderVisible="false"
+						   left.editarFoto="0" bottom.editarFoto="0" width.editarFoto="100%"
+						   height.editarFoto="100%"
+						   left.tomarFoto="10" right.tomarFoto="10">
+			<s:backgroundFill>
+				<s:LinearGradient rotation="90">
+					<s:GradientEntry color="#9b9b9b"/>
+					<s:GradientEntry color="#b1b1b1"/>
+				</s:LinearGradient>
+			</s:backgroundFill> 
+			<s:Label id="lblCambiarFoto" color="#575757" fontSize="16" text="Tomar foto instantánea"
+					 left.editarFoto="10" color.editarFoto="#FFFFFF" fontStyle.editarFoto="italic"
+					 text.editarFoto="Tomar foto nuevamente" verticalCenter.editarFoto="0"
+					 left.tomarFoto="10" color.tomarFoto="#FFFFFF" fontStyle.tomarFoto="italic"
+					 fontWeight.tomarFoto="normal" text.tomarFoto=" Tomar foto instantánea"
+					 verticalCenter.tomarFoto="0"/>
+			<s:Image id="imgSoporte" width="32" height="32" alpha=".9" scaleMode="letterbox"
+					 smooth="true" smoothingQuality="high" source="img/imgCamaraGris.png"
+					 right.editarFoto="10" verticalCenter.editarFoto="0"
+					 right.tomarFoto="10" verticalCenter.tomarFoto="0"/>
+		</s:BorderContainer>
+	</s:Group>
+	
+	<s:Group id="btnGuardar" includeIn="editarFoto" right="15" bottom="10" width="331" height="50"
+			 buttonMode="true" focusColor="#737373" rollOut="rollOutHandler(event)"
+			 rollOver="rollOverHandler(event)">
+		
+		<s:BorderContainer width="100%" height="100%" id="container2" visible="false" borderVisible="false">
+			<s:backgroundFill>
+				<s:LinearGradient rotation="90">
+					<s:GradientEntry color="#16acfa"/>
+				</s:LinearGradient>
+			</s:backgroundFill> 
+		</s:BorderContainer>
+		<s:Image id="imgProducto" right="10" width="42" height="42" alpha=".9"
+				 scaleMode="letterbox" smooth="true" smoothingQuality="high"
+				 source="img/canasta.png" verticalCenter="-2"/>
+		<s:Label id="lblEstablecerFoto" left="10" color="#575757" fontSize="16" fontStyle="italic"
+				 text="Establecer como foto del producto" verticalCenter="0"/>
+	</s:Group>
+	<s:Image id="btnCerrar" includeIn="editarFoto,tomarFoto" x="567" y="-32" width="64" height="64"
+			 buttonMode="true" click="PopUpManager.removePopUp(this)" smooth="true"
+			 smoothingQuality="high" source="img/botonCerrar.png"
+			 alpha="0.8" rollOver="btnCerrar.alpha=1" rollOut="btnCerrar.alpha=.8"/>
+</s:Group>

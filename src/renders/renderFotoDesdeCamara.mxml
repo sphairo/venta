@@ -28,8 +28,9 @@
 			</s:LinearGradient>
 		</s:backgroundFill> 
 	</s:BorderContainer>
-	<s:Image id="imgSoporte" right="10" width="32" height="32" scaleMode="letterbox" smooth="true"
+	<s:Image id="imgSoporte" right="10" width="32" height="32" alpha=".9"
+			 scaleMode="letterbox" smooth="true" smoothingQuality="high"
 			 source="img/imgCamaraGris.png" verticalCenter="0"/>
-	<s:Label id="lblCambiarFoto" left="10" color="#575757" fontSize="16" text="Cambiar foto"
+	<s:Label id="lblCambiarFoto" left="10" color="#575757" fontSize="16" text="Tomar foto desde Cámara"
 			 verticalCenter="0"/>
 </s:Group>
