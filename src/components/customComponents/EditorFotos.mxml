@@ -8,6 +8,7 @@
 	<fx:Script>
 		<![CDATA[
 			import clases.PopUpUtils;
+			import clases.Sounds;
 			
 			import mx.core.FlexGlobals;
 			import mx.graphics.codec.PNGEncoder;
@@ -81,10 +82,24 @@
 			 
 			internal var bitmapData:BitmapData;
 			 
-			internal var bitmap:Bitmap;
-			 
-			public function captureImage():void {
+			internal var bitmap:Bitmap;			
+			
+			
+			import flash.events.Event; 
+			import flash.media.Sound; 
+			import flash.net.URLRequest; 
+			
+			import flash.filesystem.*;
+			import flash.events.Event;
+			import flash.media.*;
+			import mx.core.SoundAsset;
+			
+			private var sonido:Sound = new Sound(new URLRequest("sounds/camara.mp3")); 
+			
+			public function captureImage():void {  
+				sonido.play();
 				currentState = "editarFoto";
+				parallel4.play();
 				bitmapData = new BitmapData(vd.width,vd.height);
 				bitmapData.draw(vd);
 				foto.sourceImage = bitmapData;
@@ -104,14 +119,26 @@
 			}
 			
 			internal function init():void{
+				parallel1.play();
+				parallel2.play();
+				parallel3.play();
+				
+				_dynVideoSource=new DynamicStreamingVideoSource();
+				
+				var videoItems:Vector.<DynamicStreamingVideoItem>;
+				videoItems=new Vector.<DynamicStreamingVideoItem>();
+				videoItems[0]=new DynamicStreamingVideoItem();
+				
+				_dynVideoSource.host= "";
+				_dynVideoSource.streamType=StreamType.LIVE;
+				_dynVideoSource.streamItems=videoItems;
+				
+				vd.source=_dynVideoSource;			
+				
 				cam = Camera.getCamera();
-				if(cam){
-					cam.setMode(640, 480, 30);
-					cam.setQuality(0, 100);
-					vd.attachCamera(cam);
-				}else{
-					trace("No hay ninguna camera");
-				} 
+				cam.setMode(640, 480, 40);
+				cam.setQuality(0, 100);
+				vd.videoObject.attachCamera(cam); 
 				
 				FlexGlobals.topLevelApplication.addEventListener(KeyboardEvent.KEY_UP , keyHandler);
 			}
@@ -141,6 +168,17 @@
 			internal function rollOverHandler2(event:MouseEvent):void{
 				lblCambiarFoto.setStyle("color", "#ffffff");
 			}
+						
+			
+			import mx.events.FlexEvent;
+			
+			import org.osmf.net.StreamType;
+			
+			import spark.components.mediaClasses.DynamicStreamingVideoItem;
+			import spark.components.mediaClasses.DynamicStreamingVideoSource;
+			
+			private var _cam:DynamicStreamingVideoSource =  new DynamicStreamingVideoSource();
+			private var _dynVideoSource:DynamicStreamingVideoSource;
 			
 		]]>
 	</fx:Script>
@@ -149,33 +187,61 @@
 		<s:State name="tomarFoto"/>
 	</s:states>
 	
-	<s:BorderContainer id="container3" width="100%" height="100%" borderVisible="false"
-					   dropShadowVisible="true">
-		<s:backgroundFill>
-			<s:LinearGradient rotation="90">
-				<s:GradientEntry color="#FFFFFF"/>
-			</s:LinearGradient>
-		</s:backgroundFill> 
-	</s:BorderContainer>
+	<s:transitions>
+		<s:Transition id="myTransition" fromState="*" toState="*">
+			<s:Parallel id="t1" targets="{[btnTomarFoto]}">
+				<s:Move  duration="400"/>
+				<s:Resize duration="400"/>
+			</s:Parallel>
+		</s:Transition>
+	</s:transitions>
 	
-	<s:BorderContainer id="header" includeIn="editarFoto" width="100%" height="10%"
-					   borderVisible="false" dropShadowVisible="false">
-		<s:backgroundFill>
-			<s:LinearGradient rotation="90">
-				<s:GradientEntry color="#f29c2e"/>
-				<s:GradientEntry color="#f9a73c"/>
-			</s:LinearGradient>
-		</s:backgroundFill> 
-		<s:Label left="10" color="#FFFFFF" fontSize="16" fontStyle="normal" fontWeight="normal"
-				 text="Seleccione cualquier esquina y arrastre para recortar la foto."
-				 textDecoration="none" verticalCenter="0"/>
-	</s:BorderContainer>
+	<fx:Declarations>
+		<s:Parallel id="parallel1" duration="300" startDelay="1" target="{btnTomarFoto}">
+			<mx:Move yFrom="200"/>
+			<mx:Fade alphaFrom=".1" alphaTo="1"/>
+		</s:Parallel>
+		<s:Parallel id="parallel2" duration="300" startDelay="1" target="{btnCerrar}">
+			<mx:Zoom zoomHeightFrom="0" zoomWidthFrom="0"/>
+		</s:Parallel>
+		<s:Parallel id="parallel3" duration="300" startDelay="1" target="{vd}">
+			<mx:Fade alphaFrom=".1" alphaTo="1"/>
+		</s:Parallel>
+		<s:Parallel id="parallel4" duration="300" startDelay="1" target="{containerFoto}">
+			<mx:Zoom zoomHeightFrom="0" zoomWidthFrom="0"/>
+		</s:Parallel>
+	</fx:Declarations>
+	<s:Rect id="container3" width="100%" height="100%" visible="true"
+			includeInLayout="true">
+		<s:filters>
+			<s:DropShadowFilter 
+				blurX="20" blurY="20"
+				distance="5"
+				angle="90"                 
+				knockout="false"/>
+		</s:filters>
+		<s:fill>
+			<s:SolidColor color="#FFFFFF"/>
+		</s:fill>
+	</s:Rect>
 	
-	<mx:VideoDisplay id="vd" includeIn="tomarFoto" x="10" y="19" width="580" height="359"/>
+	<s:Rect id="header" width="100%" height="10%" visible="true" includeInLayout="true">
+		<s:fill>
+			<s:SolidColor color="#f29c2e"/>
+		</s:fill>
+		
+	</s:Rect>
+	<s:Label left="10" color="#FFFFFF" fontSize="16" fontStyle="normal" fontWeight="normal"
+			 text.editarFoto="Seleccione cualquier esquina y arrastre para recortar la foto."
+			 text.tomarFoto=" Tomar foto instantánea"
+			 textDecoration="none" verticalCenter="-202" includeIn="editarFoto,tomarFoto"/>
+	
+	<s:VideoDisplay id="vd" includeIn="tomarFoto" left="10" right="10" top="55" height="326"
+					scaleMode="zoom"/>  
 	
 	<s:HGroup id="hbox" y="26" height="328" gap="0" paddingLeft="10" verticalAlign="middle"
 			  y.editarFoto="53" left.editarFoto="15" right.editarFoto="15" height.editarFoto="329"
-			  visible.tomarFoto="false" x.tomarFoto="0" width.tomarFoto="600">
+			  visible.tomarFoto="false" x.tomarFoto="0" width.tomarFoto="600" >
 		<custom:ImageCropper id="foto" x="10" y="10" width="470" height="364"
 							 backgroundColor="#FFFFFF"
 							 cropConstraintChanged="trace('Crop constraint changed'); doCrop()"
@@ -207,57 +273,56 @@
 		</s:Group>
 	</s:HGroup>
 	
-	<s:Label id="lblVistaPrevia" includeIn="editarFoto" x="427" y="334" color="#4F4F4F"
+	<s:Label id="lblVistaPrevia" includeIn="editarFoto" x="431" y="336" color="#4F4F4F"
 			 fontStyle="normal" fontWeight="normal" text="Vista previa"/>
 	
-	<s:Group id="btnTomarFoto" left="0" bottom="0" width="50%" height="50" buttonMode="true"
-			 click="captureImage()" rollOut="rollOutHandler2(event)"
-			 rollOver="rollOverHandler2(event)" click.editarFoto="currentState='tomarFoto'"
+	<s:Group id="btnTomarFoto" left="0" height="50" buttonMode="true" click="captureImage()"
+			 includeInLayout="true" rollOut.editarFoto="rollOutHandler2(event)"
+			 rollOver.editarFoto="rollOverHandler2(event)"
 			 left.editarFoto="10" bottom.editarFoto="10" width.editarFoto="40%"
-			 width.tomarFoto="100%">
+			 click.editarFoto="currentState='tomarFoto'"
+			 left.tomarFoto="10" right.tomarFoto="10" bottom.tomarFoto="10">
 		
-		<s:BorderContainer id="container" bottom="10" height="50" borderVisible="false"
-						   left.editarFoto="0" bottom.editarFoto="0" width.editarFoto="100%"
-						   height.editarFoto="100%"
-						   left.tomarFoto="10" right.tomarFoto="10">
-			<s:backgroundFill>
-				<s:LinearGradient rotation="90">
-					<s:GradientEntry color="#9b9b9b"/>
-					<s:GradientEntry color="#b1b1b1"/>
-				</s:LinearGradient>
-			</s:backgroundFill> 
-			<s:Label id="lblCambiarFoto" color="#575757" fontSize="16" text="Tomar foto instantánea"
-					 left.editarFoto="10" color.editarFoto="#FFFFFF" fontStyle.editarFoto="italic"
-					 text.editarFoto="Tomar foto nuevamente" verticalCenter.editarFoto="0"
-					 left.tomarFoto="10" color.tomarFoto="#FFFFFF" fontStyle.tomarFoto="italic"
-					 fontWeight.tomarFoto="normal" text.tomarFoto=" Tomar foto instantánea"
-					 verticalCenter.tomarFoto="0"/>
-			<s:Image id="imgSoporte" width="32" height="32" alpha=".9" scaleMode="letterbox"
-					 smooth="true" smoothingQuality="high" source="img/imgCamaraGris.png"
-					 right.editarFoto="10" verticalCenter.editarFoto="0"
-					 right.tomarFoto="10" verticalCenter.tomarFoto="0"/>
-		</s:BorderContainer>
+		<s:Rect id="container"
+				left.editarFoto="0" bottom.editarFoto="0" width="100%"
+				height="100%">
+			<s:fill>
+				<s:SolidColor color="#9b9b9b"/>
+			</s:fill>
+		</s:Rect>
+		
+		<s:Label id="lblCambiarFoto" color="#575757" fontSize="16" text="Tomar foto instantánea"
+				 left.editarFoto="10" color.editarFoto="#FFFFFF" fontStyle.editarFoto="normal"
+				 fontWeight.editarFoto="normal" text.editarFoto="Tomar foto nuevamente"
+				 verticalCenter.editarFoto="0"
+				 left.tomarFoto="10" color.tomarFoto="#FFFFFF" fontStyle.tomarFoto="normal"
+				 fontWeight.tomarFoto="normal" text.tomarFoto="Capturar foto"
+				 verticalCenter.tomarFoto="0"/>
+		<s:Image id="imgSoporte" width="32" height="32" alpha=".9" scaleMode="letterbox"
+				 smooth="true" smoothingQuality="high" source="img/imgCamaraGris.png"
+				 right.editarFoto="10" verticalCenter.editarFoto="0"
+				 right.tomarFoto="10" verticalCenter.tomarFoto="0"/>
 	</s:Group>
 	
 	<s:Group id="btnGuardar" includeIn="editarFoto" right="15" bottom="10" width="331" height="50"
 			 buttonMode="true" focusColor="#737373" rollOut="rollOutHandler(event)"
-			 rollOver="rollOverHandler(event)">
+			 rollOver="rollOverHandler(event)"  includeInLayout="true">
 		
-		<s:BorderContainer width="100%" height="100%" id="container2" visible="false" borderVisible="false">
-			<s:backgroundFill>
-				<s:LinearGradient rotation="90">
-					<s:GradientEntry color="#16acfa"/>
-				</s:LinearGradient>
-			</s:backgroundFill> 
-		</s:BorderContainer>
+		<s:Rect width="100%" height="100%" id="container2" visible="false">
+			<s:fill>
+				<s:SolidColor color="#16acfa"/>
+			</s:fill>
+		</s:Rect>
+		
 		<s:Image id="imgProducto" right="10" width="42" height="42" alpha=".9"
 				 scaleMode="letterbox" smooth="true" smoothingQuality="high"
 				 source="img/canasta.png" verticalCenter="-2"/>
-		<s:Label id="lblEstablecerFoto" left="10" color="#575757" fontSize="16" fontStyle="italic"
+		<s:Label id="lblEstablecerFoto" left="10" color="#575757" fontSize="16" fontStyle="normal"
 				 text="Establecer como foto del producto" verticalCenter="0"/>
 	</s:Group>
-	<s:Image id="btnCerrar" includeIn="editarFoto,tomarFoto" x="567" y="-32" width="64" height="64"
-			 buttonMode="true" click="PopUpManager.removePopUp(this)" smooth="true"
-			 smoothingQuality="high" source="img/botonCerrar.png"
-			 alpha="0.8" rollOver="btnCerrar.alpha=1" rollOut="btnCerrar.alpha=.8"/>
+	<s:Image id="btnCerrar" includeIn="editarFoto,tomarFoto" alpha="0.8"
+			 buttonMode="true" click="PopUpManager.removePopUp(this)" rollOut="btnCerrar.alpha=.8"
+			 rollOver="btnCerrar.alpha=1" smooth="true" smoothingQuality="high"
+			 right="10" top="5" width="32" height="32"
+			 source="img/botonTacheBlanco.png"/>
 </s:Group>

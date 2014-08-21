@@ -54,6 +54,11 @@
 		<s:Parallel id="parallel10" duration="1000" target="{containerNotify}" startDelay="1">
 			<mx:Fade alphaFrom="1" alphaTo="0"/>
 		</s:Parallel>
+		
+		<s:Parallel id="parallel11" duration="300" startDelay="1" target="{defaultCallout}">
+			<mx:Fade alphaFrom=".1" alphaTo="1"/>
+		</s:Parallel>
+		
 		<mx:HTTPService id="service" fault="errorGeneral(event)" result="onJSONLoad(event)"
 						resultFormat="text"
 						url="http://localhost/Ventas/amfphp/services/getAllProducts.php"
@@ -324,6 +329,7 @@
 			}
 			
 			internal function onShowDefaultCalloutClick():void {
+				parallel11.play();
 				defaultCallout.open(btnMenu);
 			}
 			

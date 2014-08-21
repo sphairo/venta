@@ -61,6 +61,7 @@
 			}
 			
 			internal function onShowDefaultCalloutClick():void {
+				parallel1.play();
 				defaultCallout.open(imgCamara);
 			}
 			
@@ -112,6 +113,10 @@
 	</fx:Script>
 	
 	<fx:Declarations>
+		<s:Parallel id="parallel1" duration="300" startDelay="1" target="{defaultCallout}">
+			<mx:Fade alphaFrom=".1" alphaTo="1"/>
+		</s:Parallel>
+		
 		<s:Callout id="defaultCallout" width="310" height="122" horizontalCenter="0"
 				   mouseDown="defaultCallout_mouseDownHandler(event)"
 				   mouseDownOutside="onMouseDownOutside(event)" rollOut="defaultCallout.close()"

@@ -9,6 +9,7 @@
 			import clases.Productos;
 			
 			import mx.collections.ArrayCollection;
+			import mx.effects.easing.Elastic;
 			import mx.events.EffectEvent;
 			
 			[Bindable]
@@ -54,6 +55,7 @@
 			
 			
 			internal function verDetalle():void{
+				parallel4.play();
 				boxyCallout.addElement(list);
 				boxyCallout.open(lblVerDetalle);
 			}
@@ -111,12 +113,20 @@
 			<mx:Fade alphaFrom=".1" alphaTo="1"/>
 		</s:Parallel>
 		
+		<s:Parallel id="parallel4" duration="500" startDelay="1" target="{boxyCallout}">
+			<mx:Fade alphaFrom="0" alphaTo="1"/>
+		</s:Parallel>
+		
 		<s:Callout id="boxyCallout" width="450" backgroundColor="0xFFFFFF"
 				   contentBackgroundAlpha="0" mouseDownOutside="boxyCallout.close()"
 				   rollOut="outCallout()" rollOver="overCallout()" skinClass="skins.BoxyCalloutSkin">
-			<!--<s:layout>
-				<s:VerticalLayout clipAndEnableScrolling="true"/>
-			</s:layout>-->
+			<s:filters>
+				<s:DropShadowFilter 
+					blurX="20" blurY="20"
+					distance="10" alpha=".8"
+					angle="90"                 
+					knockout="false"/>
+			</s:filters>
 		</s:Callout>
 		<s:List width="100%" height="100%" id="list" borderVisible="false" contentBackgroundAlpha="0.0" itemRenderer="renders.renderProductoEnCarrito" 
 				dataProvider="{dp2}" rollOverColor="#D1D1D1" selectionColor="#ADADAD" focusColor="#ffffff">
