@@ -7,8 +7,6 @@
 	
 	<fx:Script>
 		<![CDATA[
-			import clases.GlobalStatic;
-			
 			import com.anotherflexdev.ui.AlertError;
 			
 			import mx.events.FlexMouseEvent;
@@ -17,8 +15,7 @@
 				event.target.close();
 			}
 			
-			internal function defaultCallout_mouseDownHandler(event:MouseEvent):void
-			{
+			internal function defaultCallout_mouseDownHandler(event:MouseEvent):void{
 				defaultCallout.close();
 			}
 			
@@ -29,8 +26,7 @@
 			
 			[Bindable] private var fileReferenceListImagen:FileReferenceList;
 			
-			protected function seleccionarImagen():void
-			{
+			internal function seleccionarImagen():void{
 				fileReferenceListImagen = new FileReferenceList();
 				fileReferenceListImagen.addEventListener(Event.SELECT, fileSelectedHandler);
 				
@@ -42,8 +38,7 @@
 				fileReferenceListImagen.browse(allTypes);
 			}
 			
-			private function fileSelectedHandler(event:Event):void 
-			{
+			internal function fileSelectedHandler(event:Event):void {
 				var fileReference:FileReference;
 				var fileReferenceList:FileReferenceList = FileReferenceList(event.target);
 				var fileList:Array = fileReferenceList.fileList;
@@ -61,12 +56,11 @@
 				}
 			}
 			
-			private function uploadCompleteData(evt:DataEvent):void {
+			internal function uploadCompleteData(evt:DataEvent):void {
 				data.path = StringUtil.trim(evt.data);
 			}
 			
-			protected function img_clickHandler():void
-			{
+			internal function img_clickHandler():void{
 				if(data.isNew == true && data.path == null)
 					seleccionarImagen();
 				else
@@ -79,13 +73,13 @@
 		<s:Parallel id="parallel1" duration="300" startDelay="1" target="{defaultCallout}">
 			<mx:Fade alphaFrom=".1" alphaTo="1"/>
 		</s:Parallel>
-		<s:Callout id="defaultCallout" height="278" width="310" horizontalCenter="0"
+		<s:Callout id="defaultCallout" height="282" width="310" horizontalCenter="0"
 				   mouseDown="defaultCallout_mouseDownHandler(event)"
 				   mouseDownOutside="onMouseDownOutside(event)" verticalCenter="0">
 			<s:layout>
-				<s:VerticalLayout horizontalAlign="center"/>
+				<s:VerticalLayout horizontalAlign="center" paddingTop="5"/>
 			</s:layout>
-			<s:Image top="5" width="152" height="152" source="{img.source}"/>
+			<s:Image width="152" height="152" source="{img.source}"/>
 			<renders:renderFotoDesdePC click="seleccionarImagen()"/>
 			<renders:renderFotoDesdeCamara/>
 		</s:Callout>

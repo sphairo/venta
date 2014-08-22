@@ -10,7 +10,7 @@
 					   currentState="productos" preinitialize="preinitializeHandler(event)"
 					   showStatusBar="false" skinClass="skins.skinProductos">
 	<s:states>
-		<s:State name="mantenimiento_productos" enterState="enterStateMantenimiento(event)"/>
+		<s:State enterState="enterStateMantenimiento(event)" name="mantenimiento_productos"/>
 		<s:State name="productos"/>
 		<s:State enterState="enterStateEstadisticas(event)" name="estadisticas"/>
 		<s:State name="ganancias"/>
@@ -21,37 +21,37 @@
 	<fx:Style source="Styles/Main.css"/>
 	
 	<fx:Declarations>
-		<s:Parallel id="parallel" duration="500" target="{btnMasVendidos}" startDelay="1">
-			<mx:Zoom zoomWidthFrom="0" zoomHeightFrom="0"/>
+		<s:Parallel id="parallel" duration="500" startDelay="1" target="{btnMasVendidos}">
+			<mx:Zoom zoomHeightFrom="0" zoomWidthFrom="0"/>
 		</s:Parallel>
-		<s:Parallel id="parallel2" duration="1000" target="{btnNoVendidos}" startDelay="1">
-			<mx:Zoom zoomWidthFrom="0" zoomHeightFrom="0"/>
+		<s:Parallel id="parallel2" duration="1000" startDelay="1" target="{btnNoVendidos}">
+			<mx:Zoom zoomHeightFrom="0" zoomWidthFrom="0"/>
 		</s:Parallel>
-		<s:Parallel id="parallel3" duration="1500" target="{btnGananciasVentas}" startDelay="1">
-			<mx:Zoom zoomWidthFrom="0" zoomHeightFrom="0"/>
+		<s:Parallel id="parallel3" duration="1500" startDelay="1" target="{btnGananciasVentas}">
+			<mx:Zoom zoomHeightFrom="0" zoomWidthFrom="0"/>
 		</s:Parallel>
-		<s:Parallel id="parallel4" duration="2000" target="{btnVentasEmpleado}" startDelay="1">
-			<mx:Zoom zoomWidthFrom="0" zoomHeightFrom="0"/>
+		<s:Parallel id="parallel4" duration="2000" startDelay="1" target="{btnVentasEmpleado}">
+			<mx:Zoom zoomHeightFrom="0" zoomWidthFrom="0"/>
 		</s:Parallel>
 		
-		<s:Parallel id="parallel5" duration="500" target="{btnNuevo}" startDelay="1">
+		<s:Parallel id="parallel5" duration="500" startDelay="1" target="{btnNuevo}">
 			<s:Move yFrom="-100" yTo="0"/>
 		</s:Parallel>
 		
-		<s:Parallel id="parallel6" duration="800" target="{btnEliminar}" startDelay="1">
+		<s:Parallel id="parallel6" duration="800" startDelay="1" target="{btnEliminar}">
 			<s:Move yFrom="200" yTo="0"/>
 		</s:Parallel>
-		<s:Parallel id="parallel7" duration="1100" target="{btnGuardar}" startDelay="1">
+		<s:Parallel id="parallel7" duration="1100" startDelay="1" target="{btnGuardar}">
 			<s:Move yFrom="-300" yTo="0"/>
 		</s:Parallel>
-		<s:Parallel id="parallel8" duration="1400" target="{btnImprimir}" startDelay="1">
+		<s:Parallel id="parallel8" duration="1400" startDelay="1" target="{btnImprimir}">
 			<s:Move yFrom="400" yTo="0"/>
 		</s:Parallel>
-		<s:Parallel id="parallel9" duration="1700" target="{btnAyuda}" startDelay="1">
+		<s:Parallel id="parallel9" duration="1700" startDelay="1" target="{btnAyuda}">
 			<s:Move yFrom="-500" yTo="0"/>
 		</s:Parallel>
 		
-		<s:Parallel id="parallel10" duration="1000" target="{containerNotify}" startDelay="1">
+		<s:Parallel id="parallel10" duration="1000" startDelay="1" target="{containerNotify}">
 			<mx:Fade alphaFrom="1" alphaTo="0"/>
 		</s:Parallel>
 		
@@ -75,8 +75,9 @@
 		</mx:RemoteObject>
 		
 		<s:Callout id="defaultCallout" width="230" height="465"
-				   mouseDown="defaultCallout_mouseDownHandler(event)" rollOut="defaultCallout.close()"
-				   mouseDownOutside="onMouseDownOutside(event)" verticalPosition="after">
+				   mouseDown="defaultCallout_mouseDownHandler(event)"
+				   mouseDownOutside="onMouseDownOutside(event)" rollOut="defaultCallout.close()"
+				   verticalPosition="after">
 			<s:layout>
 				<s:VerticalLayout/>
 			</s:layout> 
@@ -112,8 +113,6 @@
 			import mx.managers.PopUpManager;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
-			
-			import org.osmf.events.TimeEvent;
 			
 			[Bindable] internal var dp:ArrayCollection = new ArrayCollection();
 			[Bindable] public var arrayMarcas:ArrayCollection;
@@ -511,28 +510,26 @@
 			</s:BorderContainer>
 			<renders:renderAdd id="btnNuevo" includeIn="mantenimiento_productos" x="548" y="0"
 							   click="btnNuevo_clickHandler(event)"/>
-			<renders:renderDelete id="btnEliminar" includeIn="mantenimiento_productos" x="656"
-								  y="0" click="btnEliminar_clickHandler()"/>
+			<renders:renderDelete id="btnEliminar" includeIn="mantenimiento_productos" x="656" y="0"
+								  click="btnEliminar_clickHandler()"/>
 			<renders:renderSave id="btnGuardar" includeIn="mantenimiento_productos" x="775" y="0"
 								click="btnGuardar_clickHandler()"/>
-			<renders:renderPrint id="btnImprimir" includeIn="mantenimiento_productos" x="891"
-								 y="0"
+			<renders:renderPrint id="btnImprimir" includeIn="mantenimiento_productos" x="891" y="0"
 								 click="AlertInfo.show('Ocurrio un error al guardar la información.')"/>
 			<renders:renderHelp id="btnAyuda" includeIn="mantenimiento_productos" x="1002" y="0"
 								click="AlertInfo.show('Ocurrio un error al guardar la información.')"/>
 			<renders:renderMasVendidos id="btnMasVendidos"
 									   includeIn="estadisticas,ganancias,mas_vendidos,ventas_empleado"
-									   y="0" click="onClickMasVendidos(event)"
-									   x="81" />
+									   x="81" y="0" click="onClickMasVendidos(event)"/>
 			<renders:renderNoVendidos id="btnNoVendidos"
 									  includeIn="estadisticas,ganancias,mas_vendidos,ventas_empleado"
 									  x="256" y="0"/>
 			<renders:renderVentasGanancias id="btnGananciasVentas"
-										   includeIn="estadisticas,ganancias,mas_vendidos,ventas_empleado" click="onClickVentasGanancias(event)"
-										   x="426" y="0"/>
+										   includeIn="estadisticas,ganancias,mas_vendidos,ventas_empleado"
+										   x="426" y="0" click="onClickVentasGanancias(event)"/>
 			<renders:renderVentasPorEmpleado id="btnVentasEmpleado"
-											 includeIn="estadisticas,ganancias,mas_vendidos,ventas_empleado" click="onClickVentasPorEmpleado(event)"
-											 x="636" y="0"/>
+											 includeIn="estadisticas,ganancias,mas_vendidos,ventas_empleado"
+											 x="636" y="0" click="onClickVentasPorEmpleado(event)"/>
 			
 			<s:List id="list" includeIn="productos" left="20" right="0" top="51" bottom="0"
 					allowMultipleSelection="true" borderVisible="false" contentBackgroundAlpha="0.0"
@@ -557,18 +554,22 @@
 									  itemRenderer="renders.itemRenderMarcas"
 									  rendererIsEditable="true"/>
 						<s:GridColumn dataField="descripcion" headerText="Descripción"
-									  itemRenderer="renders.itemRenderDescripcion" rendererIsEditable="true"/>
+									  itemRenderer="renders.itemRenderDescripcion"
+									  rendererIsEditable="true"/>
 						<s:GridColumn dataField="cantidad" headerText="Cantidad"
-									  itemRenderer="renders.itemRenderCantidad" rendererIsEditable="true"/>
+									  itemRenderer="renders.itemRenderCantidad"
+									  rendererIsEditable="true"/>
 						<s:GridColumn dataField="precio" headerText="Precio"
-									  itemRenderer="renders.itemRenderPrecio" rendererIsEditable="true"/>
+									  itemRenderer="renders.itemRenderPrecio"
+									  rendererIsEditable="true"/>
 						<s:GridColumn dataField="precio_compra" headerText="Precio compra"
 									  itemRenderer="renders.itemRenderPrecioCompra"
 									  rendererIsEditable="true"/>
-						<s:GridColumn editable="false" headerText="Foto" itemRenderer="renders.itemRenderImg"
-									  rendererIsEditable="true"/>
+						<s:GridColumn editable="false" headerText="Foto"
+									  itemRenderer="renders.itemRenderImg" rendererIsEditable="true"/>
 						<s:GridColumn dataField="fecha_entrada" headerText="Fecha Entrada"
-									  itemRenderer="renders.renderFechaEntrada" rendererIsEditable="true"/>
+									  itemRenderer="renders.renderFechaEntrada"
+									  rendererIsEditable="true"/>
 						<s:GridColumn dataField="tipoVenta" headerText="Tipo Venta"
 									  itemRenderer="renders.itemRenderTipoVenta"
 									  rendererIsEditable="true"/>
@@ -579,14 +580,15 @@
 				</s:columns>
 			</s:DataGrid>    
 			
-			<graficas:Top20 id="graficaTop20" includeIn="estadisticas,mas_vendidos" top="50" width="100%"
-							height="100%"/>	
+			<graficas:Top20 id="graficaTop20" includeIn="estadisticas,mas_vendidos" top="50"
+							width="100%" height="100%"/>	
 			<graficas:gananciasVentas id="graficaGananciasVentas" includeIn="ganancias" top="50"
 									  width="100%" height="100%"/>	
 			<graficas:ventasPorEmpleado id="graficaVentasPorEmpleado" includeIn="ventas_empleado"
 										top="50" width="100%" height="100%"/>
-			<s:Group id="containerNotify" includeIn="productos" right="50" top="70" width="230"
-					 height="80" visible="false" elementAdd="notificar()" rollOver="notificacionAbierta()" rollOut="notificar()">
+			<s:Group id="containerNotify" includeIn="productos" visible="false" right="50" top="70"
+					 width="230" height="80" elementAdd="notificar()" rollOut="notificar()"
+					 rollOver="notificacionAbierta()">
 			</s:Group>
 		</s:Group>
 	</s:Scroller>	
