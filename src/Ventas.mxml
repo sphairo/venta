@@ -25,8 +25,8 @@
 		</mx:RemoteObject>
 	</fx:Declarations>
 	<fx:Declarations>
-		<mx:Move id="hideEffect" duration="800" yTo="-5000"/>
-		<mx:Move id="hideEffect2" duration="800" xTo="-5000"/>
+		<mx:Move id="hideEffect" duration="800" yTo="-3000"/>
+		<mx:Move id="hideEffect2" duration="800" xTo="-3000"/>
 		<mx:Move id="showEffect" duration="800" yFrom="500"/>
 		<mx:Move id="showEffect2" duration="800" xFrom="500"/> 
 	</fx:Declarations>
@@ -41,7 +41,6 @@
 			
 			public var swfLoader:SWFLoader;
 			[Bindable][Embed(source="img/status_error.png")] public var icono_Error:Class;
-			[Bindable][Embed(source="img/no_encontrado_128X128.png")] public var icono_error_verificar:Class;
 			[Bindable][Embed(source="img/software_sphairo_v2.png", mimeType="image/png")] public var btnMain:Class;
 			[Bindable][Embed(source="img/btnMorado.png", mimeType="image/png")] public var btnMorado:Class;
 			[Bindable][Embed(source="img/btnAzul.png", mimeType="image/png")] public var btnAzul:Class;

@@ -17,7 +17,7 @@
 			
 			internal function quitarProducto():void{
 				if(this.data.cantidadCarrito > 0)
-					this.data.cantidadCarrito--;
+					this.data.cantidadCarrito = this.data.cantidadCarrito - 1;
 				parentDocument.parentDocument.quitarItem(this.data.id_producto);
 			}
 			

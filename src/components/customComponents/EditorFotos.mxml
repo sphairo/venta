@@ -7,6 +7,7 @@
 	
 	<fx:Script>
 		<![CDATA[
+			import clases.GlobalStatic;
 			import clases.PopUpUtils;
 			
 			import mx.core.FlexGlobals;
@@ -93,10 +94,8 @@
 			import flash.media.*;
 			import mx.core.SoundAsset;
 			
-			private var sonido:Sound = new Sound(new URLRequest("sounds/camara.mp3")); 
-			
 			public function captureImage():void {  
-				sonido.play();
+				GlobalStatic.sonidoCamara();
 				currentState = "editarFoto";
 				parallel4.play();
 				bitmapData = new BitmapData(vd.width,vd.height);
@@ -119,8 +118,9 @@
 			
 			internal function init():void{
 				parallel1.play();
-				parallel2.play();
 				parallel3.play();
+				GlobalStatic.sonidoOpenWindow();
+				parallel2.play();
 				
 				_dynVideoSource=new DynamicStreamingVideoSource();
 				
@@ -197,13 +197,13 @@
 	
 	<fx:Declarations>
 		<s:Parallel id="parallel1" duration="300" startDelay="1" target="{btnTomarFoto}">
-			<mx:Move yFrom="200"/>
+			<mx:Move yFrom="0"/>
 			<mx:Fade alphaFrom=".1" alphaTo="1"/>
 		</s:Parallel>
-		<s:Parallel id="parallel2" duration="300" startDelay="1" target="{btnCerrar}">
+		<s:Parallel id="parallel2" duration="600" startDelay="1" target="{btnCerrar}">
 			<mx:Zoom zoomHeightFrom="0" zoomWidthFrom="0"/>
 		</s:Parallel>
-		<s:Parallel id="parallel3" duration="300" startDelay="1" target="{vd}">
+		<s:Parallel id="parallel3" duration="500" startDelay="1" target="{vd}">
 			<mx:Fade alphaFrom=".1" alphaTo="1"/>
 		</s:Parallel>
 		<s:Parallel id="parallel4" duration="300" startDelay="1" target="{containerFoto}">
@@ -314,7 +314,7 @@
 				 text="Establecer como foto del producto" verticalCenter="0"/>
 	</s:Group>
 	<s:Image id="btnCerrar" includeIn="editarFoto,tomarFoto" right="10" top="5" width="32"
-			 height="32" alpha="0.8" buttonMode="true" click="PopUpManager.removePopUp(this)"
+			 height="32" alpha="0.8" buttonMode="true" click="vd.videoObject.attachCamera(null); PopUpManager.removePopUp(this)"
 			 rollOut="btnCerrar.alpha=.8" rollOver="btnCerrar.alpha=1" smooth="true"
 			 smoothingQuality="high" source="img/botonTacheBlanco.png"/>
 </s:Group>

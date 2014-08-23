@@ -15,7 +15,7 @@ package clases
 		private var _cantidad:int = Utileria.defaultValue;	
 		private var _precio:Number = Utileria.defaultValue;	
 		private var _precio_compra:Number = Utileria.defaultValue;
-		private var _marca:String;	
+		private var _marca:String;
 		private var _path:String;	
 		private var _fecha_entrada:Date = Utileria.DateToday();	
 		private var _tipoVenta:String = "P";
@@ -44,226 +44,166 @@ package clases
 		}
 		
 		[Bindable(event="propertyChange")]
-		public function get id_producto():int
-		{
+		public function get id_producto():int{
 			return _id_producto;
 		}
 		
-		public function set id_producto(newValue:int):void
-		{
-			if (newValue != id_producto)
-			{
+		public function set id_producto(newValue:int):void{
+			if (newValue != id_producto){
 				_id_producto = newValue;
 				
 				if (hasEventListener("valueChanged"))
-				{
 					dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
-				}
 			}
 		}
 		
 		[Bindable(event="propertyChange")]
-		public function get id_sucursal():int
-		{
+		public function get id_sucursal():int{
 			return _id_sucursal;
 		}
 		
-		public function set id_sucursal(newValue:int):void
-		{
-			if (newValue != id_sucursal)
-			{
+		public function set id_sucursal(newValue:int):void{
+			if (newValue != id_sucursal){
 				_id_sucursal = newValue;
 				
 				if (hasEventListener("valueChanged"))
-				{
 					dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
-				}
 			}
 		}
 		
 		
 		[Bindable(event="propertyChange")]
-		public function get codigo_barra():String
-		{
+		public function get codigo_barra():String{
 			return _codigo_barra;
 		}
 		
-		public function set codigo_barra(newValue:String):void
-		{
-			if (newValue != codigo_barra)
-			{
+		public function set codigo_barra(newValue:String):void{
+			if (newValue != codigo_barra){
 				_codigo_barra = newValue;
 				
 				if (hasEventListener("valueChanged"))
-				{
 					dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
-				}
 			}
 		}
 		
-		
 		[Bindable(event="propertyChange")]
-		public function get descripcion():String
-		{
+		public function get descripcion():String{
 			return _descripcion;
 		}
 		
-		public function set descripcion(newValue:String):void
-		{
-			if (newValue != descripcion)
-			{
+		public function set descripcion(newValue:String):void{
+			if (newValue != descripcion){
 				_descripcion = newValue;
 				
 				if (hasEventListener("valueChanged"))
-				{
 					dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
-				}
 			}
 		}
 		
-		
 		[Bindable(event="propertyChange")]
-		public function get cantidad():int
-		{
+		public function get cantidad():int{
 			return _cantidad;
 		}
 		
-		public function set cantidad(newValue:int):void
-		{
-			if (newValue != cantidad)
-			{
+		public function set cantidad(newValue:int):void{
+			if (newValue != cantidad){
 				_cantidad = newValue;
 				
 				if (hasEventListener("valueChanged"))
-				{
 					dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
-				}
 			}
 		}
 		
-		
 		[Bindable(event="propertyChange")]
-		public function get marca():String
-		{
+		public function get marca():String{
 			return _marca;
 		}
 		
-		public function set marca(newValue:String):void
-		{
-			if (newValue != marca)
-			{
+		public function set marca(newValue:String):void{
+			if (newValue != marca){
 				_marca = newValue;
 				
 				if (hasEventListener("valueChanged"))
-				{
 					dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
-				}
 			}
 		}		
 		
 		[Bindable(event="propertyChange")]
-		public function get fecha_entrada():Date
-		{
+		public function get fecha_entrada():Date{
 			return _fecha_entrada;
 		}
 		
-		public function set fecha_entrada(newValue:Date):void
-		{
-			if (newValue != fecha_entrada)
-			{
+		public function set fecha_entrada(newValue:Date):void{
+			if (newValue != fecha_entrada){
 				_fecha_entrada = newValue;
 				
 				if (hasEventListener("valueChanged"))
-				{
 					dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
-				}
 			}
 		}
 		
 		[Bindable(event="propertyChange")]
-		public function get tipoVenta():String
-		{
+		public function get tipoVenta():String{
 			return _tipoVenta;
 		}
 		
-		public function set tipoVenta(newValue:String):void
-		{
-			if (newValue != tipoVenta)
-			{
+		public function set tipoVenta(newValue:String):void{
+			if (newValue != tipoVenta){
 				_tipoVenta = newValue;
 				
 				if (hasEventListener("valueChanged"))
-				{
 					dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
-				}
 			}
 		}
 		
 		[Bindable(event="propertyChange")]
-		public function get ofertas_Especiales():String
-		{
+		public function get ofertas_Especiales():String{
 			return _ofertas_Especiales;
 		}
 		
-		public function set ofertas_Especiales(newValue:String):void
-		{
-			if (newValue != ofertas_Especiales)
-			{
+		public function set ofertas_Especiales(newValue:String):void{
+			if (newValue != ofertas_Especiales){
 				_ofertas_Especiales = newValue;
 				
 				if (hasEventListener("valueChanged"))
-				{
 					dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
-				}
 			}
 		}
 		
 		[Bindable]
-		public function get indice():int
-		{
+		public function get indice():int{
 			return _indice;
 		}
 		
 		[Bindable]
-		public function get cantidadCarrito():int
-		{
+		public function get cantidadCarrito():int{
 			return _cantidadCarrito;
 		}
 		
-		public function set indice(newValue:int):void
-		{
-			if (newValue != indice)
-			{
+		public function set indice(newValue:int):void{
+			if (newValue != indice){
 				_indice = newValue;
 				
 				if (hasEventListener("valueChanged"))
-				{
 					dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
-				}
 			}
 		}
 		
-		public function set cantidadCarrito(newValue:int):void
-		{
-			if (newValue != cantidadCarrito)
-			{
+		public function set cantidadCarrito(newValue:int):void{
+			if (newValue != cantidadCarrito){
 				_cantidadCarrito = newValue;
 				
 				if (hasEventListener("valueChanged"))
-				{
 					dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
-				}
 			}
 		}
 		
 		[Bindable]
-		public function get path():String
-		{
+		public function get path():String{
 			return _path;
 		}
 		
-		public function set path(newValue:String):void
-		{
+		public function set path(newValue:String):void{
 			if (newValue != path){
 				_path = newValue;
 				
@@ -278,14 +218,11 @@ package clases
 		}
 		
 		public function set nom_producto(newValue:String):void {
-			if (newValue != nom_producto)
-			{
+			if (newValue != nom_producto){
 				_nom_producto = newValue;
 				
 				if (hasEventListener("valueChanged"))
-				{
 					dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
-				}
 			}
 		}
 		
@@ -295,14 +232,11 @@ package clases
 		}
 		
 		public function set precio(newValue:Number):void {
-			if (newValue != precio)
-			{
+			if (newValue != precio){
 				_precio = newValue;
 				
 				if (hasEventListener("valueChanged"))
-				{
 					dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
-				}
 			}
 		}
 		
@@ -312,14 +246,11 @@ package clases
 		}
 		
 		public function set precio_compra(newValue:Number):void {
-			if (newValue != precio_compra)
-			{
+			if (newValue != precio_compra){
 				_precio_compra = newValue;
 				
 				if (hasEventListener("valueChanged"))
-				{
 					dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
-				}
 			}
 		}
 		
@@ -329,14 +260,11 @@ package clases
 		}
 		
 		public function set isNew(newValue:Boolean):void {
-			if (newValue != isNew)
-			{
+			if (newValue != isNew){
 				_isNew = newValue;
 				
 				if (hasEventListener("valueChanged"))
-				{
 					dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
-				}
 			}
 		}
 		
@@ -346,14 +274,11 @@ package clases
 		}
 		
 		public function set error(newValue:Boolean):void {
-			if (newValue != error)
-			{
+			if (newValue != error){
 				_error = newValue;
 				
 				if (hasEventListener("valueChanged"))
-				{
 					dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE));
-				}
 			}
 		}
 	}

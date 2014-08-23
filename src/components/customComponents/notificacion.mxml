@@ -55,6 +55,7 @@
 			
 			internal function verDetalle():void{
 				parallel4.play();
+				GlobalStatic.sonidoOpenDetailNotify();
 				boxyCallout.addElement(list);
 				boxyCallout.open(lblVerDetalle);
 			}
@@ -98,6 +99,8 @@
 				
 				lblNumero.text = String(numeroProductos);
 				lblTotal.text = "$"+total.toFixed(2)+" MXN";
+				
+				GlobalStatic.sonidoRemoveItem();
 			}
 		]]>
 	</fx:Script>

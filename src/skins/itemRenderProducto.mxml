@@ -31,14 +31,15 @@
 				ranking.source="img/rankingCeroStarss.png";
 				imgCamara.visible = false;
 			}
-			
+
 			internal function ranking_clickHandler(event:MouseEvent):void{
 				GlobalStatic.arrayCarrito.addItem(new clases.Productos(this.data));
 				parentDocument.parentDocument.containerNotify.addElement(new notificacion());
+				GlobalStatic.sonidoBeep();
 			}
 			
 			internal function cargaCompleta():void{
-				loader.visible= false;
+				//loader.visible= false;
 			}
 			
 			internal function img_rollOverHandler(event:MouseEvent):void{
@@ -138,11 +139,11 @@
 		</s:backgroundFill> 		
 	</s:BorderContainer>
 	
-	<s:Image id="img" y="10" width="124" height="124" complete="cargaCompleta()" horizontalCenter="0"
-			 rollOut="img_rollOutHandler(event)" rollOver="img_rollOverHandler(event)"
-			 scaleMode="letterbox" smooth="true" smoothingQuality="high"
-			 source="{'http://127.0.0.1/Ventas/amfphp/services/files/' + this.data.path}"/>
-	<s:BusyIndicator id="loader" width="64" height="64" horizontalCenter="0" verticalCenter="-40"/>
+	<s:Image id="img" y="10" width="124" height="124" complete="cargaCompleta()"
+			 enableLoadingState="true" horizontalCenter="0" rollOut="img_rollOutHandler(event)"
+			 rollOver="img_rollOverHandler(event)"
+			 skinClass="spark.skins.mobile.ImageSkin" 
+			 source="{'http://127.0.0.1/Ventas/amfphp/services/files/'+this.data.path}"/>
 	<s:Label x="15" y="172" width="130" color="#929292" fontSize="12" text="{this.data.nom_producto}"
 			 textAlign="left"/>
 	<s:Label x="15" y="159" color="#A4A4A4" fontSize="12" fontWeight="bold"
@@ -150,7 +151,7 @@
 	<s:Label visible="false" fontSize="21" fontWeight="bold" text="{this.data.id_producto}"/>
 	<s:Image id="ranking" x="15" y="136" buttonMode="true" click="ranking_clickHandler(event)"
 			 smooth="true" source="img/rankingCeroStarss.png"/>
-	<s:Image id="imgCamara" visible="false" y="45" alpha="0.9" buttonMode="true"
+	<s:Image id="imgCamara" visible="false" y="45" buttonMode="true"
 			 click="onShowDefaultCalloutClick()" horizontalCenter="0"
 			 rollOver="img_rollOverHandler(event)" smooth="true" source="img/camara.png"/>
 </s:ItemRenderer>

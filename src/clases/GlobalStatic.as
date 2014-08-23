@@ -1,6 +1,9 @@
 package clases
 {
 	import flash.events.EventDispatcher;
+	import flash.media.Sound;
+	import flash.media.SoundTransform;
+	import flash.net.URLRequest;
 	
 	import mx.collections.ArrayCollection;
 	import mx.controls.Alert;
@@ -19,9 +22,41 @@ package clases
 		public static var _arrayCarrito:ArrayCollection = new ArrayCollection();
 		private static var _newProducto:Object;
 		
+		public static var soundBeep:Sound = new Sound(new URLRequest("sounds/beep.mp3")); 
+		public static var soundCamara:Sound = new Sound(new URLRequest("sounds/camara.mp3")); 
+		public static var soundOpenWindow:Sound = new Sound(new URLRequest("sounds/open_window.mp3")); 
+		public static var soundError:Sound = new Sound(new URLRequest("sounds/failed.mp3")); 
+		public static var soundRemoveItem:Sound = new Sound(new URLRequest("sounds/removeItem.mp3")); 
+		public static var soundOpenDetailNotify:Sound = new Sound(new URLRequest("sounds/openDetailNotification.mp3")); 
+		public static var volumen:SoundTransform = new SoundTransform(.05);
 		
 		[Bindable] public static var utility:Utileria = new Utileria();
-
+		
+		public static function sonidoBeep():void{
+			soundBeep.play(0,0,volumen);
+		}
+		
+		public static function sonidoCamara():void{
+			soundCamara.play(0,0,volumen);
+		}
+		
+		
+		public static function sonidoOpenWindow():void{
+			soundOpenWindow.play(0,0,volumen);
+		}
+		
+		public static function sonidoError():void{
+			soundError.play(0,0,volumen);
+		}
+		
+		public static function sonidoRemoveItem():void{
+			soundRemoveItem.play(0,0,volumen);
+		}
+		
+		public static function sonidoOpenDetailNotify():void{
+			soundOpenDetailNotify.play(0,0,volumen);
+		}
+		
 		/** Alerta modificasiones sin Guardar */
 		private static var _AlertaDatosSinGuardar:Object = null;
 		/**
@@ -29,8 +64,7 @@ package clases
 		 */
 		public function GlobalStatic(){}
 		
-		public static function set aplicacion(value:Object):void
-		{
+		public static function set aplicacion(value:Object):void{
 			if (value != aplicacion)
 				_aplicacion = value;
 		}
