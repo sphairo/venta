@@ -7,12 +7,12 @@
 					   xmlns:renders="renders.*"
 					   xmlns:local="*"
 					   xmlns:graficas="graficas.*"
-					   currentState="productos" preinitialize="preinitializeHandler(event)"
+					   currentState="productos" preinitialize="preinitializeHandler()"
 					   showStatusBar="false" skinClass="skins.skinProductos">
 	<s:states>
-		<s:State enterState="enterStateMantenimiento(event)" name="mantenimiento_productos"/>
+		<s:State enterState="enterStateMantenimiento()" name="mantenimiento_productos"/>
 		<s:State name="productos"/>
-		<s:State enterState="enterStateEstadisticas(event)" name="estadisticas"/>
+		<s:State enterState="enterStateEstadisticas()" name="estadisticas"/>
 		<s:State name="ganancias"/>
 		<s:State name="ventas_empleado"/>
 		<s:State name="mas_vendidos"/>
@@ -75,7 +75,7 @@
 		</mx:RemoteObject>
 		
 		<s:Callout id="defaultCallout" width="230" height="465"
-				   mouseDown="defaultCallout_mouseDownHandler(event)"
+				   mouseDown="defaultCallout_mouseDownHandler()"
 				   mouseDownOutside="onMouseDownOutside(event)" rollOut="defaultCallout.close()"
 				   verticalPosition="after">
 			<s:layout>
@@ -84,7 +84,7 @@
 			<renders:renderCatalogoProductos includeIn="estadisticas,ganancias,mantenimiento_productos,mas_vendidos,ventas_empleado"
 											 click="currentState='productos'"/>
 			<renders:renderAdministrarProductos includeIn="estadisticas,ganancias,mas_vendidos,productos,ventas_empleado"
-												click="administrarProductos(event)"/>
+												click="administrarProductos()"/>
 			<renders:renderEstadisticasProductos includeIn="mantenimiento_productos,productos"
 												 click="currentState='estadisticas'"/>
 			<renders:renderSoporte/>
@@ -113,6 +113,8 @@
 			import mx.managers.PopUpManager;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
+			
+			import org.osmf.events.TimeEvent;
 			
 			[Bindable] internal var dp:ArrayCollection = new ArrayCollection();
 			[Bindable] public var arrayMarcas:ArrayCollection;
@@ -151,7 +153,7 @@
 			}
 			
 			
-			internal function preinitializeHandler(event:FlexEvent):void
+			internal function preinitializeHandler():void
 			{
 				removeEventListener(FlexEvent.PREINITIALIZE,preinitializeHandler);
 				maximize();
@@ -295,8 +297,7 @@
 				AlertError.show("La información proporcionada no esta completa o contiene un error, por favor verifique la información e intente guardar nuevamente.");
 			}
 			
-			internal function contruirQuery():void
-			{
+			internal function contruirQuery():void{
 				var superQuery:String = "";
 				var index:uint = GlobalStatic.utility.listaQuerys.length - 1;
 				for each(var query:Object in GlobalStatic.utility.listaQuerys.toArray())
@@ -314,8 +315,7 @@
 				dp.refresh();
 			}
 			
-			internal function filterMyArrayCollection(item:Object):Boolean 
-			{				
+			internal function filterMyArrayCollection(item:Object):Boolean {				
 				return ((item.nom_producto.toLowerCase().indexOf(palabra) != -1) || (item.marca.toLowerCase().indexOf(palabra) != -1) || (item.descripcion.toLowerCase().indexOf(palabra) != -1))
 			}
 			
@@ -334,15 +334,14 @@
 			
 			internal function onMouseDownOutside(event:FlexMouseEvent):void {
 				event.target.close();
-			}
+			} 
 			
-			internal function defaultCallout_mouseDownHandler(event:MouseEvent):void
+			internal function defaultCallout_mouseDownHandler():void
 			{
 				defaultCallout.close();
 			}
 			
-			internal function administrarProductos(event:MouseEvent):void
-			{
+			internal function administrarProductos():void{
 				currentState='mantenimiento_productos';
 				
 				if(arrayMarcas == null)	
@@ -355,19 +354,18 @@
 				btnAyuda.y = -500;
 			}
 			
-			internal function btnNuevo_clickHandler(event:MouseEvent):void
-			{
+			internal function btnNuevo_clickHandler():void{
 				var newItem:clases.Productos = new clases.Productos(
 					{path:null,
 						id_producto:-1,
 						id_sucursal:1,
-						codigo_barra:null,
-						nom_producto:null,
-						descripcion:null,
+						codigo_barra:"",
+						nom_producto:"",
+						descripcion:"",
 						cantidad:Utileria.defaultValue,
 						precio:Utileria.defaultValue,
 						precio_compra:Utileria.defaultValue,
-						marca:null,
+						marca:"",
 						fecha_entrada:Utileria.DateTodayToString(),
 						tipoVenta:'P',	
 						ofertas_Especiales:'N',	
@@ -383,8 +381,7 @@
 				datagrid_productos.scroller.viewport.verticalScrollPosition = -1;
 			}
 			
-			internal function btnEliminar_clickHandler():void
-			{
+			internal function btnEliminar_clickHandler():void{
 				if(datagrid_productos.selectedItem == null)
 					AlertInfo.show("Es necesario que seleccione un producto para poder eliminarlo.");
 				else if(datagrid_productos.selectedItem != null)
@@ -412,38 +409,32 @@
 				}
 			}
 			
-			internal function ejecutarConsultaSQLDelete(id_producto:int):void
-			{
+			internal function ejecutarConsultaSQLDelete(id_producto:int):void{
 				GlobalStatic.utility.showLoad();
 				var queryString:String = "UPDATE " + GlobalStatic.DataBaseName + ".producto SET status = 0 WHERE id_producto = " + id_producto;
 				trace(queryString);
 			}
 			
-			internal function onClickVentasGanancias(event:MouseEvent):void
-			{
+			internal function onClickVentasGanancias():void{
 				currentState = "ganancias";
 			}
 			
-			internal function onClickMasVendidos(event:MouseEvent):void
-			{
+			internal function onClickMasVendidos():void{
 				currentState = "mas_vendidos";
 			}
 			
-			internal function onClickVentasPorEmpleado(event:MouseEvent):void
-			{
+			internal function onClickVentasPorEmpleado():void{
 				currentState = "ventas_empleado";
 			}
 			
-			internal function enterStateEstadisticas(event:FlexEvent):void
-			{
+			internal function enterStateEstadisticas():void{
 				parallel.play();
 				parallel2.play();
 				parallel3.play();
 				parallel4.play();
 			}
 			
-			internal function enterStateMantenimiento(event:FlexEvent):void
-			{
+			internal function enterStateMantenimiento():void{
 				parallel5.play();
 				parallel6.play();
 				parallel7.play();
@@ -461,14 +452,14 @@
 				timer.addEventListener(TimerEvent.TIMER, timerComplete);
 			}
 			
-			internal function timerComplete(event:TimerEvent):void{
+			internal function timerComplete(event:TimeEvent):void{
 				timer.stop();
 				parallel10.removeEventListener(EffectEvent.EFFECT_END, timerComplete);
 				parallel10.play();
 				parallel10.addEventListener(EffectEvent.EFFECT_END, endMoveContainerNotify);
 			}
 			
-			internal function endMoveContainerNotify(event:EffectEvent):void{
+			internal function endMoveContainerNotify():void{
 				containerNotify.removeAllElements();
 				containerNotify.visible = false;
 				containerNotify.includeInLayout = false;
@@ -508,28 +499,31 @@
 						 click="onShowDefaultCalloutClick()" smooth="true" smoothingQuality="high"
 						 source="img/ModIco.png" verticalCenter="-1"/>
 			</s:BorderContainer>
-			<renders:renderAdd id="btnNuevo" includeIn="mantenimiento_productos" x="548" y="0"
-							   click="btnNuevo_clickHandler(event)"/>
-			<renders:renderDelete id="btnEliminar" includeIn="mantenimiento_productos" x="656" y="0"
-								  click="btnEliminar_clickHandler()"/>
-			<renders:renderSave id="btnGuardar" includeIn="mantenimiento_productos" x="775" y="0"
-								click="btnGuardar_clickHandler()"/>
-			<renders:renderPrint id="btnImprimir" includeIn="mantenimiento_productos" x="891" y="0"
-								 click="AlertInfo.show('Ocurrio un error al guardar la información.')"/>
-			<renders:renderHelp id="btnAyuda" includeIn="mantenimiento_productos" x="1002" y="0"
-								click="AlertInfo.show('Ocurrio un error al guardar la información.')"/>
+			<s:HGroup includeIn="mantenimiento_productos" x="548" y="0" gap="30">
+				<renders:renderAdd id="btnNuevo"  
+								   click="btnNuevo_clickHandler()"/>
+				<renders:renderDelete id="btnEliminar" 
+									  click="btnEliminar_clickHandler()"/>
+				<renders:renderSave id="btnGuardar" 
+									click="btnGuardar_clickHandler()"/>
+				<renders:renderPrint id="btnImprimir" 
+									 click="AlertInfo.show('Ocurrio un error al guardar la información.')"/>
+				<renders:renderHelp id="btnAyuda" 
+									click="AlertInfo.show('Ocurrio un error al guardar la información.')"/>	
+			</s:HGroup>
+			
 			<renders:renderMasVendidos id="btnMasVendidos"
 									   includeIn="estadisticas,ganancias,mas_vendidos,ventas_empleado"
-									   x="81" y="0" click="onClickMasVendidos(event)"/>
+									   x="81" y="0" click="onClickMasVendidos()"/>
 			<renders:renderNoVendidos id="btnNoVendidos"
 									  includeIn="estadisticas,ganancias,mas_vendidos,ventas_empleado"
 									  x="256" y="0"/>
 			<renders:renderVentasGanancias id="btnGananciasVentas"
 										   includeIn="estadisticas,ganancias,mas_vendidos,ventas_empleado"
-										   x="426" y="0" click="onClickVentasGanancias(event)"/>
+										   x="426" y="0" click="onClickVentasGanancias()"/>
 			<renders:renderVentasPorEmpleado id="btnVentasEmpleado"
 											 includeIn="estadisticas,ganancias,mas_vendidos,ventas_empleado"
-											 x="636" y="0" click="onClickVentasPorEmpleado(event)"/>
+											 x="636" y="0" click="onClickVentasPorEmpleado()"/>
 			
 			<s:List id="list" includeIn="productos" left="20" right="0" top="51" bottom="0"
 					allowMultipleSelection="true" borderVisible="false" contentBackgroundAlpha="0.0"

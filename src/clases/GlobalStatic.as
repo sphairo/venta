@@ -28,7 +28,7 @@ package clases
 		public static var soundError:Sound = new Sound(new URLRequest("sounds/failed.mp3")); 
 		public static var soundRemoveItem:Sound = new Sound(new URLRequest("sounds/removeItem.mp3")); 
 		public static var soundOpenDetailNotify:Sound = new Sound(new URLRequest("sounds/openDetailNotification.mp3")); 
-		public static var volumen:SoundTransform = new SoundTransform(.05);
+		public static var volumen:SoundTransform = new SoundTransform(.01);
 		
 		[Bindable] public static var utility:Utileria = new Utileria();
 		
