@@ -60,11 +60,11 @@
 		</s:Parallel>
 		
 		<mx:HTTPService id="service" fault="errorGeneral(event)" result="onJSONLoad(event)"
-						resultFormat="text"
+						resultFormat="text" 
 						url="http://localhost/Ventas/amfphp/services/getAllProducts.php"
 						useProxy="false"/>
 		<mx:HTTPService id="service2" fault="errorGeneral(event)" result="onJSONLoad2(event)"
-						resultFormat="text"
+						resultFormat="text" 
 						url="http://localhost/Ventas/amfphp/services/getAllProducts.php"
 						useProxy="false"/>
 		
@@ -113,9 +113,7 @@
 			import mx.managers.PopUpManager;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
-			
-			import org.osmf.events.TimeEvent;
-			
+						
 			[Bindable] internal var dp:ArrayCollection = new ArrayCollection();
 			[Bindable] public var arrayMarcas:ArrayCollection;
 			[Bindable] public var arrayOferta:ArrayCollection = new ArrayCollection([{value:"SI"},{value:"NO"}]);
@@ -452,7 +450,7 @@
 				timer.addEventListener(TimerEvent.TIMER, timerComplete);
 			}
 			
-			internal function timerComplete(event:TimeEvent):void{
+			internal function timerComplete(event:TimerEvent):void{
 				timer.stop();
 				parallel10.removeEventListener(EffectEvent.EFFECT_END, timerComplete);
 				parallel10.play();
@@ -512,18 +510,12 @@
 									click="AlertInfo.show('Ocurrio un error al guardar la información.')"/>	
 			</s:HGroup>
 			
-			<renders:renderMasVendidos id="btnMasVendidos"
-									   includeIn="estadisticas,ganancias,mas_vendidos,ventas_empleado"
-									   x="81" y="0" click="onClickMasVendidos()"/>
-			<renders:renderNoVendidos id="btnNoVendidos"
-									  includeIn="estadisticas,ganancias,mas_vendidos,ventas_empleado"
-									  x="256" y="0"/>
-			<renders:renderVentasGanancias id="btnGananciasVentas"
-										   includeIn="estadisticas,ganancias,mas_vendidos,ventas_empleado"
-										   x="426" y="0" click="onClickVentasGanancias()"/>
-			<renders:renderVentasPorEmpleado id="btnVentasEmpleado"
-											 includeIn="estadisticas,ganancias,mas_vendidos,ventas_empleado"
-											 x="636" y="0" click="onClickVentasPorEmpleado()"/>
+			<s:HGroup includeIn="estadisticas,ganancias,mas_vendidos,ventas_empleado" x="100" y="0" gap="30">
+				<renders:renderMasVendidos id="btnMasVendidos" click="onClickMasVendidos()"/>
+				<renders:renderNoVendidos id="btnNoVendidos"/>
+				<renders:renderVentasGanancias id="btnGananciasVentas" click="onClickVentasGanancias()"/>
+				<renders:renderVentasPorEmpleado id="btnVentasEmpleado" click="onClickVentasPorEmpleado()"/>
+			</s:HGroup>
 			
 			<s:List id="list" includeIn="productos" left="20" right="0" top="51" bottom="0"
 					allowMultipleSelection="true" borderVisible="false" contentBackgroundAlpha="0.0"

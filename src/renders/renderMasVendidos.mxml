@@ -2,25 +2,41 @@
 <s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
 		 xmlns:s="library://ns.adobe.com/flex/spark"
 		 xmlns:mx="library://ns.adobe.com/flex/mx"
-		 width="170" height="48" rollOver="rollOverHandler()" buttonMode="true" rollOut="rollOutHandler()">
+		 width="170" height="48" buttonMode="true" mouseChildren="false" mouseDown="down()"
+		 mouseOut="out()" mouseOver="over()" mouseUp="up()">
+	
 	<fx:Declarations>
-		<s:Parallel id="parallel" duration="300" target="{img}">
-			<s:Fade alphaFrom="0.5" alphaTo="1" duration="500"/>
-		</s:Parallel>
-		<s:Parallel id="parallel2" duration="300" target="{img}">
-			<s:Fade alphaFrom="1" alphaTo="0.5" duration="500"/>
-		</s:Parallel>
+		<s:Scale id="scaleUp" duration="50" scaleXBy="0.1" scaleXTo="1" scaleYBy="0.1" scaleYTo="1"
+				 target="{img}"/>
+		<s:Scale id="scaleUp2" duration="50" scaleXBy="0.1" scaleYBy="0.1" target="{img}"/>
+		<s:Scale id="scaleDown" duration="50" scaleXBy="-0.01" scaleXTo="1" scaleYBy="-0.01"
+				 scaleYTo="1" target="{img}"/>
 	</fx:Declarations>
+	
 	<fx:Script>
 		<![CDATA[
-			import mx.events.FlexEvent;
+			[Bindable][Embed(source="img/btnMasVendidos.png", mimeType="image/png")] public var imgDefault:Class;
+			[Bindable][Embed(source="img/btnMasVendidosOver.png", mimeType="image/png")] public var imgOver:Class;
+			[Bindable][Embed(source="img/btnMasVendidosDown.png", mimeType="image/png")] public var imgDown:Class;
 			
-			internal function rollOverHandler():void{
-				parallel.play();
+			internal function over():void{
+				scaleUp.transformX=-0.1;
+				scaleUp2.play();
+				img.source = imgOver;
 			}
 			
-			internal function rollOutHandler():void{
-				parallel2.play();
+			internal function out():void{
+				scaleDown.play();
+				img.source = imgDefault;
+			}
+			
+			internal function down():void{
+				scaleUp.play();
+				img.source = imgDown;		
+			}
+			
+			internal function up():void{
+				img.source = imgOver;
 			}
 			
 		]]>
@@ -29,9 +45,5 @@
 			 smoothingQuality="high" source="img/btnMasVendidos.png" verticalCenter="1"/>
 	<s:Label id="lblCambiarFoto" right="10" color="#FFFFFF" fontSize="16" fontStyle="italic"
 			 text="Más vendidos" verticalCenter="0"/>
-	<s:Rect id="rect" x="0" y="-100" width="100%" height="6" visible="false">
-		<s:fill>
-			<s:SolidColor color="#32c1d1"/>
-		</s:fill>
-	</s:Rect>
+	
 </s:Group>
