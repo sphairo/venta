@@ -121,8 +121,7 @@
 			
 			internal var arrayOriginal:ArrayCollection;
 			
-			internal function resultCallStoreProcedure(exito:ResultEvent):void
-			{
+			internal function resultCallStoreProcedure(exito:ResultEvent):void{
 				removeEventListener(ResultEvent.RESULT, resultCallStoreProcedure);
 				switch(exito.result.response)
 				{
@@ -136,14 +135,12 @@
 				}
 			}
 			
-			internal function onJSONLoad(event:ResultEvent):void
-			{
+			internal function onJSONLoad(event:ResultEvent):void{
 				removeEventListener(ResultEvent.RESULT, onJSONLoad);
 				encapsulado((com.adobe.serialization.json.JSON.decode(String(event.result))));
 			}
 			
-			internal function onJSONLoad2(event:ResultEvent):void
-			{
+			internal function onJSONLoad2(event:ResultEvent):void{
 				removeEventListener(ResultEvent.RESULT, onJSONLoad2);
 				encapsulado((com.adobe.serialization.json.JSON.decode(String(event.result))));
 				AlertInfo.show("La información se ha guardo exitosamente.");
@@ -151,15 +148,13 @@
 			}
 			
 			
-			internal function preinitializeHandler():void
-			{
+			internal function preinitializeHandler():void{
 				removeEventListener(FlexEvent.PREINITIALIZE,preinitializeHandler);
 				maximize();
 				service.send();
 			}
 			
-			internal function errorGeneral(error:FaultEvent):void
-			{
+			internal function errorGeneral(error:FaultEvent):void{
 				removeEventListener(FaultEvent.FAULT, errorGeneral);
 				PopUpManager.removePopUp(GlobalStatic.utility.progress);
 				AlertError.show(error.fault.faultString, "Ocurrio un error");
@@ -174,39 +169,25 @@
 			
 			[Bindable] internal var convertir:ConvertFechaToDate = new ConvertFechaToDate();
 			
-			internal function btnGuardar_clickHandler():void
-			{
+			internal function btnGuardar_clickHandler():void{
 				GlobalStatic.utility.showLoad();
 				var foundObject:Array = new Array(), index:uint = 0;
 				var lista:IList = new ArrayList();
 				var queryString:String;
 				var newDate:String, oldDate:String, isCompleted:Boolean = false, operacion:uint = 0;
-				for each(var item:Object in datagrid_productos.dataProvider)
-				{
+				for each(var item:Object in datagrid_productos.dataProvider){
 					if(item.isNew == true){
-						
-						if(item.nom_producto != "")
-						{
-							if(item.codigo_barra != "")
-							{
-								if(item.descripcion != "")
-								{
-									if(item.cantidad != Utileria.defaultValue)
-									{
-										if(item.precio != Utileria.defaultValue)
-										{
-											if(item.precio_compra != Utileria.defaultValue)
-											{
-												if(item.marca != "")
-												{
-													if(item.tipoVenta != "")
-													{
-														if(item.ofertas_Especiales != "")
-														{
+						if(item.nom_producto != ""){
+							if(item.codigo_barra != ""){
+								if(item.descripcion != ""){
+									if(item.cantidad != Utileria.defaultValue){
+										if(item.precio != Utileria.defaultValue){
+											if(item.precio_compra != Utileria.defaultValue){
+												if(item.marca != ""){
+													if(item.tipoVenta != ""){
+														if(item.ofertas_Especiales != ""){
 															if(item.fecha_entrada != null)
-															{
 																isCompleted = true;
-															}
 														}
 													}
 												}
@@ -217,8 +198,7 @@
 							}
 						}
 						
-						if(isCompleted == true)
-						{
+						if(isCompleted == true){
 							lista.addItem(" nom_producto = '" + item.nom_producto + "'");
 							lista.addItem(" codigo_barra = '" + item.codigo_barra + "'");
 							lista.addItem(" descripcion = '" + item.descripcion + "'");
@@ -238,8 +218,7 @@
 							lista.removeAll();
 							
 							isCompleted = false;
-						}else
-						{
+						}else{
 							item.error = true;
 							excepcion();
 							return;	
@@ -247,9 +226,7 @@
 						
 					}else{
 						foundObject = GlobalStatic.utility.findMatchesByIDReturnArray(item.id_producto, arrayOriginal,"id_producto");
-						for each(var originalItem:Object in foundObject)
-						{
-							
+						for each(var originalItem:Object in foundObject){
 							originalItem.nom_producto != item.nom_producto ? lista.addItem(" nom_producto = '" + item.nom_producto + "'") : "";
 							originalItem.codigo_barra != item.codigo_barra ? lista.addItem(" codigo_barra = '" + item.codigo_barra + "'") : "";
 							originalItem.descripcion != item.descripcion ? lista.addItem(" descripcion = '" + item.descripcion + "'") : "";
@@ -334,8 +311,7 @@
 				event.target.close();
 			} 
 			
-			internal function defaultCallout_mouseDownHandler():void
-			{
+			internal function defaultCallout_mouseDownHandler():void{
 				defaultCallout.close();
 			}
 			
