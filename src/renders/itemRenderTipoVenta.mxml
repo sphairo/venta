@@ -9,8 +9,7 @@
 			
 			import spark.events.IndexChangeEvent;
 			
-			override public function set data(value:Object):void
-			{
+			override public function set data(value:Object):void{
 				try
 				{
 					if(value == null) return;
@@ -27,19 +26,17 @@
 				}   
 			}
 			
-			internal function changeHandler(event:IndexChangeEvent):void
-			{
+			internal function changeHandler(event:IndexChangeEvent):void{
 				data.tipoVenta = comboBox.selectedItem.value.charAt(0);
 			}
 			
-			internal function creationCompleteHandler(event:FlexEvent):void
-			{
+			internal function creationCompleteHandler(event:FlexEvent):void{
 				comboBox.textInput.editable = false;
 			}
 			
 		]]>
 	</fx:Script>
-	<s:Rect id="background" visible="{data.error}" width="100%" height="100%">
+	<s:Rect id="background" includeInLayout="{data.error}" width="100%" height="100%">
 		<s:fill>
 			<s:SolidColor id="relleno" alpha=".5" color="red"/>
 		</s:fill>

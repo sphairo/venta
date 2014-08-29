@@ -41,7 +41,7 @@
 		]]>
 	</fx:Script>
 	<s:Image id="img" left="0" width="40" height="40" scaleMode="letterbox" smooth="true"
-			 smoothingQuality="high" source="img/btnVentasPorEmpleado.png" verticalCenter="1"/>
+			 smoothingQuality="high" source="{imgDefault}" verticalCenter="1"/>
 	<s:Label id="lblCambiarFoto" right="0" color="#FFFFFF" fontSize="16" fontStyle="italic"
 			 text="Ventas por empleado" verticalCenter="0"/>
 </s:Group>

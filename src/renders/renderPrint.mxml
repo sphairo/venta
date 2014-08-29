@@ -43,7 +43,7 @@
 	</fx:Script>
 	
 	<s:Image id="img" left="0" width="40" height="40" smooth="true"
-			 smoothingQuality="high" source="img/btnImprimir.png" verticalCenter="0"/>
+			 smoothingQuality="high" source="{imgDefault}" verticalCenter="0"/>
 	<s:Label id="lblImprimir" left="42" color="#FFFFFF" fontSize="16" fontStyle="italic"
 			 text="Imprimir" verticalCenter="0"/>
 </s:Group>

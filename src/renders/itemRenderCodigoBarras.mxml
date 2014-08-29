@@ -5,15 +5,14 @@
 	
 	<fx:Script>
 		<![CDATA[
-			internal function txt_changeHandler():void
-			{
+			internal function txt_changeHandler():void{
 				data.codigo_barra = txt.text;
 			}
 			
 		]]>
 	</fx:Script>
 	
-	<s:Rect id="background" visible="{data.error}" width="100%" height="100%">
+	<s:Rect id="background" includeInLayout="{data.error}" width="100%" height="100%">
 		<s:fill>
 			<s:SolidColor id="relleno" alpha=".5" color="red"/>
 		</s:fill>

@@ -9,20 +9,18 @@
 			import mx.events.CalendarLayoutChangeEvent;
 			import mx.formatters.DateFormatter;
 			
-			internal function convertFechaToDate(item:Object):String 
-			{ 
+			internal function convertFechaToDate(item:Object):String { 
 				var formatear:DateFormatter = new DateFormatter();
 				formatear.formatString = "DD-MM-YYYY";
 				return formatear.format(item);
 			}
 			
-			internal function selectedDate(event:CalendarLayoutChangeEvent):void
-			{
+			internal function selectedDate(event:CalendarLayoutChangeEvent):void{
 				data.fecha_entrada = event.newDate;
 			}
 		]]>
 	</fx:Script>
-	<s:Rect id="background" visible="{data.error}" width="100%" height="100%">
+	<s:Rect id="background" includeInLayout="{data.error}" width="100%" height="100%">
 		<s:fill>
 			<s:SolidColor id="relleno" alpha=".5" color="red"/>
 		</s:fill>

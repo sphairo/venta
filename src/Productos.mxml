@@ -57,7 +57,6 @@
 		
 		<s:Parallel id="parallel11" duration="200" startDelay="1" target="{defaultCallout}">
 			<mx:Fade alphaFrom=".1" alphaTo="1"/>
-			<mx:Zoom zoomHeightFrom="0" zoomWidthFrom="0"/>
 		</s:Parallel>
 		
 		<mx:HTTPService id="service" fault="errorGeneral(event)" result="onJSONLoad(event)"
@@ -153,8 +152,8 @@
 			
 			internal function preinitializeHandler():void{
 				removeEventListener(FlexEvent.PREINITIALIZE,preinitializeHandler);
-				maximize();
 				service.send();
+				maximize();
 			}
 			
 			internal function errorGeneral(error:FaultEvent):void{
@@ -169,10 +168,9 @@
 				dp.addItem(new clases.Productos(item));
 				arrayOriginal = Utileria.clonar(dp);
 			}
-			
-			[Bindable] internal var convertir:ConvertFechaToDate = new ConvertFechaToDate();
-			
+
 			internal function btnGuardar_clickHandler():void{
+				var convertir:ConvertFechaToDate = new ConvertFechaToDate();
 				GlobalStatic.utility.showLoad();
 				var foundObject:Array = new Array(), index:uint = 0;
 				var lista:IList = new ArrayList();
@@ -467,7 +465,8 @@
 							 left="60" width="400" borderColor="#FFA800" borderVisible="true"
 							 change="changeBusqueda()" chromeColor="#FFA800" enter="doSearch();"
 							 focusColor="#FF8A00" fontSize="16" fontStyle="normal" maxChars="30"
-							 prompt="Buscar"/>
+							 prompt="Buscar"
+							 y.productos="10" left.productos="60"/>
 				<s:Image id="btn_buscar" includeIn="mantenimiento_productos,productos" x="440"
 						 width="50" height="50" buttonMode="true" click="doSearch();"
 						 scaleMode="letterbox" smooth="true" smoothingQuality="high"
@@ -523,14 +522,14 @@
 									  rendererIsEditable="true"/>
 						<s:GridColumn dataField="cantidad" headerText="Cantidad"
 									  itemRenderer="renders.itemRenderCantidad"
-									  rendererIsEditable="true"/>
+									  rendererIsEditable="true" width="80"/>
 						<s:GridColumn dataField="precio" headerText="Precio"
 									  itemRenderer="renders.itemRenderPrecio"
-									  rendererIsEditable="true"/>
+									  rendererIsEditable="true" width="70"/>
 						<s:GridColumn dataField="precio_compra" headerText="Precio compra"
 									  itemRenderer="renders.itemRenderPrecioCompra"
-									  rendererIsEditable="true"/>
-						<s:GridColumn editable="false" headerText="Foto"
+									  rendererIsEditable="true" width="100"/>
+						<s:GridColumn editable="false" headerText="Foto" width="50"
 									  itemRenderer="renders.itemRenderImg" rendererIsEditable="true"/>
 						<s:GridColumn dataField="fecha_entrada" headerText="Fecha Entrada"
 									  itemRenderer="renders.renderFechaEntrada"
@@ -546,11 +545,12 @@
 			</s:DataGrid>    
 			
 			<graficas:Top20 id="graficaTop20" includeIn="estadisticas,mas_vendidos" top="50"
-							width="100%" height="100%"/>	
+							width="100%" height="100%"
+							borderVisible="false"/>	
 			<graficas:gananciasVentas id="graficaGananciasVentas" includeIn="ganancias" top="50"
-									  width="100%" height="100%"/>	
+									  width="100%" height="100%" borderVisible="false"/>	
 			<graficas:ventasPorEmpleado id="graficaVentasPorEmpleado" includeIn="ventas_empleado"
-										top="50" width="100%" height="100%"/>
+										top="50" width="100%" height="100%" borderVisible="false"/>
 			<s:Group id="containerNotify" includeIn="productos" visible="false" right="50" top="70"
 					 width="230" height="80" elementAdd="notificar()" rollOut="notificar()"
 					 rollOver="notificacionAbierta()">

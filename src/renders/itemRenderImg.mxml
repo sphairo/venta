@@ -85,7 +85,7 @@
 			<renders:renderFotoDesdeCamara/>
 		</s:Callout>
 	</fx:Declarations>
-	<s:Rect id="background" visible="{data.error}" width="100%" height="100%">
+	<s:Rect id="background" includeInLayout="{data.error}" width="100%" height="100%">
 		<s:fill>
 			<s:SolidColor id="relleno" alpha=".5" color="red"/>
 		</s:fill>

@@ -2,15 +2,14 @@
 <s:GridItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009"
 					xmlns:s="library://ns.adobe.com/flex/spark"
 					xmlns:mx="library://ns.adobe.com/flex/mx"
-					clipAndEnableScrolling="true" creationComplete="creationCompleteHandler(event)">
+					clipAndEnableScrolling="true" creationComplete="creationCompleteHandler()">
 	<fx:Script>
 		<![CDATA[
 			import mx.events.FlexEvent;
 			
 			import spark.events.IndexChangeEvent;
 			
-			override public function set data(value:Object):void
-			{
+			override public function set data(value:Object):void{
 				try
 				{
 					if(value == null) return;
@@ -27,19 +26,17 @@
 				}   
 			}
 			
-			internal function changeHandler(event:IndexChangeEvent):void
-			{
+			internal function changeHandler(event:IndexChangeEvent):void{
 				data.ofertas_Especiales = comboBox.selectedItem.value.charAt(0);
 			}
 			
-			internal function creationCompleteHandler(event:FlexEvent):void
-			{
+			internal function creationCompleteHandler():void{
 				comboBox.textInput.editable = false;
 			}
 			
 		]]>
 	</fx:Script>
-	<s:Rect id="background" visible="{data.error}" width="100%" height="100%">
+	<s:Rect id="background" includeInLayout="{data.error}" width="100%" height="100%">
 		<s:fill>
 			<s:SolidColor id="relleno" alpha=".5" color="red"/>
 		</s:fill>
