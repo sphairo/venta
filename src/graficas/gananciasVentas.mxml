@@ -132,13 +132,11 @@
 				}
 			}
 			
-			internal function preinitializeHandler(event:FlexEvent):void
-			{
+			internal function preinitializeHandler(event:FlexEvent):void{
 				service.send();
 			}
 			
-			internal function errorGeneral(error:FaultEvent):void
-			{
+			internal function errorGeneral(error:FaultEvent):void{
 				AlertError.show(error.fault.faultString);
 			}
 			

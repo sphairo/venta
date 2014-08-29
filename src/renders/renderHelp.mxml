@@ -6,18 +6,18 @@
 		 mouseOut="out()" mouseOver="over()" mouseUp="up()">
 	
 	<fx:Declarations>
-		<s:Scale id="scaleUp" duration="50" scaleXBy="0.1" scaleXTo="1" scaleYBy="0.1" scaleYTo="1"
+		<s:Scale id="scaleUp" duration="10" scaleXBy="0.1" scaleXTo="1" scaleYBy="0.1" scaleYTo="1"
 				 target="{img}"/>
-		<s:Scale id="scaleUp2" duration="50" scaleXBy="0.1" scaleYBy="0.1" target="{img}"/>
-		<s:Scale id="scaleDown" duration="50" scaleXBy="-0.01" scaleXTo="1" scaleYBy="-0.01"
+		<s:Scale id="scaleUp2" duration="10" scaleXBy="0.1" scaleYBy="0.1" target="{img}"/>
+		<s:Scale id="scaleDown" duration="10" scaleXBy="-0.01" scaleXTo="1" scaleYBy="-0.01"
 				 scaleYTo="1" target="{img}"/>
 	</fx:Declarations>
 	
 	<fx:Script>
 		<![CDATA[
-			[Bindable][Embed(source="img/btnAyuda.png", mimeType="image/png")] public var imgDefault:Class;
-			[Bindable][Embed(source="img/btnAyudaOver.png", mimeType="image/png")] public var imgOver:Class;
-			[Bindable][Embed(source="img/btnAyudaDown.png", mimeType="image/png")] public var imgDown:Class;
+			[Bindable][Embed(source="img/btnAyuda.png", mimeType="image/png")] internal var imgDefault:Class;
+			[Bindable][Embed(source="img/btnAyudaOver.png", mimeType="image/png")] internal var imgOver:Class;
+			[Bindable][Embed(source="img/btnAyudaDown.png", mimeType="image/png")] internal var imgDown:Class;
 			
 			internal function over():void{
 				scaleUp.transformX=-0.1;

@@ -4,12 +4,7 @@
 				   xmlns:mx="library://ns.adobe.com/flex/mx"
 				   xmlns:amcharts="http://www.amcharts.com/com_internal"
 				   width="100%" height="100%" preinitialize="preinitializeHandler(event)">
-	<fx:Declarations>
-		<!--<mx:RemoteObject id="MiObjetoRemotoProducto" destination="amfphp" fault="errorGeneral(event)"
-						 showBusyCursor="true" source="producto">
-			<s:method name="top20Productos" result="top20ProductosExito(event)"/>
-		</mx:RemoteObject>-->
-		
+	<fx:Declarations>		
 		<mx:HTTPService id="service" fault="errorGeneral(event)" result="top20ProductosExito(event)"
 						resultFormat="text"
 						url="http://localhost/Ventas/amfphp/services/top20Productos.php"

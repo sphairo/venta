@@ -70,8 +70,9 @@
 		]]>
 	</fx:Script>
 	<fx:Declarations>
-		<s:Parallel id="parallel1" duration="300" startDelay="1" target="{defaultCallout}">
+		<s:Parallel id="parallel1" duration="200" startDelay="1" target="{defaultCallout}">
 			<mx:Fade alphaFrom=".1" alphaTo="1"/>
+			<mx:Zoom zoomHeightFrom="0" zoomWidthFrom="0"/>
 		</s:Parallel>
 		<s:Callout id="defaultCallout" height="282" width="310" horizontalCenter="0"
 				   mouseDown="defaultCallout_mouseDownHandler(event)"

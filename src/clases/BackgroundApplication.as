@@ -5,12 +5,9 @@ package clases
 	
 	import spark.skins.spark.ApplicationSkin;
 	
-	public class BackgroundApplication extends ApplicationSkin
-	{
-		[Embed("img/patterntop.png")] protected const fondo:Class
-		
-		public function BackgroundApplication()
-		{
+	public class BackgroundApplication extends ApplicationSkin{
+		[Bindable][Embed("img/patterntop.png", mimeType="image/png")] internal const fondo:Class;
+		public function BackgroundApplication(){
 			super();
 			var rellenoBitmap:BitmapFill = new BitmapFill();
 			rellenoBitmap.source = fondo;

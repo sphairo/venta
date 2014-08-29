@@ -14,7 +14,7 @@
 	</services>
 	<channels>
 		<channel-definition id="amfphpId" class="mx.messaging.channels.AMFChannel">
-			<endpoint uri="http://127.0.0.1/Ventas/amfphp/gateway.php" class="flex.messaging.endpoints.AMFEndpoint"/>
+			<endpoint uri="https://127.0.0.1/Ventas/amfphp/gateway.php" class="flex.messaging.endpoints.AMFEndpoint"/>
 		</channel-definition>
 	</channels>
 </services-config>

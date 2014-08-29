@@ -38,10 +38,6 @@
 				GlobalStatic.sonidoBeep();
 			}
 			
-			internal function cargaCompleta():void{
-				//loader.visible= false;
-			}
-			
 			internal function img_rollOverHandler(event:MouseEvent):void{
 				imgCamara.visible = true;
 			}
@@ -112,8 +108,9 @@
 	</fx:Script>
 	
 	<fx:Declarations>
-		<s:Parallel id="parallel1" duration="300" startDelay="1" target="{defaultCallout}">
+		<s:Parallel id="parallel1" duration="200" startDelay="1" target="{defaultCallout}">
 			<mx:Fade alphaFrom=".1" alphaTo="1"/>
+			<mx:Zoom zoomHeightFrom="0" zoomWidthFrom="0"/>
 		</s:Parallel>
 		
 		<s:Callout id="defaultCallout" width="310" height="122" horizontalCenter="0"
@@ -139,7 +136,7 @@
 		</s:backgroundFill> 		
 	</s:BorderContainer>
 	
-	<s:Image id="img" y="10" width="124" height="124" complete="cargaCompleta()"
+	<s:Image id="img" y="10" width="124" height="124" 
 			 enableLoadingState="true" horizontalCenter="0" rollOut="img_rollOutHandler(event)"
 			 rollOver="img_rollOverHandler(event)"
 			 skinClass="spark.skins.mobile.ImageSkin" 

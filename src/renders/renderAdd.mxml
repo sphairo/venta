@@ -6,16 +6,15 @@
 		 mouseOut="out()" mouseOver="over()" mouseUp="up()">
 	
 	<fx:Declarations>
-		<s:Scale id="scaleUp" duration="50" scaleXBy="0.1" scaleXTo="1" scaleYBy="0.1" scaleYTo="1"
+		<s:Scale id="scaleUp" duration="10" scaleXBy="0.1" scaleXTo="1" scaleYBy="0.1" scaleYTo="1"
 				 target="{img}"/>
-		<s:Scale id="scaleUp2" duration="50" scaleXBy="0.1" scaleYBy="0.1" target="{img}"/>
-		<s:Scale id="scaleDown" duration="50" scaleXBy="-0.01" scaleXTo="1" scaleYBy="-0.01"
+		<s:Scale id="scaleUp2" duration="10" scaleXBy="0.1" scaleYBy="0.1" target="{img}"/>
+		<s:Scale id="scaleDown" duration="10" scaleXBy="-0.01" scaleXTo="1" scaleYBy="-0.01"
 				 scaleYTo="1" target="{img}"/>
 	</fx:Declarations>
 	
 	<fx:Script>
 		<![CDATA[
-			import mx.events.FlexEvent;
 			[Bindable][Embed(source="img/btnNuevo.png", mimeType="image/png")] internal var imgDefault:Class;
 			[Bindable][Embed(source="img/btnNuevoOver.png", mimeType="image/png")] internal var imgOver:Class;
 			[Bindable][Embed(source="img/btnNuevoDown.png", mimeType="image/png")] internal var imgDown:Class;
@@ -44,7 +43,7 @@
 	</fx:Script>
 	
 	<s:Image id="img" left="0" width="40" height="40" smooth="true" smoothingQuality="high"
-			 verticalCenter="0" source="{imgDefault}"/>
+			 source="{imgDefault}" verticalCenter="0"/>
 	<s:Label id="lblAgregar" left="45" color="#FFFFFF" fontSize="16" fontStyle="italic" text="Nuevo"
 			 verticalCenter="0"/>
 </s:Group>

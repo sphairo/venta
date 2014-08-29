@@ -22,13 +22,11 @@
 			import flash.filters.DropShadowFilter;
 			[Bindable] internal var shadow:DropShadowFilter = new DropShadowFilter(2,45,0,0.5);
 			
-			internal function preinitializeHandler(event:FlexEvent):void
-			{
+			internal function preinitializeHandler(event:FlexEvent):void{
 				service.send();
 			}
 			
-			internal function errorGeneral(error:FaultEvent):void
-			{
+			internal function errorGeneral(error:FaultEvent):void{
 				trace(error.fault.faultString);
 			}
 			
@@ -55,7 +53,7 @@
 						 balloonText="[[nombre]] a hecho [[Ventas_Totales]] ventas por un total de [[Total_Vendido]] pesos."
 						 dataProvider="{dp}" depth3D="5" filters="{[shadow]}" gradient="radial"
 						 groupPercent="3" innerRadius="10" labelWidth="100" marginLeft="0"
-						 marginRight="0" startDuration="3" startRadius="600" styleName="MyTextStyle"
+						 marginRight="0" startDuration="1" startRadius="200" styleName="MyTextStyle"
 						 titleField="nombre" valueField="Total_Vendido">
 		
 		<amcharts:balloon>	

@@ -55,8 +55,9 @@
 			<mx:Fade alphaFrom="1" alphaTo="0"/>
 		</s:Parallel>
 		
-		<s:Parallel id="parallel11" duration="300" startDelay="1" target="{defaultCallout}">
+		<s:Parallel id="parallel11" duration="200" startDelay="1" target="{defaultCallout}">
 			<mx:Fade alphaFrom=".1" alphaTo="1"/>
+			<mx:Zoom zoomHeightFrom="0" zoomWidthFrom="0"/>
 		</s:Parallel>
 		
 		<mx:HTTPService id="service" fault="errorGeneral(event)" result="onJSONLoad(event)"
@@ -118,7 +119,9 @@
 			[Bindable] public var arrayMarcas:ArrayCollection;
 			[Bindable] public var arrayOferta:ArrayCollection = new ArrayCollection([{value:"SI"},{value:"NO"}]);
 			[Bindable] public var arrayTipoVenta:ArrayCollection = new ArrayCollection([{value:"Pieza(s)"},{value:"A granel Kg/gr"}]);
-			
+			[Bindable][Embed(source="img/btnSearch.png", mimeType="image/png")] internal var imgSearch:Class;
+			[Bindable][Embed(source="img/ModIco.png", mimeType="image/png")] internal var imgMenu:Class;
+				
 			internal var arrayOriginal:ArrayCollection;
 			
 			internal function resultCallStoreProcedure(exito:ResultEvent):void{
@@ -468,10 +471,10 @@
 				<s:Image id="btn_buscar" includeIn="mantenimiento_productos,productos" x="440"
 						 width="50" height="50" buttonMode="true" click="doSearch();"
 						 scaleMode="letterbox" smooth="true" smoothingQuality="high"
-						 source="img/btnSearch.png" verticalCenter="-1"/>
+						 source="{imgSearch}" verticalCenter="-1"/>
 				<s:Image id="btnMenu" x="25" width="24" height="24" buttonMode="true"
 						 click="onShowDefaultCalloutClick()" smooth="true" smoothingQuality="high"
-						 source="img/ModIco.png" verticalCenter="-1"/>
+						 source="{imgMenu}" verticalCenter="-1"/>
 			</s:BorderContainer>
 			<s:HGroup includeIn="mantenimiento_productos" x="548" y="0" gap="30">
 				<renders:renderAdd id="btnNuevo"  
