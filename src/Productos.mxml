@@ -51,7 +51,7 @@
 			<s:Move yFrom="-500" yTo="0"/>
 		</s:Parallel>
 		
-		<s:Parallel id="parallel10" duration="1000" startDelay="1" target="{containerNotify}">
+		<s:Parallel id="parallel10" duration="500" startDelay="1" target="{containerNotify}">
 			<mx:Fade alphaFrom="1" alphaTo="0"/>
 		</s:Parallel>
 		
@@ -434,7 +434,7 @@
 				parallel10.addEventListener(EffectEvent.EFFECT_END, endMoveContainerNotify);
 			}
 			
-			internal function endMoveContainerNotify():void{
+			internal function endMoveContainerNotify(event:EffectEvent):void{
 				containerNotify.removeAllElements();
 				containerNotify.visible = false;
 				containerNotify.includeInLayout = false;
@@ -466,7 +466,7 @@
 							 change="changeBusqueda()" chromeColor="#FFA800" enter="doSearch();"
 							 focusColor="#FF8A00" fontSize="16" fontStyle="normal" maxChars="30"
 							 prompt="Buscar"
-							 y.productos="10" left.productos="60"/>
+							 y.productos="11" left.productos="60"/>
 				<s:Image id="btn_buscar" includeIn="mantenimiento_productos,productos" x="440"
 						 width="50" height="50" buttonMode="true" click="doSearch();"
 						 scaleMode="letterbox" smooth="true" smoothingQuality="high"
