@@ -178,7 +178,7 @@
 				var newDate:String, oldDate:String, isCompleted:Boolean = false, operacion:uint = 0;
 				for each(var item:Object in datagrid_productos.dataProvider){
 					if(item.isNew == true){
-						if(item.nom_producto != ""){
+						/*if(item.nom_producto != ""){
 							if(item.codigo_barra != ""){
 								if(item.descripcion != ""){
 									if(item.cantidad != Utileria.defaultValue){
@@ -197,9 +197,15 @@
 									}
 								}
 							}
-						}
+						}*/
 						
-						if(isCompleted == true){
+						isCompleted = item.nom_producto != "" && item.codigo_barra != "" 
+							&& item.descripcion != "" && item.cantidad > Utileria.defaultValue 
+							&& item.precio > Utileria.defaultValue && item.precio_compra > Utileria.defaultValue
+							&& item.marca != "" && item.tipoVenta != "" && item.ofertas_Especiales != "" && item.fecha_entrada != null;
+						
+						if(isCompleted){
+							
 							lista.addItem(" nom_producto = '" + item.nom_producto + "'");
 							lista.addItem(" codigo_barra = '" + item.codigo_barra + "'");
 							lista.addItem(" descripcion = '" + item.descripcion + "'");
@@ -207,6 +213,8 @@
 							lista.addItem(" precio_compra = " + item.precio_compra);
 							lista.addItem(" tipoVenta = '" + item.tipoVenta + "'");
 							lista.addItem(" ofertas_Especiales = '" + item.ofertas_Especiales + "'");
+							lista.addItem(" marca = '" + item.marca + "'");
+							lista.addItem(" id_sucursal = " + 1);
 							
 							if(item.path != null)
 								lista.addItem(" path = '" + item.path + "'");
